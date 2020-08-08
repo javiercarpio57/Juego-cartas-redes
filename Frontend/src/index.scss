@@ -1,0 +1,27 @@
+$main-color: #f5f5f57e;
+
+body{
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    background-color: $main-color;
+}
+
+.all-flexed{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+}
+
+.grided{
+    position: relative;
+    display: grid;
+    grid-template-columns: 45% 45%;
+    grid-column-gap: 5%;
+    justify-content: center;
+    align-content: center;
+}
