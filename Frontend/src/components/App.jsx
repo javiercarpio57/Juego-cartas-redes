@@ -2,7 +2,7 @@ import React from 'react'
 import './style.scss'
 import 'rsuite/dist/styles/rsuite-default.css'
 
-import Button1 from './Button1/Button1.jsx'
+import ConfirmButton from './ConfirmButton/ConfirmButton.jsx'
 
 export default class App extends React.Component {
     constructor (props) {
@@ -14,8 +14,8 @@ export default class App extends React.Component {
 
     render () {
         return (
-            <div>
-                <Button1 />
+            <div className= 'main'>
+                <ConfirmButton />
             </div>
         )
     }
