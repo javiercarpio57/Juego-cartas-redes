@@ -15,7 +15,7 @@ export default class App extends React.Component {
     render () {
         return (
             <div className= 'main'>
-                <ConfirmButton />
+                <ConfirmButton name='Play'/>
             </div>
         )
     }

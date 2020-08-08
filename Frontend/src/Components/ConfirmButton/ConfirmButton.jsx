@@ -3,10 +3,16 @@ import { Button } from 'rsuite'
 import './ConfirmButtonStyle.scss'
 
 export default class ConfirmButton extends React.Component {
+	constructor(props){
+		super(props);
+	}
+	
 	render(){
+		const {name} = this.props
+
 		return (
 			<div className= 'buttonStyle'>
-				<Button>Hello World</Button>
+				<Button> { name } </Button>
 			</div>
 		)
 	}
