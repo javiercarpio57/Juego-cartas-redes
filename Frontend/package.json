@@ -1,23 +1,15 @@
 {
-  "name": "portafolio",
+  "name": "react_web",
   "version": "1.0.0",
-  "description": "This is me: Javier Carpio",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/javiercarpio57/Portafolio.git"
-  },
-  "author": "Javier Carpio",
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/javiercarpio57/Portafolio/issues"
-  },
-  "homepage": "https://github.com/javiercarpio57/Portafolio#readme",
   "dependencies": {
     "@babel/core": "^7.11.1",
     "@babel/preset-env": "^7.11.0",
