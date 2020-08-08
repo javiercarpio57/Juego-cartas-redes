@@ -1,0 +1,1 @@
+npm i webpack webpack-cli @babel/core babel-loader @babel/preset-env @babel/preset-react react react-dom eslint-loader babel-eslint html-webpack-plugin copy-webpack-plugin style-loader css-loader postcss-loader sass-loader url-loader file-loader svg-url-loader postcss-preset-env cssnano webpack-dev-server node-sass
