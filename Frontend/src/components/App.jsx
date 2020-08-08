@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import './style.scss'
 import 'rsuite/dist/styles/rsuite-default.css'
 
+import ConfirmButton from './ConfirmButton/ConfirmButton.jsx'
+
 export default class App extends React.Component {
     constructor (props) {
         super(props)
@@ -14,10 +16,9 @@ export default class App extends React.Component {
 
     render () {
         return (
-            <div>
-                <h1>App</h1>
+            <div className= 'main'>
                 <Link to="/lobby">
-                    <button>click</button>
+                    <ConfirmButton name='Play'/>
                 </Link>
             </div>
         )
