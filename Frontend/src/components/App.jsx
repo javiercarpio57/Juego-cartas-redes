@@ -1,8 +1,8 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 import './style.scss'
 import 'rsuite/dist/styles/rsuite-default.css'
-
-import Button1 from './Button1/Button1.jsx'
 
 export default class App extends React.Component {
     constructor (props) {
@@ -15,7 +15,10 @@ export default class App extends React.Component {
     render () {
         return (
             <div>
-                <Button1 />
+                <h1>App</h1>
+                <Link to="/lobby">
+                    <button>click</button>
+                </Link>
             </div>
         )
     }
