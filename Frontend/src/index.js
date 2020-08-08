@@ -1,10 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './components/App.jsx'
 
-const App = () => {
-  return (<div className='all-flexed'>
-    
-  </div>);
-};
-
-ReactDOM.render(<App />, document.querySelector("#root"));
+ReactDOM.render(
+    <App />,
+    document.getElementById('root')
+)
