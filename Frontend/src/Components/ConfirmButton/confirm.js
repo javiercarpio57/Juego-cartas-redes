@@ -28,11 +28,11 @@ class Confirm extends React.Component {
                 icon="remind"
                 style={{
                   color: '#ffb300',
-                  fontSize: 24
+                  fontSize: 30
                 }}
               />
               {'  '}
-              
+              Desea tener ese nombre de usuario?
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.close} appearance="primary">

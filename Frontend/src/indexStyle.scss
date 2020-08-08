@@ -1,4 +1,4 @@
-$main-color: #f5f5f57e;
+$main-color: #ffffff;
 
 body{
     width: 100%;
@@ -6,6 +6,17 @@ body{
     padding: 0px;
     margin: 0px;
     background-color: $main-color;
+}
+
+.inputField{
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 10%;
+    height: 10%;
+    background-color: rgb(175, 22, 22);
+    justify-content: center;
+    align-content: center;
 }
 
 .all-flexed{
