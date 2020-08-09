@@ -71,3 +71,60 @@
     background-size: 100%;
     background-repeat: no-repeat;
 }
+
+.unknown-card{
+    position: relative;
+    width: 145px;
+    height: 200px;
+    background-image: url(../../images/backCard.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+.player-spot-horizontal {
+    width: 40%;
+    height: 27%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.player-spot-vertical {
+    height: 125%;
+    width: 13%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.spot-organization-vertical {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.spot-organization-horizontal {
+    display: flex;
+    height: 50%;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.max-height {
+    height: 100%;
+}
+
+.player-2 {
+    transform: rotate(90deg);
+}
+
+.player-3 {
+    transform: rotate(180deg);
+}
+
+.player-4 {
+    transform: rotate(270deg);
+}
