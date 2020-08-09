@@ -2,10 +2,14 @@ import React from 'react'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import './style.scss' 
 import { Button, Modal, InputNumber } from 'rsuite'
-
 import './style.scss' 
 
 const numberInput = { width: '50%' };
+let cont = 0;
+let puerto = ''
+let sockets = []
+let PORT = 4200
+
 // const history = useHistory()
 export default class Lobby extends React.Component {
 	convertStrToBin(mensaje) {
@@ -19,21 +23,21 @@ export default class Lobby extends React.Component {
 	convertBinToStr(mensaje){
 		let respuesta = parseInt(mensaje,2).toString(10);
 	}
-	oka() {
-		const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
+
+	Unirse(puerto) {
+		let enlace = 'ws://localhost:'+puerto+'/'
+		const client = new W3CWebSocket(enlace, 'echo-protocol');
 		console.log('Se hizo click');
 			client.onopen = () => {
-				console.log('WebSocket Client Connected');
-				function sendNumber() {
+				console.log('Conexion establecida en el puerto'+puerto);
+				function EstablecerConexion() {
 					if (client.readyState === client.OPEN) {
-						var number = Math.round(Math.random() * 0xFFFFFF);
-						client.send(number.toString());
-						setTimeout(sendNumber, 1000);
+						client.send("conectarmeASala");
 					}
 				}
-				sendNumber();
+				EstablecerConexion();
 		  };
-		  client.onclose = function() {
+		    client.onclose = function() {
 			console.log('echo-protocol Client Closed');
 			};
 			
@@ -43,6 +47,46 @@ export default class Lobby extends React.Component {
 				}
 			};
 	  }
+	  
+
+	  preguntar() {
+		const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
+		console.log('Se hizo click en crear sala');
+			client.onopen = () => {
+				console.log('WebSocket Client Connected');
+				function sendText() {
+					if (client.readyState === client.OPEN) {
+						client.send("dondeConecto");
+					}
+				}
+				sendText();
+		  };
+		    setTimeout(function(){
+			   
+				setTimeout(function(){
+					console.log("puerto es"+puerto);
+					this.Unirse(puerto)
+					
+				}.bind(this), 5000);
+			   
+				client.close()
+			}.bind(this), 5000);
+			
+		  
+		    client.onclose = function() {
+			console.log('echo-protocol Client Closed');
+			};
+			
+			client.onmessage = function(e) {
+				if (typeof e.data === 'string') {
+					console.log("Del server: '" + e.data + "'");
+					puerto = e.data
+				}
+			};
+		cont += 1
+	  }
+
+	
 
 	constructor(props) {
 		super(props)
@@ -56,6 +100,8 @@ export default class Lobby extends React.Component {
 		this.handleChange = this.handleChange.bind(this)
 		this.sendToServer = this.sendToServer.bind(this)
 		this.crearSala = this.crearSala.bind(this)
+		this.conectarse = this.conectarse.bind(this)
+		
 	}
 
 	close () {
@@ -69,7 +115,6 @@ export default class Lobby extends React.Component {
 		this.setState({
 			show: true
 		})
-		this.oka()
 	}
 
 	handleChange (value) {
@@ -80,6 +125,7 @@ export default class Lobby extends React.Component {
 
 	sendToServer () {
 		console.log(this.state.codigoSala)
+		this.Unirse(this.state.codigoSala)
 		this.setState({
 			show: false
 		})
@@ -87,9 +133,33 @@ export default class Lobby extends React.Component {
 	}
 
 	crearSala () {
+		this.preguntar()
 		this.props.history.push('/game');
 	}
-
+	conectarse(puerto){
+		const client = new W3CWebSocket('ws://localhost:4201/', 'echo-protocol');
+		console.log('Se hizo click');
+		client.onopen = () => {	
+			console.log('WebSocket Client Connected');
+				function sendNumber() {
+					if (client.readyState === client.OPEN) {
+						var number = Math.round(Math.random() * 0xFFFFFF);
+						client.send(number.toString());
+						setTimeout(sendNumber, 1000);
+					}
+				}
+				sendNumber();
+			};
+		client.onclose = function() {
+		console.log('echo-protocol Client Closed');
+		};
+				
+		client.onmessage = function(e) {
+			if (typeof e.data === 'string') {
+				console.log("Del server: '" + e.data + "'");
+			}
+		};
+	}
 	render(){
 		return (
 			<div className='background-wood'>
