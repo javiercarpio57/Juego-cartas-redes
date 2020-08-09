@@ -24,8 +24,10 @@ function convertBinToStr(mensaje){
 }
 
 function crearSala(){
+    console.log("He llegado de nuevo a crear sala")
     let usuariosIngresados = 0;
     let turno = cont;
+    console.log("Esto esta en turno"+turno);
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
         response.writeHead(404);
@@ -39,6 +41,7 @@ function crearSala(){
         httpServer: servidores[turno],
         autoAcceptConnections: false
     });
+    console.log("Ha llegado aqui a esta parte");
     sockets[turno].on('request', function(request) {
         if (!originIsAllowed(request.origin)) {
           // Make sure we only accept requests from an allowed origin
@@ -61,29 +64,35 @@ function crearSala(){
                 connection.sendBytes(message.binaryData);
             }*/
             if(mensaje.localeCompare("dondeConecto")==0){
-                console.log("entro a preguntar")
-                servidores[cont] = http.createServer(function(request, response) {
-                    console.log((new Date()) + ' Received request for ' + request.url);
-                    response.writeHead(404);
-                    response.end();
-                });
-                let puerto = PORT + cont
-                servidores[cont].listen(puerto,function() {
-                    console.log((new Date()) + ' Server is listening on port '+puerto.toString());
-                });
-                sockets[cont] = new WebSocketServer({
-                    httpServer: servidores[cont],
-                    autoAcceptConnections: false
-                });
+                console.log("entro a preguntar y el valor de cont es: "+cont);
+                cont++;
+                nuevopuerto = PORT+cont;
+                connection.sendUTF(nuevopuerto.toString());
+                crearSala();
+                // servidores[cont] = http.createServer(function(request, response) {
+                //     console.log((new Date()) + ' Received request for ' + request.url);
+                //     response.writeHead(404);
+                //     response.end();
+                // });
+                // let puerto = PORT + cont
+                // servidores[cont].listen(puerto,function() {
+                //     console.log((new Date()) + ' Server is listening on port '+puerto.toString());
+                // });
+                // sockets[cont] = new WebSocketServer({
+                //     httpServer: servidores[cont],
+                //     autoAcceptConnections: false
+                // });
 
-                usuariosIngresados++;
-                console.log("el contador va "+usuariosIngresados);
-                console.log("vamos a ejecutar el crear room")
-                connection.sendUTF(usuariosIngresados.toString());
+                // usuariosIngresados++;
+                // console.log("el contador va "+puerto);
+                // console.log("vamos a ejecutar el crear room")
+                // connection.sendUTF(puerto.toString());
+                // console.log("servidores: "+servidores);
+                // console.log("sockets "+sockets);
                 //codigo para crear room
             }else
             if(mensaje.localeCompare("conectarmeASala")==0){
-                console.log("Me he conectado exitosamente");
+                console.log("Me he conectado exitosamente "+":"+puerto);
                 usuariosIngresados++;
             }
         });
@@ -91,7 +100,6 @@ function crearSala(){
             console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
         });
     });
-    cont++;
 }
 
 function unirseSala(){

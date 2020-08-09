@@ -64,8 +64,8 @@ export default class Lobby extends React.Component {
 		    setTimeout(function(){
 			   
 				setTimeout(function(){
-					
-					this.conectarse(puerto)
+					console.log("puerto es"+puerto);
+					this.Unirse(puerto)
 					
 				}.bind(this), 5000);
 			   
