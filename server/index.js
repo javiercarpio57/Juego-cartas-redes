@@ -11,7 +11,17 @@ function originIsAllowed(origin) {
     // put logic here to detect whether the specified origin is allowed.
     return true;
   }
+function convertStrToBin(mensaje) {
+    let output = ""
+    for (let i = 0; i < mensaje.length; i++) {
+        output += input[i].charCodeAt(0).toString(2) + " ";
+    }
+    return output
+}
 
+function convertBinToStr(mensaje){
+    let respuesta = parseInt(mensaje,2).toString(10);
+}
 
 function crearSala(){
     let turno = cont;

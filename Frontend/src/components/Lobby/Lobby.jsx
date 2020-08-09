@@ -8,6 +8,17 @@ import './style.scss'
 const numberInput = { width: '50%' };
 // const history = useHistory()
 export default class Lobby extends React.Component {
+	convertStrToBin(mensaje) {
+		let output = ""
+		for (let i = 0; i < mensaje.length; i++) {
+			output += input[i].charCodeAt(0).toString(2) + " ";
+		}
+		return output
+	}
+	
+	convertBinToStr(mensaje){
+		let respuesta = parseInt(mensaje,2).toString(10);
+	}
 	oka() {
 		const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
 		console.log('Se hizo click');
