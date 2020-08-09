@@ -6,9 +6,10 @@ import App from './components/App.jsx'
 import Lobby from './components/Lobby/Lobby.jsx'
 import Game from './components/Game/Game.jsx'
 
+
 const routing = (
     <Router>
-        <div>
+        <div style={{height: '100%'}}>
             <Route exact path='/' component={App} />
             <Route path='/lobby' component={Lobby} />
             <Route path='/game' component={Game} />

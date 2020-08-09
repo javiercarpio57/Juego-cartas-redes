@@ -1,9 +1,14 @@
 import React from 'react'
 
+import './style.scss' 
+
 export default class Lobby extends React.Component {
 	render(){
 		return (
-            <h1>Lobby</h1>
+			<div className='background-wood'>
+				<h1>Lobby</h1>
+				{/* lobby */}
+			</div>
 		)
 	}
 }
