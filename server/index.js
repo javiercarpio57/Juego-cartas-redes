@@ -50,6 +50,8 @@ function crearSala(){
         var connection = request.accept('echo-protocol', request.origin);
         console.log((new Date()) + ' Connection accepted.');
         connection.on('message', function(message) {
+            console.log("El mensaje ingresado es "+message.utf8Data);
+            let mensaje = message.utf8Data
             /*if (message.type === 'utf8') {
                 console.log("vamos a ejecutar el crear room")
                 connection.sendUTF(turno.toString());
@@ -58,8 +60,8 @@ function crearSala(){
                 console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
                 connection.sendBytes(message.binaryData);
             }*/
-            if(message.toString().localeCompare("dondeConecto")){
-                console.log("entro   a preguntar")
+            if(mensaje.localeCompare("dondeConecto")==0){
+                console.log("entro a preguntar")
                 servidores[cont] = http.createServer(function(request, response) {
                     console.log((new Date()) + ' Received request for ' + request.url);
                     response.writeHead(404);
@@ -79,6 +81,10 @@ function crearSala(){
                 console.log("vamos a ejecutar el crear room")
                 connection.sendUTF(usuariosIngresados.toString());
                 //codigo para crear room
+            }else
+            if(mensaje.localeCompare("conectarmeASala")==0){
+                console.log("Me he conectado exitosamente");
+                usuariosIngresados++;
             }
         });
         connection.on('close', function(reasonCode, description) {

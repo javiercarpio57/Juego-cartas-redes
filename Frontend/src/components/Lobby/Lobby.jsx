@@ -32,7 +32,7 @@ export default class Lobby extends React.Component {
 				console.log('Conexion establecida en el puerto'+puerto);
 				function EstablecerConexion() {
 					if (client.readyState === client.OPEN) {
-						client.send("Me he conectado yupi");
+						client.send("conectarmeASala");
 					}
 				}
 				EstablecerConexion();
@@ -125,7 +125,7 @@ export default class Lobby extends React.Component {
 
 	sendToServer () {
 		console.log(this.state.codigoSala)
-		this.Unirse()
+		this.Unirse(this.state.codigoSala)
 		this.setState({
 			show: false
 		})
