@@ -12,7 +12,7 @@ export default class ConfirmButton extends React.Component {
 
 		return (
 			<div className= 'buttonStyle'>
-				<Button> { name } </Button>
+				<Button className= 'button'> { name } </Button>
 			</div>
 		)
 	}
