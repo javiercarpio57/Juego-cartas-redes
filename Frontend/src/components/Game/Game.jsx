@@ -1,6 +1,8 @@
 import React from 'react'
+import './Game.scss'
 
 import { Modal, Loader, Button } from 'rsuite'
+import Card from '../Card/Card.jsx'
 
 export default class Game extends React.Component {
 	constructor (props) {
@@ -22,7 +24,10 @@ export default class Game extends React.Component {
 		const { show } = this.state
 		return (
             <div className='background-wood'>
-				
+				<Card name = 'guard' frontImage= 'guard'>
+
+				</Card>
+
 
 				<Modal show={show}>
 					<Modal.Header closeButton={false}>

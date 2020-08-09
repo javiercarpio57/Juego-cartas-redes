@@ -1,5 +1,7 @@
 import React from 'react'
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { Link } from 'react-router-dom'
+import { Button, Modal, InputNumber, Input } from 'rsuite'
 
 import './style.scss'
 import 'rsuite/dist/styles/rsuite-default.css'
@@ -19,12 +21,12 @@ export default class App extends React.Component {
             <div className= 'main'>
                 <div className= 'inputArea'>
                     <div className= 'inputField'>
-                        Javier C.
+                        <Input min={0} />
                     </div>
                 </div>
                 <div className= 'buttonArea'>
                     <Link to="/lobby">
-                        <ConfirmButton name='Play'/>
+                        <ConfirmButton name='Play' onClick={this.registerName}/>
                     </Link>
                     <div className='loveLetter'></div>
                 </div>                
