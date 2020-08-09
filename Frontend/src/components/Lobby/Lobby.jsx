@@ -1,11 +1,7 @@
 import React from 'react'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import './style.scss' 
-import { Button } from 'rsuite'
-import { Modal } from 'rsuite'
-import { InputNumber } from 'rsuite'
-
-// import { useHistory } from "react-router-dom"
+import { Button, Modal, InputNumber } from 'rsuite'
 
 import './style.scss' 
 
@@ -118,12 +114,12 @@ export default class Lobby extends React.Component {
 								Cancel
 							</Button>
 							<Button onClick={this.sendToServer} color="green">
-								Ok
+								Join
 							</Button>
 						</div>
 					</Modal.Footer>
 				</Modal>
-				</div>
+			</div>
 			)
 		}
 }
