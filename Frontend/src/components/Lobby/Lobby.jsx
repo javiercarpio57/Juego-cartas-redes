@@ -6,7 +6,7 @@ import './style.scss'
 
 const numberInput = { width: '50%' };
 let cont = 0;
-let servidores = []
+let puerto = ''
 let sockets = []
 let PORT = 4200
 
@@ -47,15 +47,11 @@ export default class Lobby extends React.Component {
 				}
 			};
 	  }
+	  
 
-	  Preguntar() {
-		// HACER QUE EL PUERTO VAYA VARIANDO CADA VEZ QUE SE LLAME ESTA FUNCION 
-		// Y QUE NO SEA FIJO 4200
-		let turno = cont;
-		let puerto = PORT + turno
-		console.log("el puerto es "+puerto)
-		const client = new W3CWebSocket('ws://localhost:'+puerto+'/', 'echo-protocol');
-		console.log('Se hizo click en crear');
+	  preguntar() {
+		const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
+		console.log('Se hizo click en crear sala');
 			client.onopen = () => {
 				console.log('WebSocket Client Connected');
 				function sendText() {
@@ -65,9 +61,17 @@ export default class Lobby extends React.Component {
 				}
 				sendText();
 		  };
-		  setTimeout(function(){
-			client.close()
-			}, 5000);
+		    setTimeout(function(){
+			   
+				setTimeout(function(){
+					
+					this.conectarse(puerto)
+					
+				}.bind(this), 5000);
+			   
+				client.close()
+			}.bind(this), 5000);
+			
 		  
 		    client.onclose = function() {
 			console.log('echo-protocol Client Closed');
@@ -76,10 +80,13 @@ export default class Lobby extends React.Component {
 			client.onmessage = function(e) {
 				if (typeof e.data === 'string') {
 					console.log("Del server: '" + e.data + "'");
+					puerto = e.data
 				}
 			};
 		cont += 1
 	  }
+
+	
 
 	constructor(props) {
 		super(props)
@@ -93,6 +100,8 @@ export default class Lobby extends React.Component {
 		this.handleChange = this.handleChange.bind(this)
 		this.sendToServer = this.sendToServer.bind(this)
 		this.crearSala = this.crearSala.bind(this)
+		this.conectarse = this.conectarse.bind(this)
+		
 	}
 
 	close () {
@@ -106,7 +115,6 @@ export default class Lobby extends React.Component {
 		this.setState({
 			show: true
 		})
-		//this.oka()
 	}
 
 	handleChange (value) {
@@ -117,7 +125,7 @@ export default class Lobby extends React.Component {
 
 	sendToServer () {
 		console.log(this.state.codigoSala)
-		this.Unirse(this.state.codigoSala)
+		this.unirse()
 		this.setState({
 			show: false
 		})
@@ -125,10 +133,33 @@ export default class Lobby extends React.Component {
 	}
 
 	crearSala () {
-		this.crear()
+		this.preguntar()
 		this.props.history.push('/game');
 	}
-
+	conectarse(puerto){
+		const client = new W3CWebSocket('ws://localhost:4201/', 'echo-protocol');
+		console.log('Se hizo click');
+		client.onopen = () => {	
+			console.log('WebSocket Client Connected');
+				function sendNumber() {
+					if (client.readyState === client.OPEN) {
+						var number = Math.round(Math.random() * 0xFFFFFF);
+						client.send(number.toString());
+						setTimeout(sendNumber, 1000);
+					}
+				}
+				sendNumber();
+			};
+		client.onclose = function() {
+		console.log('echo-protocol Client Closed');
+		};
+				
+		client.onmessage = function(e) {
+			if (typeof e.data === 'string') {
+				console.log("Del server: '" + e.data + "'");
+			}
+		};
+	}
 	render(){
 		return (
 			<div className='background-wood'>

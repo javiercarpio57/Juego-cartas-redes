@@ -24,6 +24,7 @@ function convertBinToStr(mensaje){
 }
 
 function crearSala(){
+    let usuariosIngresados = 0;
     let turno = cont;
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
@@ -58,10 +59,25 @@ function crearSala(){
                 connection.sendBytes(message.binaryData);
             }*/
             if(message.toString().localeCompare("dondeConecto")){
-                cont++;
-                console.log("el contador va "+cont)
+                console.log("entro a preguntar")
+                servidores[cont] = http.createServer(function(request, response) {
+                    console.log((new Date()) + ' Received request for ' + request.url);
+                    response.writeHead(404);
+                    response.end();
+                });
+                let puerto = PORT + cont
+                servidores[cont].listen(puerto,function() {
+                    console.log((new Date()) + ' Server is listening on port '+puerto.toString());
+                });
+                sockets[cont] = new WebSocketServer({
+                    httpServer: servidores[cont],
+                    autoAcceptConnections: false
+                });
+
+                usuariosIngresados++;
+                console.log("el contador va "+usuariosIngresados);
                 console.log("vamos a ejecutar el crear room")
-                connection.sendUTF(cont.toString());
+                connection.sendUTF(usuariosIngresados.toString());
                 //codigo para crear room
             }
         });
@@ -69,7 +85,7 @@ function crearSala(){
             console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
         });
     });
-    
+    cont++;
 }
 
 function unirseSala(){
