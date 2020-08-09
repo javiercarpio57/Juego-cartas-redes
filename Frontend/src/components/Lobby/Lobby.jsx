@@ -2,10 +2,14 @@ import React from 'react'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import './style.scss' 
 import { Button, Modal, InputNumber } from 'rsuite'
-
 import './style.scss' 
 
 const numberInput = { width: '50%' };
+let cont = 0;
+let servidores = []
+let sockets = []
+let PORT = 4200
+
 // const history = useHistory()
 export default class Lobby extends React.Component {
 	convertStrToBin(mensaje) {
@@ -19,7 +23,9 @@ export default class Lobby extends React.Component {
 	convertBinToStr(mensaje){
 		let respuesta = parseInt(mensaje,2).toString(10);
 	}
+
 	oka() {
+
 		const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
 		console.log('Se hizo click');
 			client.onopen = () => {
@@ -33,7 +39,7 @@ export default class Lobby extends React.Component {
 				}
 				sendNumber();
 		  };
-		  client.onclose = function() {
+		    client.onclose = function() {
 			console.log('echo-protocol Client Closed');
 			};
 			
@@ -42,6 +48,38 @@ export default class Lobby extends React.Component {
 					console.log("Del server: '" + e.data + "'");
 				}
 			};
+	  }
+	  crear() {
+		// HACER QUE EL PUERTO VAYA VARIANDO CADA VEZ QUE SE LLAME ESTA FUNCION 
+		// Y QUE NO SEA FIJO 4200
+		let turno = cont;
+		let puerto = PORT + turno
+		console.log("el puerto es "+puerto)
+		const client = new W3CWebSocket('ws://localhost:'+puerto+'/', 'echo-protocol');
+		console.log('Se hizo click en crear');
+			client.onopen = () => {
+				console.log('WebSocket Client Connected');
+				function sendText() {
+					if (client.readyState === client.OPEN) {
+						client.send("dondeConecto");
+					}
+				}
+				sendText();
+		  };
+		  setTimeout(function(){
+			client.close()
+			}, 5000);
+		  
+		    client.onclose = function() {
+			console.log('echo-protocol Client Closed');
+			};
+			
+			client.onmessage = function(e) {
+				if (typeof e.data === 'string') {
+					console.log("Del server: '" + e.data + "'");
+				}
+			};
+		cont += 1
 	  }
 
 	constructor(props) {
@@ -69,7 +107,7 @@ export default class Lobby extends React.Component {
 		this.setState({
 			show: true
 		})
-		this.oka()
+		//this.oka()
 	}
 
 	handleChange (value) {
@@ -80,6 +118,7 @@ export default class Lobby extends React.Component {
 
 	sendToServer () {
 		console.log(this.state.codigoSala)
+		this.oka()
 		this.setState({
 			show: false
 		})
@@ -87,6 +126,7 @@ export default class Lobby extends React.Component {
 	}
 
 	crearSala () {
+		this.crear()
 		this.props.history.push('/game');
 	}
 
