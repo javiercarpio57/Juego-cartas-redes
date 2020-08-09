@@ -62,6 +62,10 @@ function crearSala(){
                 console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
                 connection.sendBytes(message.binaryData);
             }
+            if(message.toString().localeCompare("hola")){
+                console.log("vamos a ejecutar el crear room")
+                //codigo para crear room
+            }
         });
         connection.on('close', function(reasonCode, description) {
             console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
