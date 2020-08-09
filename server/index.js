@@ -2,9 +2,17 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 
+const usuarios = {
+    user1: "",
+    user2: "",
+    user3: "",
+    user4: ""
+}
+
 let cont = 0;
 let servidores = []
 let sockets = []
+let clientes = []
 let PORT = 4200
 
 function originIsAllowed(origin) {
@@ -42,6 +50,7 @@ function crearSala(){
         autoAcceptConnections: false
     });
     console.log("Ha llegado aqui a esta parte");
+    clientes[cont] = []
     sockets[turno].on('request', function(request) {
         if (!originIsAllowed(request.origin)) {
           // Make sure we only accept requests from an allowed origin
@@ -49,7 +58,6 @@ function crearSala(){
           console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
           return;
         }
-        
         var connection = request.accept('echo-protocol', request.origin);
         console.log((new Date()) + ' Connection accepted.');
         connection.on('message', function(message) {
@@ -94,6 +102,8 @@ function crearSala(){
             if(mensaje.localeCompare("conectarmeASala")==0){
                 console.log("Me he conectado exitosamente "+":"+puerto);
                 usuariosIngresados++;
+                usuarios[cont][usuariosIngresados-1] = "pepe";
+                connection.sendUTF(usuariosIngresados);
             }
         });
         connection.on('close', function(reasonCode, description) {
