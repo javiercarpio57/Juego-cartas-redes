@@ -1,5 +1,29 @@
 .background-wood {
     min-height: 100%;
-    // background-color: lightblue;
     background-image: url(../../images/gameBackground.jpg);
+    text-align: center;
+    padding-top: 90px;
+}
+
+.order-components {
+    padding-left: 25%;
+    padding-right: 25%;
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 170px;
+}
+
+.title-lobby {
+    color: white;
+    font-size: 80px;
+}
+
+.rs-btn-lg {
+    padding: 10px 16px;
+    font-size: 20px;
+    line-height: 2;
+    border-radius: 6px;
 }

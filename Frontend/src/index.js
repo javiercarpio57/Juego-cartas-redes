@@ -6,7 +6,6 @@ import App from './components/App.jsx'
 import Lobby from './components/Lobby/Lobby.jsx'
 import Game from './components/Game/Game.jsx'
 
-
 const routing = (
     <Router>
         <div style={{height: '100%'}}>
