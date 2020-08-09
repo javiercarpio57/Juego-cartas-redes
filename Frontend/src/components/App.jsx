@@ -19,7 +19,7 @@ export default class App extends React.Component {
             <div className= 'main'>
                 <div className= 'inputArea'>
                     <div className= 'inputField'>
-                        Hola
+                        Javier C.
                     </div>
                 </div>
                 <div className= 'buttonArea'>
