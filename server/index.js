@@ -59,7 +59,7 @@ function crearSala(){
                 connection.sendBytes(message.binaryData);
             }*/
             if(message.toString().localeCompare("dondeConecto")){
-                console.log("entro a preguntar")
+                console.log("entro   a preguntar")
                 servidores[cont] = http.createServer(function(request, response) {
                     console.log((new Date()) + ' Received request for ' + request.url);
                     response.writeHead(404);

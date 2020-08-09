@@ -125,7 +125,7 @@ export default class Lobby extends React.Component {
 
 	sendToServer () {
 		console.log(this.state.codigoSala)
-		this.unirse()
+		this.Unirse()
 		this.setState({
 			show: false
 		})
