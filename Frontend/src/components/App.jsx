@@ -17,9 +17,17 @@ export default class App extends React.Component {
     render () {
         return (
             <div className= 'main'>
-                <Link to="/lobby">
-                    <ConfirmButton name='Play'/>
-                </Link>
+                <div className= 'inputArea'>
+                    <div className= 'inputField'>
+                        Hola
+                    </div>
+                </div>
+                <div className= 'buttonArea'>
+                    <Link to="/lobby">
+                        <ConfirmButton name='Play'/>
+                    </Link>
+                    <div className='loveLetter'></div>
+                </div>                
             </div>
         )
     }
