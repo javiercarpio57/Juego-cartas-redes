@@ -3,6 +3,7 @@ import './Game.scss'
 
 import { Modal, Loader, Button } from 'rsuite'
 import Card from '../Card/Card.jsx'
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 
 const usuarios = ['Javi', 'Guille', 'Gustavo', 'Uri']
@@ -25,7 +26,8 @@ export default class Game extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log(this.props.location.state.client)
+		console.log(this.props.location.state.username);
+		console.log(this.props.location.state.puerto);
 	}
 
 	render() {
