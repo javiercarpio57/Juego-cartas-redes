@@ -7,6 +7,13 @@ let servidores = []
 let sockets = []
 let usuarios = {}
 let PORT = 4200
+var cards = [
+	'guard','guard','guard','guard',
+	'guard','priest','priest','baron',
+	'baron','handmaid', 'handmaid','prince',
+	'prince','king','countess','princess'
+	]
+
 
 function originIsAllowed(origin) {
     // put logic here to detect whether the specified origin is allowed.
