@@ -36,7 +36,7 @@ export default class App extends React.Component {
             <div className= 'main'>
                 <div className= 'inputArea'>
                     <div className= 'inputField'>
-                        <Input  min={0} placeholder="Default Input" onChange={this.handleChange}/> 
+                        <Input style={{ height:80, textAlign:"center", fontSize:30, width: 400 }}  min={0} placeholder="Username" onChange={this.handleChange}/> 
                     </div>
                 </div>
                 <div className= 'buttonArea'>                    
