@@ -122,8 +122,6 @@ export default class Lobby extends React.Component {
 		this.setState({
 			username: this.props.match.params.name
 		})
-
-		// console.log(this.props.location.client)
 	}
 
 	close () {
