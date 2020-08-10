@@ -89,25 +89,26 @@ function crearSala(){
                 console.log(usuarios)
                 let mensaje = "conectado|"+usuariosIngresados
                 connection.sendUTF(mensaje);
-            }
-            else
-            if(entradaCliente[0].localeCompare("play")==0){
-                console.log("Iniciando juego");
+
+
                 shuffle(cartaServer)
-                var stack = new Stack(); 
+                //console.log(cartaServer)
+                var stack = []; 
                 //stack.push(cartaServer)
                 cartaServer.forEach(carta=>stack.push(carta))
-                
+                //console.log(stack)
                 for(i=1; i<=4; i++ ){
-                    connection.sendUTF(i+"|"+cartaServer.pop);
+                    //connection.sendUTF(i+"|"+cartaServer.pop);
+                    let card = stack.pop()
+                    console.log(i+" | "+card)
                 }
-                
             }
         });
         connection.on('close', function(reasonCode, description) {
             console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
         });
     });
+    cont++;
 }
 
 function unirseSala(){
