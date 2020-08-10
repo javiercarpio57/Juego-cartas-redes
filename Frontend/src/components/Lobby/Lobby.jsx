@@ -31,30 +31,7 @@ export default class Lobby extends React.Component {
 		let respuesta = parseInt(mensaje,2).toString(10);
 	}
 
-	Unirse(puerto,username) {
-		let enlace = 'ws://localhost:'+puerto+'/'
-		const client = new W3CWebSocket(enlace, 'echo-protocol');
-		console.log('Se hizo click');
-			client.onopen = () => {
-				console.log('Conexion establecida en el puerto'+puerto);
-				function EstablecerConexion() {
-					if (client.readyState === client.OPEN) {
-						let conectarmeASala = "conectarmeASala|"+username
-						client.send(conectarmeASala);
-					}
-				}
-				EstablecerConexion();
-		  };
-		    client.onclose = function() {
-			console.log('echo-protocol Client Closed');
-			};
-			
-			client.onmessage = function(e) {
-				if (typeof e.data === 'string') {
-					console.log("Del server: '" + e.data + "'");
-				}
-			};
-	  }
+	
 	  
 
 	preguntar(username) {
@@ -71,14 +48,7 @@ export default class Lobby extends React.Component {
 				sendText();
 		    };
 		    setTimeout(function(){
-			   
-				setTimeout(function(){
-					console.log("puerto es "+port);
-					console.log("usuario es "+username);
-					this.Unirse(port,username)
-					
-				}.bind(this), 100);
-			   
+		
 				client.close()
 			}.bind(this), 5000);
 			
@@ -145,7 +115,7 @@ export default class Lobby extends React.Component {
 
 	sendToServer () {
 		console.log(this.state.codigoSala)
-		this.Unirse(this.state.codigoSala,this.state.username)
+		
 		this.setState({
 			show: false
 		})
@@ -161,9 +131,7 @@ export default class Lobby extends React.Component {
 
 	crearSala () {
 		port = this.preguntar(this.state.username)
-		
-		
-		
+	
 		// TO DO: del server debemos devolvernos el puerto en el cual nos conectamos
 		setTimeout(function(){   
 			console.log("Mandando este username desde Lobby: "+this.state.username)

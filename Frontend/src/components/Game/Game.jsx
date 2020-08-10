@@ -40,8 +40,34 @@ export default class Game extends React.Component {
 	componentDidMount() {
 		console.log("el username que vino a Game es "+this.props.location.state.username);
 		console.log("el puerto que vino a Game es "+this.props.location.state.puerto);
+		this.Unirse(this.props.location.state.puerto,this.props.location.state.username)
 		this.getNewCard()
 	}
+
+	Unirse(puerto,username) {
+		let enlace = 'ws://localhost:'+puerto+'/'
+		const client = new W3CWebSocket(enlace, 'echo-protocol');
+		console.log('Se hizo click');
+			client.onopen = () => {
+				console.log('Conexion establecida en el puerto'+puerto);
+				function EstablecerConexion() {
+					if (client.readyState === client.OPEN) {
+						let conectarmeASala = "conectarmeASala|"+username
+						client.send(conectarmeASala);
+					}
+				}
+				EstablecerConexion();
+		  };
+		    client.onclose = function() {
+			console.log('echo-protocol Client Closed');
+			};
+			
+			client.onmessage = function(e) {
+				if (typeof e.data === 'string') {
+					console.log("Del server: '" + e.data + "'");
+				}
+			};
+	  }
 
 	getNewCard() {
 		const item = cards[Math.floor(Math.random() * cards.length)];
