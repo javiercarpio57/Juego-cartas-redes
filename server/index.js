@@ -7,13 +7,16 @@ let servidores = []
 let sockets = []
 let usuarios = {}
 let PORT = 4200
-var cards = [
+const cards = [
 	'guard','guard','guard','guard',
 	'guard','priest','priest','baron',
 	'baron','handmaid', 'handmaid','prince',
 	'prince','king','countess','princess'
-	]
+    ]
 
+function shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+}
 
 function originIsAllowed(origin) {
     // put logic here to detect whether the specified origin is allowed.
@@ -36,6 +39,7 @@ function crearSala(){
     let usuariosIngresados = 0;
     let turno = cont;
     let puerto = PORT + turno
+    let cartaServer = cards
     usuarios[puerto] = {}
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
@@ -84,6 +88,19 @@ function crearSala(){
                 usuarios[puerto][usuariosIngresados] = temp;
                 console.log(usuarios)
                 connection.sendUTF(usuariosIngresados);
+            }
+            else
+            if(entradaCliente[0].localeCompare("play")==0){
+                console.log("Iniciando juego");
+                shuffle(cartaServer)
+                var stack = new Stack(); 
+                //stack.push(cartaServer)
+                cartaServer.forEach(carta=>stack.push(carta))
+                
+                for(i=1; i<=4; i++ ){
+                    connection.sendUTF(i+"|"+cartaServer.pop);
+                }
+                
             }
         });
         connection.on('close', function(reasonCode, description) {
