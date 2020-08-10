@@ -29,7 +29,7 @@ function crearSala(){
     let usuariosIngresados = 0;
     let turno = cont;
     let puerto = PORT + turno
-    usuarios[puerto] = []
+    usuarios[puerto] = {}
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
         response.writeHead(404);
@@ -67,7 +67,14 @@ function crearSala(){
             if(entradaCliente[0].localeCompare("conectarmeASala")==0){
                 console.log("Me he conectado exitosamente "+":"+puerto);
                 usuariosIngresados++;
-                usuarios[puerto].push(entradaCliente[1]);
+                let temp = {}
+                temp[usuariosIngresados] = {
+                    "username": entradaCliente[1],
+                    "cartas": []
+                }
+                console.log("Mira temp"+JSON.stringify(temp));
+                console.log("Esto es usuarios"+JSON.stringify(usuarios));
+                usuarios[puerto].append(temp);
                 console.log(usuarios)
                 connection.sendUTF(usuariosIngresados);
             }
