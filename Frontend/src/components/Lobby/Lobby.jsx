@@ -117,8 +117,6 @@ export default class Lobby extends React.Component {
 		this.setState({
 			username: this.props.match.params.name
 		})
-
-		// console.log(this.props.location.client)
 	}
 
 	close () {
@@ -148,15 +146,22 @@ export default class Lobby extends React.Component {
 		})
 		this.props.history.push({
 			pathname: '/game',
-			state: { client: cliente }
+			state: { 
+				username: this.state.username, 
+				puerto: this.state.codigoSala
+			}
 		});
 	}
 
 	crearSala () {
 		this.preguntar(this.state.username)
+		// TO DO: del server debemos devolvernos el puerto en el cual nos conectamos
 		this.props.history.push({
 			pathname: '/game',
-			state: { client: cliente }
+			state: { 
+				username: this.state.username,
+				puerto: this.state.codigoSala
+			}
 		});
 	}
 	

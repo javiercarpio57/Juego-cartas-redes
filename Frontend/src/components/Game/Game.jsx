@@ -3,10 +3,19 @@ import './Game.scss'
 
 import { Modal, Loader, Button } from 'rsuite'
 import Card from '../Card/Card.jsx'
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 
 const usuarios = ['Javi', 'Guille', 'Gustavo', 'Uri']
 const my_user = 'Javi'
+
+let cards = [
+    'guard','guard','guard','guard',
+    'guard','priest','priest','baron',
+    'baron','handmaid', 'handmaid','prince',
+    'prince','king','countess','princess'
+]
+
 export default class Game extends React.Component {
 	constructor (props) {
 		super(props)
@@ -19,6 +28,7 @@ export default class Game extends React.Component {
 		}
 
 		this.close = this.close.bind(this)
+		this.getNewCard = this.getNewCard.bind(this)
 	}
 
 	close () {
@@ -28,7 +38,39 @@ export default class Game extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log(this.props.location.state.client)
+		console.log(this.props.location.state.username);
+		console.log(this.props.location.state.puerto);
+		this.getNewCard()
+	}
+
+	getNewCard() {
+		const item = cards[Math.floor(Math.random() * cards.length)];
+		cards.splice(cards.indexOf(item), 1)
+
+		const temp_card = this.state.my_cards
+		temp_card.push({
+			is_enable: true,
+			name: item,
+		})
+
+		this.setState({
+			my_cards: temp_card
+		})
+		console.log(this.state.my_cards)
+		this.checkMyCards()
+	}
+
+	checkMyCards() {
+		let tmp_cards = this.state.my_cards
+		tmp_cards[0].is_enable = false
+
+		this.setState({
+			my_cards: tmp_cards
+		})
+	}
+
+	useCard() {
+
 	}
 
 	handleClick(){
@@ -40,12 +82,23 @@ export default class Game extends React.Component {
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
 				<div className='player-spot-horizontal'>
-					<Card name='guard' cardImagen='guard' me={true} users={usuarios} my_user={my_user} />
-					{/* <Button onClick={this.close} color="green" block>
+					{
+						my_cards.map((card, index) => {
+							return <Card key={card.name + '_'+ index}
+											name={card.name}
+											cardImagen={card.name} 
+											me={true}
+											users={usuarios}
+											my_user={my_user}
+											enable={card.is_enable}
+									/>
+						})
+					}
+					<Button onClick={this.getNewCard}>
 						Recibir carta
-					</Button> */}
-					{ <Card name='priest' cardImagen='priest' me={true} users={usuarios} my_user={my_user}/>
-					/*<Card name='baron' cardImagen='baron' me={true} users={usuarios} my_user={my_user} />
+					</Button>
+					{/* <Card name='priest' cardImagen='priest' me={true} users={usuarios} my_user={my_user} />
+					<Card name='baron' cardImagen='baron' me={true} users={usuarios} my_user={my_user} />
 					<Card name='handmaid' cardImagen='handmaid' me={true} users={usuarios} my_user={my_user} />
 					<Card name='prince' cardImagen='prince' me={true} users={usuarios} my_user={my_user} />
 					<Card name='king' cardImagen='king' me={true} users={usuarios} my_user={my_user} />
@@ -55,7 +108,7 @@ export default class Game extends React.Component {
 				<div className='spot-organization-horizontal'>
 					<div className='player-spot-vertical-left'>
 						<div className='player-2'>
-							<Card name = 'player2' cardImagen= 'unknown-card' me={false} />
+							<Card name = 'player2' cardImagen= 'unknown-card' enable={true} />
 						</div>
 						<div className='player-2-card-2'>
 							<Card name = 'player2' cardImagen= 'unknown-card' me={false} />
@@ -72,7 +125,7 @@ export default class Game extends React.Component {
 							<Card name = 'player4' cardImagen= 'unknown-card' />
 						</div>
 						<div className='player-4'>
-							<Card name = 'player4' cardImagen= 'unknown-card' />
+							<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
 						</div>
 					</div>
 				</div>
@@ -84,7 +137,7 @@ export default class Game extends React.Component {
 						<Card name = 'player3' cardImagen= 'unknown-card' />
 					</div>
 					<div className='player-3'>
-						<Card name = 'player3' cardImagen= 'unknown-card' />
+						<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
 					</div>
 				</div>
 
