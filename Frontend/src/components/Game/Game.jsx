@@ -16,6 +16,8 @@ let cards = [
     'prince','king','countess','princess'
 ]
 
+let client = null
+
 export default class Game extends React.Component {
 	constructor (props) {
 		super(props)
@@ -26,7 +28,7 @@ export default class Game extends React.Component {
 			my_cards: [],
 			discarded_cards: []
 		}
-
+		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
 		this.getNewCard = this.getNewCard.bind(this)
 	}
@@ -40,7 +42,34 @@ export default class Game extends React.Component {
 	componentDidMount() {
 		console.log("el username que vino a Game es "+this.props.location.state.username);
 		console.log("el puerto que vino a Game es "+this.props.location.state.puerto);
-		this.Unirse(this.props.location.state.puerto,this.props.location.state.username)
+		let usuario 
+		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
+		client = new W3CWebSocket(enlace, 'echo-protocol');
+		self = this
+		console.log('Se hizo click');
+		client.onopen = () => {
+			function EstablecerConexion() {
+				if (client.readyState === client.OPEN) {
+					let conectarmeASala = "conectarmeASala|"+self.props.location.state.username
+					client.send(conectarmeASala);
+				}
+			}
+			EstablecerConexion();
+	  };
+	  client.onclose = function() {
+		console.log('echo-protocol Client Closed');
+		};
+		client.onmessage = function(e) {
+			let mensaje= e.data
+			let entradaServer = mensaje.split("|");
+			if (typeof e.data === 'string') {
+				console.log("Del server: '" + e.data + "'");
+			}
+			if((entradaServer[0].localeCompare("conectado"))==0){
+				console.log("eres el cliente numero "+entradaServer[1]+" en entrar")
+			}
+		};
+		//this.Unirse(this.props.location.state.puerto,this.props.location.state.username)
 		this.getNewCard()
 	}
 
