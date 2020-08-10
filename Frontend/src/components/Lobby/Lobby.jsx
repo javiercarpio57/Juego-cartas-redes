@@ -110,7 +110,13 @@ export default class Lobby extends React.Component {
 		this.handleChange = this.handleChange.bind(this)
 		this.sendToServer = this.sendToServer.bind(this)
 		this.crearSala = this.crearSala.bind(this)
-		this.conectarse = this.conectarse.bind(this)		
+		this.conectarse = this.conectarse.bind(this)
+	}
+	
+	componentDidMount() {
+		this.setState({
+			username: this.props.match.params.name
+		})
 	}
 
 	close () {
@@ -172,7 +178,7 @@ export default class Lobby extends React.Component {
 	render(){
 		return (
 			<div className='background-wood'>
-				<h1 className='title-lobby'> LOBBY DE: {name}</h1>
+				<h1 className='title-lobby'> LOBBY DE: {this.state.username}</h1>
 				<div className='order-components'>
 					<Button size="lg" color='cyan' block onClick={this.crearSala}>Crear sala</Button>
 					<Button size="lg" color='green' block onClick={this.open}>Unirse a sala</Button>

@@ -40,7 +40,7 @@ export default class App extends React.Component {
                     </div>
                 </div>
                 <div className= 'buttonArea'>                    
-                    <Link  to="/lobby" onClick={this.handleClick}>
+                    <Link  to={{ pathname: `/lobby/${this.state.name}` }} onClick={this.handleClick}>
                         <ConfirmButton buttonname='Play'/>
                     </Link>
                     <div className='loveLetter'></div>

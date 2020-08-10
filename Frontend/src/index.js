@@ -10,7 +10,7 @@ const routing = (
     <Router>
         <div style={{height: '100%'}}>
             <Route exact path='/' component={App} />
-            <Route path='/lobby' component={Lobby} />
+            <Route exact path='/lobby/:name' component={Lobby} />
             <Route path='/game' component={Game} />
         </div>
     </Router>

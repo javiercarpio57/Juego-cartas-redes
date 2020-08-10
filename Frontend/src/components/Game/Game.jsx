@@ -24,12 +24,17 @@ export default class Game extends React.Component {
 		})
 	}
 
+
+
 	render() {
 		const { show, my_cards } = this.state
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
 				<div className='player-spot-horizontal'>
 					<Card name='guard' cardImagen='guard' me={true} users={usuarios} my_user={my_user} />
+					{/* <Button onClick={this.close} color="green" block>
+						Recibir carta
+					</Button> */}
 					{/* <Card name='priest' cardImagen='priest' me={true} users={usuarios} my_user={my_user} />
 					<Card name='baron' cardImagen='baron' me={true} users={usuarios} my_user={my_user} />
 					<Card name='handmaid' cardImagen='handmaid' me={true} users={usuarios} my_user={my_user} />
