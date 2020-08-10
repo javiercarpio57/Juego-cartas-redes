@@ -24,7 +24,9 @@ export default class Game extends React.Component {
 		})
 	}
 
-
+	componentDidMount() {
+		console.log(this.props.location.state.client)
+	}
 
 	render() {
 		const { show, my_cards } = this.state

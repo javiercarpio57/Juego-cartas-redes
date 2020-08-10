@@ -13,6 +13,11 @@ let nicknames = ["gusta", "uri", "javier", "lcest", "juan"]
 let username = ''
 
 // const history = useHistory()
+
+const cliente = {
+	name: 'Gusta gay',
+	codigo: '6'
+}
 export default class Lobby extends React.Component {
 	convertStrToBin(mensaje) {
 		let output = ""
@@ -117,6 +122,8 @@ export default class Lobby extends React.Component {
 		this.setState({
 			username: this.props.match.params.name
 		})
+
+		// console.log(this.props.location.client)
 	}
 
 	close () {
@@ -144,12 +151,18 @@ export default class Lobby extends React.Component {
 		this.setState({
 			show: false
 		})
-		this.props.history.push('/game')
+		this.props.history.push({
+			pathname: '/game',
+			state: { client: cliente }
+		});
 	}
 
 	crearSala () {
 		this.preguntar()
-		this.props.history.push('/game');
+		this.props.history.push({
+			pathname: '/game',
+			state: { client: cliente }
+		});
 	}
 	conectarse(puerto){
 		const client = new W3CWebSocket('ws://localhost:4201/', 'echo-protocol');
