@@ -9,6 +9,8 @@ let cont = 0;
 let puerto = ''
 let sockets = []
 let PORT = 4200
+let nicknames = ["gusta", "uri", "javier", "lcest", "juan"]
+let username = ''
 
 // const history = useHistory()
 export default class Lobby extends React.Component {
@@ -24,6 +26,11 @@ export default class Lobby extends React.Component {
 		let respuesta = parseInt(mensaje,2).toString(10);
 	}
 
+	componentDidMount(){
+		let rand = Math.floor(Math.random() * 5); 
+		username = nicknames[rand]
+
+	}
 	Unirse(puerto) {
 		let enlace = 'ws://localhost:'+puerto+'/'
 		const client = new W3CWebSocket(enlace, 'echo-protocol');
@@ -32,7 +39,7 @@ export default class Lobby extends React.Component {
 				console.log('Conexion establecida en el puerto'+puerto);
 				function EstablecerConexion() {
 					if (client.readyState === client.OPEN) {
-						let conectarmeASala = "conectarmeASala|URI"
+						let conectarmeASala = "conectarmeASala|"+username
 						client.send(conectarmeASala);
 					}
 				}
@@ -57,7 +64,8 @@ export default class Lobby extends React.Component {
 				console.log('WebSocket Client Connected');
 				function sendText() {
 					if (client.readyState === client.OPEN) {
-						client.send("dondeConecto|URI");
+						let conectarmeASala = "dondeConecto|"+username
+						client.send(conectarmeASala);
 					}
 				}
 				sendText();
