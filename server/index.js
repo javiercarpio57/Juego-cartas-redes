@@ -87,7 +87,8 @@ function crearSala(){
                 console.log("Esto es usuarios"+JSON.stringify(usuarios));
                 usuarios[puerto][usuariosIngresados] = temp;
                 console.log(usuarios)
-                connection.sendUTF(usuariosIngresados);
+                let mensaje = "conectado|"+usuariosIngresados
+                connection.sendUTF(mensaje);
             }
             else
             if(entradaCliente[0].localeCompare("play")==0){

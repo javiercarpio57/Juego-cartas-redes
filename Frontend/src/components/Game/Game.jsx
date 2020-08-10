@@ -63,9 +63,17 @@ export default class Game extends React.Component {
 			};
 			
 			client.onmessage = function(e) {
+				let mensaje= e.data
+				let entradaServer = mensaje.split("|");
 				if (typeof e.data === 'string') {
 					console.log("Del server: '" + e.data + "'");
 				}
+				if((entradaServer[0].localeCompare("conectado"))==0){
+					console.log("eres el cliente numero "+entradaServer[1]+" en entrar")
+				}
+				/*if((entradaServer[0].localeCompare("listo"))==0){
+					console.log("Se unieron 4")
+				}*/
 			};
 	  }
 
