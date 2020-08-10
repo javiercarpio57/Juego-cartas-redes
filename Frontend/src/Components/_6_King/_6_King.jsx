@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, SelectPicker, Button, Form, FormGroup, FormControl, ControlLabel } from 'rsuite'
 
-export default class _2_Priest extends React.Component {
+export default class _6_King extends React.Component {
 	constructor(props){
         super(props);
         this.state = {
@@ -50,7 +50,7 @@ export default class _2_Priest extends React.Component {
             <Modal show={this.state.show} onHide={this.close} onExited={this.close} size='xs' keyboard>
                 <Modal.Header>
                     <div style={{ textAlign: 'center' }}>
-                        <Modal.Title>PRIEST</Modal.Title>
+                        <Modal.Title>KING</Modal.Title>
                     </div>
                 </Modal.Header>
                 <Modal.Body>

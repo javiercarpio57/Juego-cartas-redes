@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, SelectPicker, Button, Form, FormGroup, FormControl, ControlLabel } from 'rsuite'
 
-export default class _2_Priest extends React.Component {
+export default class _5_Prince extends React.Component {
 	constructor(props){
         super(props);
         this.state = {
@@ -34,23 +34,21 @@ export default class _2_Priest extends React.Component {
     }
 	
 	render(){
-        const { my_user, users } = this.props
+        const { users } = this.props
 
         const all_users = []
         for (let i = 0; i < users.length; i++) {
-            if (my_user !== users[i]) {
-                all_users.push({
-                    label: users[i],
-                    value: users[i]
-                })
-            }
+            all_users.push({
+                label: users[i],
+                value: users[i]
+            })
         }
 
 		return (
             <Modal show={this.state.show} onHide={this.close} onExited={this.close} size='xs' keyboard>
                 <Modal.Header>
                     <div style={{ textAlign: 'center' }}>
-                        <Modal.Title>PRIEST</Modal.Title>
+                        <Modal.Title>PRINCE</Modal.Title>
                     </div>
                 </Modal.Header>
                 <Modal.Body>

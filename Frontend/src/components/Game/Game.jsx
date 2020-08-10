@@ -12,7 +12,8 @@ export default class Game extends React.Component {
 		super(props)
 
 		this.state = {
-			show: true
+			show: true,
+			my_cards: []
 		}
 		this.close = this.close.bind(this)
 	}
@@ -24,12 +25,18 @@ export default class Game extends React.Component {
 	}
 
 	render() {
-		const { show } = this.state
+		const { show, my_cards } = this.state
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
 				<div className='player-spot-horizontal'>
 					<Card name='guard' cardImagen='guard' me={true} users={usuarios} my_user={my_user} />
-					<Card name='priest' cardImagen='priest' me={true} users={usuarios} my_user={my_user} />
+					{/* <Card name='priest' cardImagen='priest' me={true} users={usuarios} my_user={my_user} />
+					<Card name='baron' cardImagen='baron' me={true} users={usuarios} my_user={my_user} />
+					<Card name='handmaid' cardImagen='handmaid' me={true} users={usuarios} my_user={my_user} />
+					<Card name='prince' cardImagen='prince' me={true} users={usuarios} my_user={my_user} />
+					<Card name='king' cardImagen='king' me={true} users={usuarios} my_user={my_user} />
+					<Card name='countess' cardImagen='countess' me={true} users={usuarios} my_user={my_user} />
+					<Card name='princess' cardImagen='princess' me={true} users={usuarios} my_user={my_user} /> */}
 				</div>
 				<div className='spot-organization-horizontal'>
 					<div className='player-spot-vertical'>
