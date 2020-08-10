@@ -32,7 +32,8 @@ export default class Lobby extends React.Component {
 				console.log('Conexion establecida en el puerto'+puerto);
 				function EstablecerConexion() {
 					if (client.readyState === client.OPEN) {
-						client.send("conectarmeASala");
+						let conectarmeASala = "conectarmeASala|URI"
+						client.send(conectarmeASala);
 					}
 				}
 				EstablecerConexion();
@@ -56,7 +57,7 @@ export default class Lobby extends React.Component {
 				console.log('WebSocket Client Connected');
 				function sendText() {
 					if (client.readyState === client.OPEN) {
-						client.send("dondeConecto");
+						client.send("dondeConecto|URI");
 					}
 				}
 				sendText();
