@@ -2,13 +2,8 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 
-const usuarios = {
-    user1: "",
-    user2: "",
-    user3: "",
-    user4: ""
-}
-
+let usuarios = []
+let listaUsuarios = []
 let cont = 0;
 let servidores = []
 let sockets = []
@@ -54,7 +49,7 @@ function crearSala(){
     sockets[turno].on('request', function(request) {
         if (!originIsAllowed(request.origin)) {
           // Make sure we only accept requests from an allowed origin
-          request.reject();
+          request.reject(); 
           console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
           return;
         }
@@ -63,46 +58,27 @@ function crearSala(){
         connection.on('message', function(message) {
             console.log("El mensaje ingresado es "+message.utf8Data);
             let mensaje = message.utf8Data
-            /*if (message.type === 'utf8') {
-                console.log("vamos a ejecutar el crear room")
-                connection.sendUTF(turno.toString());
-            }
-            else if (message.type === 'binary') {
-                console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-                connection.sendBytes(message.binaryData);
-            }*/
-            if(mensaje.localeCompare("dondeConecto")==0){
+            let entradaCliente = mensaje.split("|");
+            console.log("holaaaaaaaaaaaaa")
+            console.log(entradaCliente)
+            console.log(entradaCliente[0])
+            console.log(entradaCliente[1])
+            // instruccion | username | target 
+            if(entradaCliente[0].localeCompare("dondeConecto")==0){
                 console.log("entro a preguntar y el valor de cont es: "+cont);
                 cont++;
                 nuevopuerto = PORT+cont;
                 connection.sendUTF(nuevopuerto.toString());
                 crearSala();
-                // servidores[cont] = http.createServer(function(request, response) {
-                //     console.log((new Date()) + ' Received request for ' + request.url);
-                //     response.writeHead(404);
-                //     response.end();
-                // });
-                // let puerto = PORT + cont
-                // servidores[cont].listen(puerto,function() {
-                //     console.log((new Date()) + ' Server is listening on port '+puerto.toString());
-                // });
-                // sockets[cont] = new WebSocketServer({
-                //     httpServer: servidores[cont],
-                //     autoAcceptConnections: false
-                // });
-
-                // usuariosIngresados++;
-                // console.log("el contador va "+puerto);
-                // console.log("vamos a ejecutar el crear room")
-                // connection.sendUTF(puerto.toString());
-                // console.log("servidores: "+servidores);
-                // console.log("sockets "+sockets);
-                //codigo para crear room
+                
             }else
-            if(mensaje.localeCompare("conectarmeASala")==0){
+            if(entradaCliente[0].localeCompare("conectarmeASala")==0){
                 console.log("Me he conectado exitosamente "+":"+puerto);
                 usuariosIngresados++;
-                usuarios[cont][usuariosIngresados-1] = "pepe";
+                //console.log(turno)
+                usuarios.push([entradaCliente[1]])
+                //listaUsuarios.push(usuarios)
+                console.log(usuarios)
                 connection.sendUTF(usuariosIngresados);
             }
         });
