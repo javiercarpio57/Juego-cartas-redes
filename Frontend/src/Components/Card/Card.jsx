@@ -8,6 +8,8 @@ import _6_King from '../_6_King/_6_King.jsx'
 import _7_Countess from '../_7_Countess/_7_Countess.jsx'
 import _8_Princess from '../_8_Princess/_8_Princess.jsx'
 
+var discardedCards = []
+
 export default class Card extends React.Component {
 	constructor(props){
 		super(props);
@@ -22,6 +24,7 @@ export default class Card extends React.Component {
 				playingCard: name
 			})
 		}
+		discardedCards.push(this.props)
 	}
 
 	playGuard(usuario_seleccionado, carta_seleccionada) {
@@ -41,7 +44,7 @@ export default class Card extends React.Component {
 	}
 	
 	playPrince(usuario_seleccionado) {
-		console.log('PRICE:', usuario_seleccionado)
+		console.log('PRINCE:', usuario_seleccionado)
 	}
 
 	playKing(usuario_seleccionado) {

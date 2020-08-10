@@ -84,17 +84,37 @@
 .player-spot-horizontal {
     width: 40%;
     height: 27%;
-    display: flex;
+    display: grid;
     align-items: center;
     justify-content: space-around;
+    grid-template-columns: 20% 20% 60%;
 }
 
-.player-spot-vertical {
-    height: 125%;
-    width: 13%;
-    display: flex;
+.player-spot-horizontal-top {
+    width: 40%;
+    height: 27%;
+    display: grid;
     align-items: center;
     justify-content: space-around;
+    grid-template-columns: 60% 20% 20%;
+}
+
+.player-spot-vertical-left {
+    height: 125%;
+    width: 13%;
+    display: grid;
+    align-items: center;
+    justify-content: space-around;
+    grid-template-rows: 20% 20% 60%;
+}
+
+.player-spot-vertical-right {
+    height: 125%;
+    width: 13%;
+    display: grid;
+    align-items: center;
+    justify-content: space-around;
+    grid-template-rows: 60% 20% 20%;
 }
 
 .spot-organization-vertical {
@@ -113,6 +133,49 @@
     align-items: center;
 }
 
+.center-pile-cards{
+    position: absolute;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    width: 145px;
+    height: 200px;
+    margin-bottom: 325px;
+    background-image: url(../../images/backCard.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position-x: center;
+}
+
+.player-2-card-2{
+    transform: rotate(90deg);
+}
+
+.player-3-card-2{
+    transform: rotate(180deg);
+}
+
+.player-4-card-2{
+    transform: rotate(270deg);
+}
+
+
+.discard-pile-player-2{
+    transform: rotate(90deg);
+}
+
+.discard-pile-player-3{
+    transform: rotate(180deg);
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.discard-pile-player-4{
+    transform: rotate(270deg);
+    justify-content: end;
+}
+
 .max-height {
     height: 100%;
 }
@@ -128,3 +191,5 @@
 .player-4 {
     transform: rotate(270deg);
 }
+
+
