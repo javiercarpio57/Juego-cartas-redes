@@ -32,7 +32,8 @@ export default class Lobby extends React.Component {
 				console.log('Conexion establecida en el puerto'+puerto);
 				function EstablecerConexion() {
 					if (client.readyState === client.OPEN) {
-						client.send("conectarmeASala");
+						let conectarmeASala = "conectarmeASala|URI"
+						client.send(conectarmeASala);
 					}
 				}
 				EstablecerConexion();
@@ -56,7 +57,7 @@ export default class Lobby extends React.Component {
 				console.log('WebSocket Client Connected');
 				function sendText() {
 					if (client.readyState === client.OPEN) {
-						client.send("dondeConecto");
+						client.send("dondeConecto|URI");
 					}
 				}
 				sendText();
@@ -93,15 +94,15 @@ export default class Lobby extends React.Component {
 
 		this.state = {
 			show: false,
-			codigoSala: ''
+			codigoSala: '',
+			username: ''
 		}
 		this.close = this.close.bind(this)
 		this.open = this.open.bind(this)
 		this.handleChange = this.handleChange.bind(this)
 		this.sendToServer = this.sendToServer.bind(this)
 		this.crearSala = this.crearSala.bind(this)
-		this.conectarse = this.conectarse.bind(this)
-		
+		this.conectarse = this.conectarse.bind(this)		
 	}
 
 	close () {
@@ -163,7 +164,7 @@ export default class Lobby extends React.Component {
 	render(){
 		return (
 			<div className='background-wood'>
-				<h1 className='title-lobby'>Lobby</h1>
+				<h1 className='title-lobby'> LOBBY DE: {name}</h1>
 				<div className='order-components'>
 					<Button size="lg" color='cyan' block onClick={this.crearSala}>Crear sala</Button>
 					<Button size="lg" color='green' block onClick={this.open}>Unirse a sala</Button>

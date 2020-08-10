@@ -4,31 +4,38 @@ import { Modal, SelectPicker, Button, Form, FormGroup, FormControl, ControlLabel
 const cards = [
     {
         label: 'Priest',
-        value: 'Priest'
+        value: 'Priest',
+        cardValue: '2'
     },
     {
         label: 'Baron',
-        value: 'Baron'
+        value: 'Baron',
+        cardValue: '3'
     },
     {
         label: 'Handmaid',
-        value: 'Handmaid'
+        value: 'Handmaid',
+        cardValue: '4'
     },
     {
         label: 'Prince',
-        value: 'Prince'
+        value: 'Prince',
+        cardValue: '5'
     },
     {
         label: 'King',
-        value: 'King'
+        value: 'King',
+        cardValue: '6'
     },
     {
         label: 'Countess',
-        value: 'Countess'
+        value: 'Countess',
+        cardValue: '7'
     },
     {
         label: 'Princess',
-        value: 'Princess'
+        value: 'Princess',
+        cardValue: '8'
     }
 ]
 export default class _1_Guard extends React.Component {
