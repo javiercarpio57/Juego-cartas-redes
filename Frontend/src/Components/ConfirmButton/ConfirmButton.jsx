@@ -8,11 +8,11 @@ export default class ConfirmButton extends React.Component {
 	}
 	
 	render(){
-		const {name} = this.props
+		const {buttonname} = this.props
 
 		return (
 			<div className= 'buttonStyle'>
-				<Button className= 'button'> { name } </Button>
+				<Button className= 'button'> { buttonname } </Button>
 			</div>
 		)
 	}
