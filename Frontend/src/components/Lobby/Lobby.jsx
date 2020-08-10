@@ -8,7 +8,7 @@ const numberInput = { width: '50%' };
 let cont = 0;
 let puerto = ''
 let sockets = []
-let PORT = 4200
+var port = ''
 //let nicknames = ["gusta", "uri", "javier", "lcest", "juan"]
 //let username = ''
 
@@ -57,7 +57,7 @@ export default class Lobby extends React.Component {
 	  }
 	  
 
-	  preguntar(username) {
+	preguntar(username) {
 		const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
 		console.log('Se hizo click en crear sala');
 			client.onopen = () => {
@@ -69,14 +69,15 @@ export default class Lobby extends React.Component {
 					}
 				}
 				sendText();
-		  };
+		    };
 		    setTimeout(function(){
 			   
 				setTimeout(function(){
-					console.log("puerto es"+puerto);
-					this.Unirse(puerto,username)
+					console.log("puerto es "+port);
+					console.log("usuario es "+username);
+					this.Unirse(port,username)
 					
-				}.bind(this), 5000);
+				}.bind(this), 100);
 			   
 				client.close()
 			}.bind(this), 5000);
@@ -89,10 +90,14 @@ export default class Lobby extends React.Component {
 			client.onmessage = function(e) {
 				if (typeof e.data === 'string') {
 					console.log("Del server: '" + e.data + "'");
-					puerto = e.data
+					port = e.data
 				}
 			};
 		cont += 1
+		setTimeout(function(){   
+			console.log("antes del return tenemoooos: "+port)
+			return port
+		}.bind(this), 5000);
 	  }
 
 	
@@ -144,6 +149,7 @@ export default class Lobby extends React.Component {
 		this.setState({
 			show: false
 		})
+		
 		this.props.history.push({
 			pathname: '/game',
 			state: { 
@@ -154,15 +160,25 @@ export default class Lobby extends React.Component {
 	}
 
 	crearSala () {
-		this.preguntar(this.state.username)
+		port = this.preguntar(this.state.username)
+		
+		
+		
 		// TO DO: del server debemos devolvernos el puerto en el cual nos conectamos
-		this.props.history.push({
-			pathname: '/game',
-			state: { 
-				username: this.state.username,
-				puerto: this.state.codigoSala
-			}
-		});
+		setTimeout(function(){   
+			console.log("Mandando este username desde Lobby: "+this.state.username)
+			console.log("Mandando este puerto desde Lobby: "+port)
+			this.props.history.push({
+				pathname: '/game',
+				state: { 
+					username: this.state.username,
+					puerto: port
+				}
+			});	 
+		}.bind(this), 12000);
+		  
+
+		
 	}
 	
 	render(){

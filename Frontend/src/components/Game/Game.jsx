@@ -38,8 +38,8 @@ export default class Game extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log(this.props.location.state.username);
-		console.log(this.props.location.state.puerto);
+		console.log("el username que vino a Game es "+this.props.location.state.username);
+		console.log("el puerto que vino a Game es "+this.props.location.state.puerto);
 		this.getNewCard()
 	}
 
