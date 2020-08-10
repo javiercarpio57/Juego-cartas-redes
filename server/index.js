@@ -68,13 +68,13 @@ function crearSala(){
                 console.log("Me he conectado exitosamente "+":"+puerto);
                 usuariosIngresados++;
                 let temp = {}
-                temp[usuariosIngresados] = {
+                temp = {
                     "username": entradaCliente[1],
                     "cartas": []
                 }
                 console.log("Mira temp"+JSON.stringify(temp));
                 console.log("Esto es usuarios"+JSON.stringify(usuarios));
-                usuarios[puerto].append(temp);
+                usuarios[puerto][usuariosIngresados] = temp;
                 console.log(usuarios)
                 connection.sendUTF(usuariosIngresados);
             }
