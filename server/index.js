@@ -2,12 +2,10 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 
-let usuarios = []
-let listaUsuarios = []
 let cont = 0;
 let servidores = []
 let sockets = []
-let clientes = []
+let usuarios = {}
 let PORT = 4200
 
 function originIsAllowed(origin) {
@@ -30,13 +28,13 @@ function crearSala(){
     console.log("He llegado de nuevo a crear sala")
     let usuariosIngresados = 0;
     let turno = cont;
-    console.log("Esto esta en turno"+turno);
+    let puerto = PORT + turno
+    usuarios[puerto] = []
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
         response.writeHead(404);
         response.end();
     });
-    let puerto = PORT + turno
     servidores[turno].listen(puerto,function() {
         console.log((new Date()) + ' Server is listening on port '+puerto.toString());
     });
@@ -44,8 +42,6 @@ function crearSala(){
         httpServer: servidores[turno],
         autoAcceptConnections: false
     });
-    console.log("Ha llegado aqui a esta parte");
-    clientes[cont] = []
     sockets[turno].on('request', function(request) {
         if (!originIsAllowed(request.origin)) {
           // Make sure we only accept requests from an allowed origin
@@ -59,10 +55,6 @@ function crearSala(){
             console.log("El mensaje ingresado es "+message.utf8Data);
             let mensaje = message.utf8Data
             let entradaCliente = mensaje.split("|");
-            console.log("holaaaaaaaaaaaaa")
-            console.log(entradaCliente)
-            console.log(entradaCliente[0])
-            console.log(entradaCliente[1])
             // instruccion | username | target 
             if(entradaCliente[0].localeCompare("dondeConecto")==0){
                 console.log("entro a preguntar y el valor de cont es: "+cont);
@@ -75,9 +67,7 @@ function crearSala(){
             if(entradaCliente[0].localeCompare("conectarmeASala")==0){
                 console.log("Me he conectado exitosamente "+":"+puerto);
                 usuariosIngresados++;
-                //console.log(turno)
-                usuarios.push([entradaCliente[1]])
-                //listaUsuarios.push(usuarios)
+                usuarios[puerto].push(entradaCliente[1]);
                 console.log(usuarios)
                 connection.sendUTF(usuariosIngresados);
             }
