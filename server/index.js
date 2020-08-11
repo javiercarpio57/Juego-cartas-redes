@@ -112,7 +112,7 @@ function crearSala(){
                 shuffle(cartaServer)
                 var stack = []; 
                 cartaServer.forEach(carta=>stack.push(carta))
-                let mensaje  = ''
+                let mensaje  = 'cartas|'
                 for(i=1; i<=4; i++ ){
                     let card = stack.pop()
                     mensaje = mensaje.concat(i+"|"+card+"|")

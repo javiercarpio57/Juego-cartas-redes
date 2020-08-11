@@ -12,12 +12,22 @@ var port = ''
 //let nicknames = ["gusta", "uri", "javier", "lcest", "juan"]
 //let username = ''
 
-
-const cliente = {
-	name: 'Gusta gay',
-	codigo: '6'
-}
 export default class Lobby extends React.Component {
+	constructor(props) {
+		super(props)
+	
+		this.state = {
+			show: false,
+			codigoSala: '',
+			username: ''
+		}
+		this.close = this.close.bind(this)
+		this.open = this.open.bind(this)
+		this.handleChange = this.handleChange.bind(this)
+		this.sendToServer = this.sendToServer.bind(this)
+		this.crearSala = this.crearSala.bind(this)
+	}
+
 	convertStrToBin(mensaje) {
 		let output = ""
 		for (let i = 0; i < mensaje.length; i++) {
@@ -30,62 +40,42 @@ export default class Lobby extends React.Component {
 		let respuesta = parseInt(mensaje,2).toString(10);
 	}
 
-	
-	  
-
 	preguntar(username) {
 		const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
 		console.log('Se hizo click en crear sala');
-			client.onopen = () => {
-				console.log('WebSocket Client Connected');
-				function sendText() {
-					if (client.readyState === client.OPEN) {
-						let conectarmeASala = "dondeConecto|"+username
-						client.send(conectarmeASala);
-					}
+		client.onopen = () => {
+			console.log('WebSocket Client Connected');
+			function sendText() {
+				if (client.readyState === client.OPEN) {
+					let conectarmeASala = "dondeConecto|"+username
+					client.send(conectarmeASala);
 				}
-				sendText();
-		    };
-		    setTimeout(function(){
+			}
+			sendText();
+		};
+		setTimeout(function(){
+	
+			client.close()
+		}.bind(this), 5000);
 		
-				client.close()
-			}.bind(this), 5000);
-			
-		  
-		    client.onclose = function() {
-			console.log('echo-protocol Client Closed');
-			};
-			
-			client.onmessage = function(e) {
-				if (typeof e.data === 'string') {
-					console.log("Del server: '" + e.data + "'");
-					port = e.data
-				}
-			};
+		
+		client.onclose = function() {
+		console.log('echo-protocol Client Closed');
+		};
+		
+		client.onmessage = function(e) {
+			if (typeof e.data === 'string') {
+				console.log("Del server: '" + e.data + "'");
+				port = e.data
+			}
+		};
 		cont += 1
 		setTimeout(function(){   
 			console.log("antes del return tenemoooos: "+port)
 			return port
 		}.bind(this), 5000);
-	  }
-
-	
-
-	constructor(props) {
-		super(props)
-
-		this.state = {
-			show: false,
-			codigoSala: '',
-			username: ''
-		}
-		this.close = this.close.bind(this)
-		this.open = this.open.bind(this)
-		this.handleChange = this.handleChange.bind(this)
-		this.sendToServer = this.sendToServer.bind(this)
-		this.crearSala = this.crearSala.bind(this)
-		
 	}
+
 	
 	componentDidMount() {
 		this.setState({
