@@ -40,6 +40,7 @@ function crearSala(){
     let turno = cont;
     let puerto = PORT + turno
     let cartaServer = cards
+    let socketsClients = []
     usuarios[puerto] = {}
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
@@ -61,6 +62,7 @@ function crearSala(){
           return;
         }
         var connection = request.accept('echo-protocol', request.origin);
+        socketsClients.push(connection);
         console.log((new Date()) + ' Connection accepted.');
         connection.on('message', function(message) {
             console.log("El mensaje ingresado es "+message.utf8Data);
@@ -101,10 +103,26 @@ function crearSala(){
                     //connection.sendUTF(i+"|"+cartaServer.pop);
                     let card = stack.pop()
                     console.log(i+" | "+card)
+                    //console.log("Esto esta usuarios"+JSON.stringify(usuarios[puerto]));
                 }
+
             }else
-            if(entradaCliente[0].localeCompare("PRUEBA")==0){
-                console.log("funcionaaaaaaaaaaaaaa")
+            if(entradaCliente[0].localeCompare("iniciar")==0){
+                console.log("entro al if")
+                shuffle(cartaServer)
+                var stack = []; 
+                cartaServer.forEach(carta=>stack.push(carta))
+                let mensaje  = ''
+                for(i=1; i<=4; i++ ){
+                    let card = stack.pop()
+                    mensaje = mensaje.concat(i+"|"+card+"|")
+                    console.log(mensaje)
+                    //connection.sendUTF(mensaje);
+                    //console.log(i+" | "+card)
+                }
+                socketsClients.forEach(function(client){
+                    client.sendUTF(mensaje);
+                })
             }
         });
         connection.on('close', function(reasonCode, description) {
