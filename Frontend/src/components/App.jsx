@@ -38,6 +38,8 @@ export default class App extends React.Component {
 
         return (
             <div className= 'main'>
+                <div className='loveLetter'></div>
+
                 <div className= 'inputArea'>
                     <div className= 'inputField'>
                         <InputGroup style={styles}>
@@ -51,11 +53,12 @@ export default class App extends React.Component {
                         </InputGroup>
                     </div>
                 </div>
+
                 <div className= 'buttonArea'>                    
                     <Link  to={{ pathname: `/lobby/${this.state.name}` }} onClick={this.handleClick}>
                         <ConfirmButton buttonname='Play'/>
                     </Link>
-                    <div className='loveLetter'></div>
+                    
                 </div>                
             </div>
         )
