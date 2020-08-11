@@ -17,23 +17,10 @@ const cards = [
 function shuffle(array) {
     array.sort(() => Math.random() - 0.5);
 }
-
 function originIsAllowed(origin) {
     // put logic here to detect whether the specified origin is allowed.
     return true;
   }
-function convertStrToBin(mensaje) {
-    let output = ""
-    for (let i = 0; i < mensaje.length; i++) {
-        output += input[i].charCodeAt(0).toString(2) + " ";
-    }
-    return output
-}
-
-function convertBinToStr(mensaje){
-    let respuesta = parseInt(mensaje,2).toString(10);
-}
-
 function crearSala(){
     console.log("He llegado de nuevo a crear sala")
     let usuariosIngresados = 0;
@@ -44,6 +31,7 @@ function crearSala(){
     usuarios[puerto] = {}
     shuffle(cartaServer)
     let stack = []; 
+    let personas = 'usuarios|'
     cartaServer.forEach(carta=>stack.push(carta))
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
@@ -67,6 +55,7 @@ function crearSala(){
         var connection = request.accept('echo-protocol', request.origin);
         socketsClients.push(connection);
         console.log((new Date()) + ' Connection accepted.');
+
         connection.on('message', function(message) {
             console.log("El mensaje ingresado es "+message.utf8Data);
             let mensaje = message.utf8Data
@@ -81,8 +70,13 @@ function crearSala(){
                 
             }else
             if(entradaCliente[0].localeCompare("conectarmeASala")==0){
-                console.log("Me he conectado exitosamente "+":"+puerto);
                 usuariosIngresados++;
+
+                personas = personas+usuariosIngresados+"|"+entradaCliente[1]+"|"
+                
+                console.log("Me he conectado exitosamente "+":"+puerto);
+                
+                console.log("personas conectadas "+personas)
                 let temp = {}
                 temp = {
                     "username": entradaCliente[1],
@@ -94,13 +88,15 @@ function crearSala(){
                 console.log(usuarios)
                 let mensaje = "conectado|"+usuariosIngresados
                 connection.sendUTF(mensaje);
-                //console.log(stack)
-                    //connection.sendUTF(i+"|"+cartaServer.pop);
                 let card = stack.pop();
                 let indice = usuariosIngresados.toString();
                 console.log("inice"+indice);
                 usuarios[puerto][indice]["cartas"].push(card)
                 console.log("Esto esta usuarios"+JSON.stringify(usuarios));
+
+                socketsClients.forEach(function(client){
+                    client.sendUTF(personas);
+                })
 
             }else
             if(entradaCliente[0].localeCompare("iniciar")==0){
@@ -109,10 +105,9 @@ function crearSala(){
                 for(i=1; i<=4; i++ ){
                     let card = stack.pop()
                     mensaje = mensaje.concat(i+"|"+card+"|")
-                    console.log(mensaje)
-                    //connection.sendUTF(mensaje);
-                    //console.log(i+" | "+card)
+                    
                 }
+                console.log(mensaje)
                 socketsClients.forEach(function(client){
                     client.sendUTF(mensaje);
                 })

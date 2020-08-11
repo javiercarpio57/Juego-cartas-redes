@@ -93,46 +93,20 @@ export default class Game extends React.Component {
 			}
 			if (entradaServer[0].localeCompare('cartas') === 0) {
 				const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
+				console.log("tu carta es", mi_carta)
 				self.setState({
 					show: false
 				})
 				self.getNewCard(mi_carta)
 			}
+			if (entradaServer[0].localeCompare('usuarios') === 0) {
+				console.log("probando",mensaje)
+			}
+			
 		};
 	}
 
-	// Unirse(puerto,username) {
-	// 	let enlace = 'ws://localhost:'+puerto+'/'
-	// 	const client = new W3CWebSocket(enlace, 'echo-protocol');
-	// 	console.log('Se hizo click');
-	// 		client.onopen = () => {
-	// 			console.log('Conexion establecida en el puerto'+puerto);
-	// 			function EstablecerConexion() {
-	// 				if (client.readyState === client.OPEN) {
-	// 					let conectarmeASala = "conectarmeASala|"+username
-	// 					client.send(conectarmeASala);
-	// 				}
-	// 			}
-	// 			EstablecerConexion();
-	// 	  };
-	// 	client.onclose = function() {
-	// 		console.log('echo-protocol Client Closed');
-	// 	};
-		
-	// 	client.onmessage = function(e) {
-	// 		let mensaje= e.data
-	// 		let entradaServer = mensaje.split("|");
-	// 		if (typeof e.data === 'string') {
-	// 			console.log("Del server UNIRSE: '" + e.data + "'");
-	// 		}
-	// 		if((entradaServer[0].localeCompare("conectado"))==0){
-	// 			console.log("eres el cliente numero "+entradaServer[1]+" en entrar")
-	// 		}
-	// 		/*if((entradaServer[0].localeCompare("listo"))==0){
-	// 			console.log("Se unieron 4")
-	// 		}*/
-	// 	};
-	//   }
+	
 
 	getNewCard(newCard) {
 		const item = newCard
