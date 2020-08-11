@@ -63,7 +63,7 @@ export default class Game extends React.Component {
 		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
 		client = new W3CWebSocket(enlace, 'echo-protocol');
 
-		console.log('Se hizo click');
+		//console.log('Se hizo click');
 		
 		client.onopen = () => {
 			function EstablecerConexion() {
@@ -80,11 +80,12 @@ export default class Game extends React.Component {
 		client.onmessage = function(e) {
 			let mensaje= e.data
 			let entradaServer = mensaje.split("|");
+			console.log(entradaServer)
 			if (typeof e.data === 'string') {
-				console.log("Del server DIDMOUNT: '" + e.data + "'");
+				console.log("El Server Manda: '" + e.data + "'");
 			}
 			if((entradaServer[0].localeCompare("conectado"))==0){
-				console.log("eres el cliente numero "+entradaServer[1]+" en entrar")
+				console.log("Eres el cliente numero "+entradaServer[1]+" en entrar")
 				my_code = entradaServer[1]
 
 				self.setState({
@@ -93,14 +94,18 @@ export default class Game extends React.Component {
 			}
 			if (entradaServer[0].localeCompare('cartas') === 0) {
 				const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
-				console.log("tu carta es", mi_carta)
+				console.log("Tu carta es", mi_carta)
 				self.setState({
 					show: false
 				})
 				self.getNewCard(mi_carta)
 			}
 			if (entradaServer[0].localeCompare('usuarios') === 0) {
-				console.log("probando",mensaje)
+				console.log("Lista de Usuarios conectados")
+				let i = 0
+				for(i = 1; i<(entradaServer.length)-1; i=i+2){
+					console.log("ID: "+entradaServer[i]+" Username: "+entradaServer[i+1])
+				}
 			}
 			
 		};
