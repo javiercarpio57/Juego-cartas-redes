@@ -107,7 +107,10 @@ export default class Game extends React.Component {
 					console.log("ID: "+entradaServer[i]+" Username: "+entradaServer[i+1])
 				}
 			}
-			
+			if (entradaServer[0].localeCompare('chatc') === 0) {
+				console.log("Mensaje para broadcast")
+				console.log("Usuario: "+entradaServer[1]+"mensaje: "+entradaServer[2]);
+			}
 		};
 	}
 
@@ -167,6 +170,7 @@ export default class Game extends React.Component {
 		//Send to Server chat
 		console.log(event.target.value)
 		this.setState({lastMessage: event.target.value})
+		client.send(this.state.lastMessage);
 		//Clean box
 		event.target.value = ''
 	}

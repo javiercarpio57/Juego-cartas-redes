@@ -109,6 +109,14 @@ function crearSala() {
                 socketsClients.forEach(function (client) {
                     client.sendUTF(repartoInicial);
                 })
+            }else
+            if (entradaCliente[0].localeCompare("chat") == 0) {
+                let usuarioMensaje = entradaCliente[1];
+                let mensaje = entradaCliente[2];
+                let mensajeAEnviar = "chatc|"+usuarioMensaje+": "+mensaje
+                socketsClients.forEach(function (client) {
+                    client.sendUTF(mensajeAEnviar);
+                })
             }
         });
         connection.on('close', function (reasonCode, description) {
