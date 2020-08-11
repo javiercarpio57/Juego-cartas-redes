@@ -20,6 +20,8 @@ const has_to_play_other = ['guard', 'priest', 'baron', 'handmaid', 'princess']
 const has_to_play_countess = ['prince', 'king']
 
 let client = null
+let is_host = false
+let puertoCodigo = ''
 
 export default class Game extends React.Component {
 	constructor (props) {
@@ -50,7 +52,10 @@ export default class Game extends React.Component {
 	componentDidMount() {
 		console.log("el username que vino a Game es "+this.props.location.state.username);
 		console.log("el puerto que vino a Game es "+this.props.location.state.puerto);
-		let usuario 
+
+		puertoCodigo = this.props.location.state.puerto
+		is_host = this.props.location.state.es_host
+
 		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
 		client = new W3CWebSocket(enlace, 'echo-protocol');
 		self = this
@@ -232,19 +237,44 @@ export default class Game extends React.Component {
 
 				<Modal show={show}>
 					<Modal.Header closeButton={false}>
-						<Modal.Title>¿Todos los jugadores están unidos?</Modal.Title>
+						{
+							is_host ?
+							<Modal.Title>¿Todos los jugadores están unidos?</Modal.Title>
+								:
+							<Modal.Title>Esperando que el host inicie la partida</Modal.Title>
+						}
 					</Modal.Header>
 					<Modal.Body>
-						<div style={{ textAlign: 'center' }}>
-							<Loader size="md" />
+						<div>
+							{
+								is_host ?
+								<div style={{ width: '100%'}}>
+									<h5>Invita a tus amigos.</h5>
+									<div style={{textAlign: 'center'}}>
+										<h6>Código: {puertoCodigo}</h6>
+										<br />
+									</div>
+								</div>
+									:
+								null
+							}
+							<div style={{ textAlign: 'center' }}>
+								<Loader size="md" />
+							</div>
 						</div>
 					</Modal.Body>
 					<Modal.Footer>
-						<div className='modal-buttons'>
-							<Button onClick={this.close} color="green" block>
-								Play
-							</Button>
-						</div>
+						{
+							is_host
+								?
+							<div className='modal-buttons'>
+								<Button onClick={this.close} color="green" block>
+									Play
+								</Button>
+							</div>
+								:
+							null							
+						}
 					</Modal.Footer>
 				</Modal>
 			</div>

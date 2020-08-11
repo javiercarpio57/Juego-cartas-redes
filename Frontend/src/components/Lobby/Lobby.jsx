@@ -12,7 +12,6 @@ var port = ''
 //let nicknames = ["gusta", "uri", "javier", "lcest", "juan"]
 //let username = ''
 
-// const history = useHistory()
 
 const cliente = {
 	name: 'Gusta gay',
@@ -124,7 +123,8 @@ export default class Lobby extends React.Component {
 			pathname: '/game',
 			state: { 
 				username: this.state.username, 
-				puerto: this.state.codigoSala
+				puerto: this.state.codigoSala,
+				es_host: false
 			}
 		});
 	}
@@ -140,13 +140,11 @@ export default class Lobby extends React.Component {
 				pathname: '/game',
 				state: { 
 					username: this.state.username,
-					puerto: port
+					puerto: port,
+					es_host: true
 				}
 			});	 
 		}.bind(this), 12000);
-		  
-
-		
 	}
 	
 	render(){
