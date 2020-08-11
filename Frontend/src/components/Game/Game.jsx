@@ -39,15 +39,15 @@ export default class Game extends React.Component {
 	}
 
 	close () {
-		this.setState({
-			show: false
-		})
-		if (client.readyState === client.OPEN) {
-			let conectarmeASala = "PRUEBA|"
-			client.send(conectarmeASala);
-		}
+        this.setState({
+            show: false
+        })
+        if (client.readyState === client.OPEN) {
+            let conectarmeASala = "iniciar"
+            client.send(conectarmeASala);
+        }
 
-	}
+    }
 
 	componentDidMount() {
 		console.log("el username que vino a Game es "+this.props.location.state.username);
