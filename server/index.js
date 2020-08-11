@@ -42,6 +42,9 @@ function crearSala(){
     let cartaServer = cards
     let socketsClients = []
     usuarios[puerto] = {}
+    shuffle(cartaServer)
+    let stack = []; 
+    cartaServer.forEach(carta=>stack.push(carta))
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
         response.writeHead(404);
@@ -91,27 +94,17 @@ function crearSala(){
                 console.log(usuarios)
                 let mensaje = "conectado|"+usuariosIngresados
                 connection.sendUTF(mensaje);
-
-
-                shuffle(cartaServer)
-                //console.log(cartaServer)
-                var stack = []; 
-                //stack.push(cartaServer)
-                cartaServer.forEach(carta=>stack.push(carta))
                 //console.log(stack)
-                for(i=1; i<=4; i++ ){
                     //connection.sendUTF(i+"|"+cartaServer.pop);
-                    let card = stack.pop()
-                    console.log(i+" | "+card)
-                    //console.log("Esto esta usuarios"+JSON.stringify(usuarios[puerto]));
-                }
+                let card = stack.pop();
+                let indice = usuariosIngresados.toString();
+                console.log("inice"+indice);
+                usuarios[puerto][indice]["cartas"].push(card)
+                console.log("Esto esta usuarios"+JSON.stringify(usuarios));
 
             }else
             if(entradaCliente[0].localeCompare("iniciar")==0){
                 console.log("entro al if")
-                shuffle(cartaServer)
-                var stack = []; 
-                cartaServer.forEach(carta=>stack.push(carta))
                 let mensaje  = 'cartas|'
                 for(i=1; i<=4; i++ ){
                     let card = stack.pop()
