@@ -110,10 +110,12 @@ function crearSala() {
                     client.sendUTF(repartoInicial);
                 })
             }else
-            if (entradaCliente[0].localeCompare("chat") == 0) {
+            if (entradaCliente[0].localeCompare("broadcast") == 0) {
+
                 let usuarioMensaje = entradaCliente[1];
-                let mensaje = entradaCliente[2];
-                let mensajeAEnviar = "chatc|"+usuarioMensaje+": "+mensaje
+                let mensajeChat = entradaCliente[2];
+                let mensajeAEnviar = "chatc|"+usuarioMensaje+"|"+mensajeChat
+
                 socketsClients.forEach(function (client) {
                     client.sendUTF(mensajeAEnviar);
                 })

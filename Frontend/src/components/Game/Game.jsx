@@ -7,7 +7,7 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 
 const usuarios = ['Javi', 'Guille', 'Gustavo', 'Uri']
-const my_user = 'Javi'
+let my_user = ''
 
 let my_code = ''
 
@@ -57,7 +57,7 @@ export default class Game extends React.Component {
 		self = this
 		console.log("el username que vino a Game es "+this.props.location.state.username);
 		console.log("el puerto que vino a Game es "+this.props.location.state.puerto);
-
+		my_user = this.props.location.state.username
 		puertoCodigo = this.props.location.state.puerto
 
 		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
@@ -109,7 +109,7 @@ export default class Game extends React.Component {
 			}
 			if (entradaServer[0].localeCompare('chatc') === 0) {
 				console.log("Mensaje para broadcast")
-				console.log("Usuario: "+entradaServer[1]+"mensaje: "+entradaServer[2]);
+				console.log(entradaServer[1]+": "+entradaServer[2])
 			}
 		};
 	}
@@ -170,7 +170,9 @@ export default class Game extends React.Component {
 		//Send to Server chat
 		console.log(event.target.value)
 		this.setState({lastMessage: event.target.value})
-		client.send(this.state.lastMessage);
+		let texto = 'broadcast|'+my_user+'|'+event.target.value
+		console.log("el mensaje a enviar es: "+texto)
+		client.send(texto);
 		//Clean box
 		event.target.value = ''
 	}
