@@ -32,6 +32,7 @@ function crearSala(){
     shuffle(cartaServer)
     let stack = []; 
     let personas = 'usuarios|'
+    let repartoInicial = 'cartas|'
     cartaServer.forEach(carta=>stack.push(carta))
     servidores[turno] = http.createServer(function(request, response) {
         console.log((new Date()) + ' Received request for ' + request.url);
@@ -82,34 +83,35 @@ function crearSala(){
                     "username": entradaCliente[1],
                     "cartas": []
                 }
+
                 console.log("Mira temp"+JSON.stringify(temp));
                 console.log("Esto es usuarios"+JSON.stringify(usuarios));
                 usuarios[puerto][usuariosIngresados] = temp;
                 console.log(usuarios)
                 let mensaje = "conectado|"+usuariosIngresados
                 connection.sendUTF(mensaje);
+
                 let card = stack.pop();
                 let indice = usuariosIngresados.toString();
                 console.log("inice"+indice);
                 usuarios[puerto][indice]["cartas"].push(card)
                 console.log("Esto esta usuarios"+JSON.stringify(usuarios));
+                
+                repartoInicial = repartoInicial+usuariosIngresados+"|"+card+"|"
 
                 socketsClients.forEach(function(client){
                     client.sendUTF(personas);
+                    //client.sendUTF(repartoInicial);
                 })
+
+                
 
             }else
             if(entradaCliente[0].localeCompare("iniciar")==0){
                 console.log("entro al if")
-                let mensaje  = 'cartas|'
-                for(i=1; i<=4; i++ ){
-                    let card = stack.pop()
-                    mensaje = mensaje.concat(i+"|"+card+"|")
-                    
-                }
-                console.log(mensaje)
+                console.log(repartoInicial)
                 socketsClients.forEach(function(client){
-                    client.sendUTF(mensaje);
+                    client.sendUTF(repartoInicial);
                 })
             }
         });
