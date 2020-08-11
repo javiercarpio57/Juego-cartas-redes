@@ -16,6 +16,9 @@ let cards = [
     'prince','king','countess','princess'
 ]
 
+const has_to_play_other = ['guard', 'priest', 'baron', 'handmaid', 'princess']
+const has_to_play_countess = ['prince', 'king']
+
 let client = null
 
 export default class Game extends React.Component {
@@ -119,13 +122,37 @@ export default class Game extends React.Component {
 		this.setState({
 			my_cards: temp_card
 		})
-		console.log(this.state.my_cards)
 		this.checkMyCards()
+	}
+
+	clearCards() {
+		let tmp_cards = this.state.my_cards
+
+		for (let i = 0; i < tmp_cards.length; i++) {
+			tmp_cards[i].is_enable = true
+		}
+
+		this.setState({
+			my_cards: tmp_cards
+		})
 	}
 
 	checkMyCards() {
 		let tmp_cards = this.state.my_cards
-		tmp_cards[0].is_enable = false
+
+		if (tmp_cards.length === 2) {
+			if (has_to_play_other.includes(tmp_cards[0].name) && tmp_cards[1].name === 'countess') {
+				tmp_cards[1].is_enable = false
+			} else if (has_to_play_other.includes(tmp_cards[1].name) && tmp_cards[0].name === 'countess') {
+				tmp_cards[0].is_enable = false
+			}
+
+			if (has_to_play_countess.includes(tmp_cards[0].name) && tmp_cards[1].name === 'countess') {
+				tmp_cards[0].is_enable = false
+			} else if (has_to_play_countess.includes(tmp_cards[1].name) && tmp_cards[0].name === 'countess') {
+				tmp_cards[1].is_enable = false
+			}
+		}
 
 		this.setState({
 			my_cards: tmp_cards
@@ -157,16 +184,6 @@ export default class Game extends React.Component {
 									/>
 						})
 					}
-					<Button onClick={this.getNewCard}>
-						Recibir carta
-					</Button>
-					{/* <Card name='priest' cardImagen='priest' me={true} users={usuarios} my_user={my_user} />
-					<Card name='baron' cardImagen='baron' me={true} users={usuarios} my_user={my_user} />
-					<Card name='handmaid' cardImagen='handmaid' me={true} users={usuarios} my_user={my_user} />
-					<Card name='prince' cardImagen='prince' me={true} users={usuarios} my_user={my_user} />
-					<Card name='king' cardImagen='king' me={true} users={usuarios} my_user={my_user} />
-					<Card name='countess' cardImagen='countess' me={true} users={usuarios} my_user={my_user} />
-					<Card name='princess' cardImagen='princess' me={true} users={usuarios} my_user={my_user} /> */}
 				</div>
 				<div className='spot-organization-horizontal'>
 					<div className='player-spot-vertical-left'>
@@ -174,18 +191,18 @@ export default class Game extends React.Component {
 							<Card name = 'player2' cardImagen= 'unknown-card' enable={true} />
 						</div>
 						<div className='player-2-card-2'>
-							<Card name = 'player2' cardImagen= 'unknown-card' me={false} />
+							<Card name = 'player2' cardImagen= 'unknown-card' enable={true} me={false} />
 						</div>
 						<div className='discard-pile-player-2'>
-							<Card name = 'player2' cardImagen= 'guard' />							
+							<Card name = 'player2' cardImagen= 'guard' enable={true} />							
 						</div>
 					</div>
 					<div className='player-spot-vertical-right'>
 						<div className='discard-pile-player-4'>
-							<Card name = 'player4' cardImagen= 'priest' />
+							<Card name = 'player4' cardImagen= 'priest' enable={true} />
 						</div>
 						<div className='player-4-card-2'>
-							<Card name = 'player4' cardImagen= 'unknown-card' />
+							<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
 						</div>
 						<div className='player-4'>
 							<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
@@ -194,10 +211,10 @@ export default class Game extends React.Component {
 				</div>
 				<div className='player-spot-horizontal-top'>
 					<div className='discard-pile-player-3'> 
-						<Card name = 'player3' cardImagen= 'prince' />
+						<Card name = 'player3' cardImagen= 'prince' enable={true} />
 					</div>
 					<div className='player-3-card-2'>
-						<Card name = 'player3' cardImagen= 'unknown-card' />
+						<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
 					</div>
 					<div className='player-3'>
 						<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
