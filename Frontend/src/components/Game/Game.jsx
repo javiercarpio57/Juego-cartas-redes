@@ -202,6 +202,9 @@ export default class Game extends React.Component {
 							<Card name = 'player2' cardImagen= 'guard' enable={true} />							
 						</div>
 					</div>
+
+					<div className='center-pile-cards' />
+
 					<div className='player-spot-vertical-right'>
 						<div className='discard-pile-player-4'>
 							<Card name = 'player4' cardImagen= 'priest' enable={true} />
@@ -226,8 +229,6 @@ export default class Game extends React.Component {
 					</div>
 				</div>
 
-				<div className='center-pile-cards'>
-				</div>
 
 				<Modal show={show}>
 					<Modal.Header closeButton={false}>
