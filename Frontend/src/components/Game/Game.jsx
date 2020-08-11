@@ -40,6 +40,11 @@ export default class Game extends React.Component {
 		this.setState({
 			show: false
 		})
+		if (client.readyState === client.OPEN) {
+			let conectarmeASala = "PRUEBA|"
+			client.send(conectarmeASala);
+		}
+
 	}
 
 	componentDidMount() {
