@@ -1,7 +1,7 @@
 import React from 'react'
 import './Game.scss'
 
-import { Modal, Loader, Button } from 'rsuite'
+import { Modal, Loader, Button, Input } from 'rsuite'
 import Card from '../Card/Card.jsx'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
@@ -31,23 +31,25 @@ export default class Game extends React.Component {
 			show: true,
 			block: true,
 			my_cards: [],
-			discarded_cards: []
+			discarded_cards: [],
+			lastMessage: ''
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
 		this.getNewCard = this.getNewCard.bind(this)
+		this.sendChat = this.sendChat.bind(this)
 	}
 
 	close () {
-		this.setState({
-			show: false
-		})
-		if (client.readyState === client.OPEN) {
-			let conectarmeASala = "PRUEBA|"
-			client.send(conectarmeASala);
-		}
+        this.setState({
+            show: false
+        })
+        if (client.readyState === client.OPEN) {
+            let conectarmeASala = "iniciar"
+            client.send(conectarmeASala);
+        }
 
-	}
+    }
 
 	componentDidMount() {
 		console.log("el username que vino a Game es "+this.props.location.state.username);
@@ -169,6 +171,18 @@ export default class Game extends React.Component {
 		})
 	}
 
+	sendChat(event){
+		//Send to Server chat
+		console.log(event.target.value)
+		this.setState({lastMessage: event.target.value})
+		//Clean box
+		event.target.value = ''
+	}
+
+	handleChange(){
+
+	}
+
 	useCard() {
 
 	}
@@ -209,6 +223,14 @@ export default class Game extends React.Component {
 					</div>
 
 					<div className='center-pile-cards' />
+					<div className='center-chat'> 
+						<div className='center-chat-show'>
+							<div>{usuarios[0]}: {this.state.lastMessage}</div>
+						</div>
+						<div className='center-chat-input'>
+							<Input style={{ height: 30, fontSize: 12, width: 200 }} placeholder='Chat' onPressEnter={this.sendChat}/>
+						</div>
+					</div>
 
 					<div className='player-spot-vertical-right'>
 						<div className='discard-pile-player-4'>

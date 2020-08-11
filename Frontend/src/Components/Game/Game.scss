@@ -134,18 +134,42 @@
 }
 
 .center-pile-cards{
-    // position: absolute;
-    // display: flex;
-    // align-content: center;
-    // justify-content: center;
     width: 145px;
     height: 200px;
-    // margin-bottom: 325px;
     background-image: url(../../images/backCard.jpg);
     background-size: 100%;
     background-repeat: no-repeat;
     background-position-x: center;
 }
+
+.center-chat{
+    width: 200px;
+    height: 250px;
+    position: relative;
+    display: grid;
+    grid-template-rows: 80% 20%;
+}
+
+.center-chat-show{
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    position: relative;
+    display: flex;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.center-chat-input{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 5px;    
+}
+
 
 .player-2-card-2{
     transform: rotate(90deg);
