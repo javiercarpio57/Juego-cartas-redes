@@ -64,8 +64,6 @@ export default class Game extends React.Component {
 
 		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
 		client = new W3CWebSocket(enlace, 'echo-protocol');
-
-		//console.log('Se hizo click');
 		
 		client.onopen = () => {
 			function EstablecerConexion() {
@@ -75,10 +73,12 @@ export default class Game extends React.Component {
 				}
 			}
 			EstablecerConexion();
-	  	};
+		  };
+		  
 	  	client.onclose = function() {
 			console.log('echo-protocol Client Closed');
 		};
+
 		client.onmessage = function(e) {
 			let mensaje= e.data
 			let entradaServer = mensaje.split("|");

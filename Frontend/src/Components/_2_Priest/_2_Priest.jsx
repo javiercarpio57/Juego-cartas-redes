@@ -29,7 +29,6 @@ export default class _2_Priest extends React.Component {
     }
 
     play(me) {
-        this.props.onPlay(this.state.formValue.usuario_seleccionado)
 		const play = `jugar|${me}|priest|${usuario_seleccionado}`
 		this.props.jugarCarta(play)
         this.close()

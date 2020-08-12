@@ -1,7 +1,7 @@
 import React from 'react'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import './style.scss' 
-import { Button, Modal, InputNumber } from 'rsuite'
+import { Button, Modal, InputNumber, Loader } from 'rsuite'
 import './style.scss' 
 
 const numberInput = { width: '50%' };
@@ -19,7 +19,8 @@ export default class Lobby extends React.Component {
 		this.state = {
 			show: false,
 			codigoSala: '',
-			username: ''
+			username: '',
+			mostrar_backdrop: false
 		}
 		this.close = this.close.bind(this)
 		this.open = this.open.bind(this)
@@ -120,6 +121,11 @@ export default class Lobby extends React.Component {
 	}
 
 	crearSala () {
+		this.setState ({
+			mostrar_backdrop: true
+		})
+		console.log(this.state.mostrar_backdrop)
+
 		port = this.preguntar(this.state.username)
 	
 		// TO DO: del server debemos devolvernos el puerto en el cual nos conectamos
@@ -133,11 +139,14 @@ export default class Lobby extends React.Component {
 					puerto: port,
 					es_host: true
 				}
-			});	 
+			});
+			self.setState({
+				mostrar_backdrop: false
+			})
 		}.bind(this), 12000);
 	}
 	
-	render(){
+	render() {
 		return (
 			<div className='background-wood'>
 				<h1 className='title-lobby'> LOBBY DE: {this.state.username}</h1>
@@ -166,6 +175,15 @@ export default class Lobby extends React.Component {
 						</div>
 					</Modal.Footer>
 				</Modal>
+
+				{
+					this.state.mostrar_backdrop
+						?
+					<Loader inverse backdrop content='Cargando...' vertical />
+						:
+					null
+				}
+
 			</div>
 			)
 		}
