@@ -35,8 +35,8 @@ export default class Game extends React.Component {
 			block: true,
 			my_cards: [],
 			discarded_cards: [],
-			lastMessage: '',
-			is_host: false
+			messages_array: [],
+			is_host: false			
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
@@ -111,7 +111,15 @@ export default class Game extends React.Component {
 			}
 			if (entradaServer[0].localeCompare('chatc') === 0) {
 				console.log("Mensaje para broadcast")
-				console.log(entradaServer[1]+": "+entradaServer[2])
+				let mensaje = (entradaServer[1]+": "+entradaServer[2])
+				let mensajeArray = self.state.messages_array
+				mensajeArray.push({
+					mensaje 
+				})
+				self.setState({
+					messages_array: mensajeArray					
+				})
+				console.log(self.state.messages_array)
 			}
 		};
 	}
@@ -196,7 +204,9 @@ export default class Game extends React.Component {
 	}
 
 	render() {
-		const { show, my_cards } = this.state
+		
+		
+		const { show, my_cards, messages_array } = this.state
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
 				<div className='player-spot-horizontal'>
@@ -230,7 +240,7 @@ export default class Game extends React.Component {
 					<div className='center-pile-cards' />
 					<div className='center-chat'> 
 						<div className='center-chat-show'>
-							<div>{usuarios[0]}: {this.state.lastMessage}</div>
+							<div className='chat-Size'>{messages_array.map((d) => <li key={d.mensaje}>{d.mensaje}</li>)}</div>
 						</div>
 						<div className='center-chat-input'>
 							<Input style={{ height: 30, fontSize: 12, width: 200 }} placeholder='Chat' onPressEnter={this.sendChat}/>

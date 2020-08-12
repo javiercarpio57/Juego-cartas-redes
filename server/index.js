@@ -3,6 +3,8 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 // import { guard } from './arbitro.js'
+//import { guard,baron } from './arbitro.js'
+import { client } from 'websocket';
 
 let cont = 0;
 let servidores = []
@@ -121,6 +123,16 @@ function crearSala() {
                     client.sendUTF(mensajeAEnviar);
                 })
             }
+            // if(entradaCliente[0].localeCompare("jugar") == 0){
+            //     let cartaAJugar = entradaCliente[1];
+            //     let cartaContrincante = entradaCliente[4];
+            //     let cartaContrincanteReal = usuarios[puerto]["1"]["cartas"];
+            //     if(cartaAJugar.localeCompare("guard")==0){
+            //         let res = guard(cartaContrincante,cartaContrincanteReal);
+            //         client.sendUTF("guard|"+res);
+            //     }
+            // }
+        
         });
         connection.on('close', function (reasonCode, description) {
             console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
