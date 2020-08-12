@@ -2,7 +2,7 @@
 
 var WebSocketServer = require('websocket').server;
 var http = require('http');
-import { guard } from './arbitro.js'
+//import { guard } from './arbitro.js'
 
 let cont = 0;
 let servidores = []
