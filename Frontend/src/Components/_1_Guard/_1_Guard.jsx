@@ -67,8 +67,10 @@ export default class _1_Guard extends React.Component {
         this.setState({ show: true })
     }
 
-    play() {
-        this.props.onPlay(this.state.formValue.usuario_seleccionado, this.state.formValue.carta_seleccionada)
+    play(m) {
+        let play = `jugar|${m}|guard|${this.state.formValue.usuario_seleccionado}|${this.state.formValue.carta_seleccionada}`
+		play = play.toLowerCase()
+        this.props.jugarCarta(play)
         this.close()
     }
 	
@@ -120,7 +122,7 @@ export default class _1_Guard extends React.Component {
                         <Button onClick={this.close} color="red">
                             Cancel
                         </Button>
-                        <Button onClick={this.play} color="green" 
+                        <Button onClick={() => this.play(my_user)} color="green" 
                                 disabled={this.state.formValue.carta_seleccionada === '' || this.state.formValue.usuario_seleccionado === ''}
                         >
                             Do it!

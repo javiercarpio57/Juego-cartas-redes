@@ -9,6 +9,8 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 const usuarios = ['Javi', 'Guille', 'Gustavo', 'Uri']
 let my_user = ''
 
+let my_username = ''
+
 let my_code = ''
 
 let cards = [
@@ -55,9 +57,9 @@ export default class Game extends React.Component {
 
 	componentDidMount() {
 		self = this
-		console.log("el username que vino a Game es "+this.props.location.state.username);
+		console.log("el username que vino a Game es: YO "+this.props.location.state.username);
 		console.log("el puerto que vino a Game es "+this.props.location.state.puerto);
-		my_user = this.props.location.state.username
+		my_username = this.props.location.state.username
 		puertoCodigo = this.props.location.state.puerto
 
 		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
@@ -181,12 +183,16 @@ export default class Game extends React.Component {
 
 	}
 
-	useCard() {
-
+	useCard(stringPlay) {
+		console.log('TO PLAY:', stringPlay)
 	}
 
 	handleClick(){
 	//		this.state.discarded_cards.push(this.Card)
+	}
+
+	showSome(stringPlay) {
+		console.log(stringPlay)
 	}
 
 	render() {
@@ -197,12 +203,13 @@ export default class Game extends React.Component {
 					{
 						my_cards.map((card, index) => {
 							return <Card key={card.name + '_'+ index}
-											name={card.name}
-											cardImagen={card.name} 
-											me={true}
-											users={usuarios}
-											my_user={my_user}
-											enable={card.is_enable}
+										 name={card.name}
+										 cardImagen={card.name}
+										 me={true}
+										 users={usuarios}
+										 my_user={my_username}
+										 enable={card.is_enable}
+										 jugarCarta={this.showSome.bind(this)}
 									/>
 						})
 					}

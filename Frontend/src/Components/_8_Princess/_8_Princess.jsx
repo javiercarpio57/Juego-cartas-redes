@@ -25,12 +25,14 @@ export default class _7_Countess extends React.Component {
         this.setState({ show: true })
     }
 
-    play() {
-        this.props.onPlay()
+    play(me) {
+        const play = `jugar|${me}|princess|${me}`
+		this.props.jugarCarta(play)
         this.close()
     }
 	
 	render(){
+        const { my_user } = this.props
 		return (
             <Modal show={this.state.show} onHide={this.close} onExited={this.close} size='xs' keyboard>
                 <Modal.Header>
@@ -46,7 +48,7 @@ export default class _7_Countess extends React.Component {
                     <Button onClick={this.close} color="red">
                             Cancel
                         </Button>
-                        <Button onClick={this.play} color="green">
+                        <Button onClick={() => this.play(my_user)} color="green">
                             Do it!
                         </Button>
                     </div>

@@ -27,40 +27,8 @@ export default class Card extends React.Component {
 		discardedCards.push(this.props)
 	}
 
-	playGuard(usuario_seleccionado, carta_seleccionada) {
-		console.log('GUARD:', usuario_seleccionado, carta_seleccionada)
-	}
-
-	playPriest(usuario_seleccionado) {
-		console.log('PRIEST:', usuario_seleccionado)
-	}
-
-	playBaron(usuario_seleccionado) {
-		console.log('BARON:', usuario_seleccionado)
-	}
-
-	playHandmaid() {
-		console.log('HANDMAID')
-	}
-	
-	playPrince(usuario_seleccionado) {
-		console.log('PRINCE:', usuario_seleccionado)
-	}
-
-	playKing(usuario_seleccionado) {
-		console.log('KING:', usuario_seleccionado)
-	}
-
-	playCountess() {
-		console.log('COUNTESS')
-	}
-
-	playPrincess() {
-		console.log('PRINCESS')
-	}
-
 	render(){
-		const { name, cardImagen, me, users, my_user, enable } = this.props
+		const { name, cardImagen, me, users, my_user, enable, jugarCarta } = this.props
 		let css = ''
 		if (enable) {
 			css = `${cardImagen}`
@@ -76,7 +44,7 @@ export default class Card extends React.Component {
 					<_1_Guard handleClose={() => this.setState({ playingCard: null })}
 						my_user={my_user}
 						users={users}
-						onPlay={this.playGuard}
+						jugarCarta={jugarCarta}
 					/>
 						:
 					this.state.playingCard === 'priest'
@@ -84,7 +52,7 @@ export default class Card extends React.Component {
 					<_2_Priest handleClose={() => this.setState({ playingCard: null })}
 						my_user={my_user}
 						users={users}
-						onPlay={this.playPriest}
+						jugarCarta={jugarCarta}
 			  		/>
 						:
 					this.state.playingCard === 'baron'
@@ -92,7 +60,7 @@ export default class Card extends React.Component {
 					<_3_Baron handleClose={() => this.setState({ playingCard: null })}
 						my_user={my_user}
 						users={users}
-						onPlay={this.playBaron}
+						jugarCarta={jugarCarta}
 			  		/>
 						:
 					this.state.playingCard === 'handmaid'
@@ -100,14 +68,15 @@ export default class Card extends React.Component {
 					<_4_Handmaid handleClose={() => this.setState({ playingCard: null })}
 						my_user={my_user}
 						users={users}
-						onPlay={this.playHandmaid}
+						jugarCarta={jugarCarta}
 			  		/>
 						:
 					this.state.playingCard === 'prince'
 						?
 					<_5_Prince handleClose={() => this.setState({ playingCard: null })}
+						my_user={my_user}
 						users={users}
-						onPlay={this.playPrince}
+						jugarCarta={jugarCarta}
 			  		/>
 						:
 					this.state.playingCard === 'king'
@@ -115,19 +84,21 @@ export default class Card extends React.Component {
 					<_6_King handleClose={() => this.setState({ playingCard: null })}
 						my_user={my_user}
 						users={users}
-						onPlay={this.playKing}
+						jugarCarta={jugarCarta}
 			  		/>
 						:
 					this.state.playingCard === 'countess'
 						?
 					<_7_Countess handleClose={() => this.setState({ playingCard: null })}
-						onPlay={this.playCountess}
+						my_user={my_user}
+						jugarCarta={jugarCarta}
 			  		/>
 						:
 					this.state.playingCard === 'princess'
 						?
 					<_8_Princess handleClose={() => this.setState({ playingCard: null })}
-						onPlay={this.playPrincess}
+						my_user={my_user}
+						jugarCarta={jugarCarta}
 			  		/>
 						:
 					null

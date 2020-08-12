@@ -28,13 +28,14 @@ export default class _5_Prince extends React.Component {
         this.setState({ show: true })
     }
 
-    play() {
-        this.props.onPlay(this.state.formValue.usuario_seleccionado)
+    play(me) {
+        const play = `jugar|${me}|prince|${this.state.formValue.usuario_seleccionado}`
+		this.props.jugarCarta(play)
         this.close()
     }
 	
 	render(){
-        const { users } = this.props
+        const { my_user, users } = this.props
 
         const all_users = []
         for (let i = 0; i < users.length; i++) {
@@ -70,7 +71,7 @@ export default class _5_Prince extends React.Component {
                         <Button onClick={this.close} color="red">
                             Cancel
                         </Button>
-                        <Button onClick={this.play} color="green" 
+                        <Button onClick={() => this.play(my_user)} color="green" 
                                 disabled={this.state.formValue.usuario_seleccionado === ''}
                         >
                             Do it!

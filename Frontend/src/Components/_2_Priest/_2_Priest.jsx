@@ -28,8 +28,10 @@ export default class _2_Priest extends React.Component {
         this.setState({ show: true })
     }
 
-    play() {
+    play(me) {
         this.props.onPlay(this.state.formValue.usuario_seleccionado)
+		const play = `jugar|${me}|priest|${usuario_seleccionado}`
+		this.props.jugarCarta(play)
         this.close()
     }
 	
@@ -72,7 +74,7 @@ export default class _2_Priest extends React.Component {
                         <Button onClick={this.close} color="red">
                             Cancel
                         </Button>
-                        <Button onClick={this.play} color="green" 
+                        <Button onClick={() => this.play(my_user)} color="green" 
                                 disabled={this.state.formValue.usuario_seleccionado === ''}
                         >
                             Do it!

@@ -28,8 +28,9 @@ export default class _3_Baron extends React.Component {
         this.setState({ show: true })
     }
 
-    play() {
-        this.props.onPlay(this.state.formValue.usuario_seleccionado)
+    play(me) {
+        const play = `jugar|${me}|baron|${this.state.formValue.usuario_seleccionado}`
+        this.props.jugarCarta(play)
         this.close()
     }
 	
@@ -72,7 +73,7 @@ export default class _3_Baron extends React.Component {
                         <Button onClick={this.close} color="red">
                             Cancel
                         </Button>
-                        <Button onClick={this.play} color="green" 
+                        <Button onClick={() => this.play(my_user)} color="green" 
                                 disabled={this.state.formValue.usuario_seleccionado === ''}
                         >
                             Do it!
