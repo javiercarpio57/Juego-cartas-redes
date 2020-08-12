@@ -43,7 +43,9 @@ export default class App extends React.Component {
 
     render () {
         const styles = {
-            marginBottom: 10
+            marginBottom: 10,
+            fontStyle: 'italic',
+            fontFamily: 'Snell Roundhand'
         }
 
         return (
@@ -59,7 +61,7 @@ export default class App extends React.Component {
                         </InputGroup.Button>
                     </InputGroup>
 
-                    <Button color="green" block onClick={this.handleClick}>
+                    <Button style={{ fontStyle: 'italic', fontFamily: 'Snell Roundhand' }} color="green" block onClick={this.handleClick}>
                         Play
                     </Button>
                 </div>

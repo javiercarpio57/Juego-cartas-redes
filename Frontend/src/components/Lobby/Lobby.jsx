@@ -147,12 +147,16 @@ export default class Lobby extends React.Component {
 	}
 	
 	render() {
+		const style = {
+			fontStyle: 'italic',
+			fontFamily: 'Snell Roundhand'
+		}
 		return (
 			<div className='background-wood'>
-				<h1 className='title-lobby'> LOBBY DE: {this.state.username}</h1>
+				<h1 style={style} className='title-lobby'> Lobby de {this.state.username}</h1>
 				<div className='order-components'>
-					<Button size="lg" color='cyan' block onClick={this.crearSala}>Crear sala</Button>
-					<Button size="lg" color='green' block onClick={this.open}>Unirse a sala</Button>
+					<Button style={style} size="lg" color='cyan' block onClick={this.crearSala}>Crear sala</Button>
+					<Button style={style} size="lg" color='green' block onClick={this.open}>Unirse a sala</Button>
 				</div>
 
 				<Modal show={this.state.show} onHide={this.close}>
