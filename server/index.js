@@ -163,8 +163,11 @@ function crearSala() {
             if(entradaCliente[0].localeCompare("jugar") == 0){
                 let cartaAJugar = entradaCliente[2];
                 let cartaContrincante = entradaCliente[4];
-
+                console.log("usuarios[puerto] es",usuarios[puerto])
+                console.log("entradaCliente[3] es",entradaCliente[3])
+                console.log("Object.keys(object) es",Object.keys(usuarios[puerto]))
                 let num = getKeyByValue(usuarios[puerto],entradaCliente[3])
+
                 console.log("el num del usuario es",num)
                 let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
 
@@ -182,7 +185,7 @@ function crearSala() {
     });
 }
 function getKeyByValue(object, value) {
-    return Object.keys(object).find(key => object[key] === value);
+    return Object.keys(object).find(key => object[key]["username"] === value);
   }
   
 
