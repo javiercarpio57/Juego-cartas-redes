@@ -12,9 +12,9 @@ let my_username = ''
 let my_code = ''
 
 let cards = [
-    'guard','guard','baron','guard',
-    'guard','baron','priest','baron',
-    'baron','handmaid', 'handmaid','prince',
+    'guard','guard','handmaid','handmaid',
+    'handmaid','handmaid','handmaid','handmaid',
+    'handmaid','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
 
@@ -178,6 +178,15 @@ export default class Game extends React.Component {
 						console.log("Empate");
 					}
 				}
+			}if (entradaServer[0].localeCompare('handmaid') === 0) {
+				//"baron|"+tu+"|"+rival+"|"+perdedor
+				if(entradaServer[1].localeCompare(my_username) == 0){
+					console.log("Eres invencible por un turno")
+				}else{
+					console.log("Cuidado "+ entradaServer[1]+" es invencible por un turno.")
+				}
+				
+				
 			}
 		};
 	}

@@ -9,9 +9,9 @@ let sockets = []
 let usuarios = {}
 let PORT = 4200
 let cards = [
-    'guard','guard','baron','guard',
-    'guard','baron','priest','baron',
-    'baron','handmaid', 'handmaid','prince',
+    'guard','guard','handmaid','handmaid',
+    'handmaid','handmaid','handmaid','handmaid',
+    'handmaid','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
 
@@ -227,13 +227,18 @@ function crearSala() {
                     })
 
                 }
-                /*if(cartaAJugar.localeCompare("handmaid")==0){
-                    //jugar | javi | handmaid | javi *este no se usaria*
-                    
-                    //console.log("la carta de tu rival es",cartaContrincanteReal[0])
-                    //let res = cartaContrincanteReal[0]
-                    connection.sendUTF("handmaid|"+res);
-                }*/
+                if(cartaAJugar.localeCompare("handmaid")==0){
+
+                    // Este se debe modificar cuando se tengan turnos para regresar a la normalidad a un jugador
+
+                    //jugar|gustavo|handmaid|gustavo
+                    usuarios[puerto][num]["invencible"] = true
+                    console.log(usuarios[puerto])
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("handmaid|"+tu);
+                    })
+                   
+                }
             }
         
         });
