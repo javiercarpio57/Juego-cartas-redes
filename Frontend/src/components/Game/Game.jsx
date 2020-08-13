@@ -5,12 +5,8 @@ import { Modal, Loader, Button, Input } from 'rsuite'
 import Card from '../Card/Card.jsx'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
-
-const usuarios = ['Javi', 'Guille', 'Gustavo', 'Uri']
 let my_user = ''
-
 let my_username = ''
-
 let my_code = ''
 
 let cards = [
@@ -210,13 +206,12 @@ export default class Game extends React.Component {
 	showSome(stringPlay) {
 		console.log(stringPlay)
 		client.send(stringPlay);
-		
 	}
 
 	render() {
 		
 		
-		const { show, my_cards, messages_array } = this.state
+		const { show, my_cards, messages_array, connected_users } = this.state
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
 				<div className='player-spot-horizontal'>
@@ -226,7 +221,7 @@ export default class Game extends React.Component {
 										 name={card.name}
 										 cardImagen={card.name}
 										 me={true}
-										 users={usuarios}
+										 users={connected_users}
 										 my_user={my_username}
 										 enable={card.is_enable}
 										 jugarCarta={this.showSome.bind(this)}
