@@ -243,11 +243,13 @@ export default class Game extends React.Component {
 
 	sendChat(event){
 		//Send to Server chat
-		console.log(event.target.value)
-		this.setState({lastMessage: event.target.value})
-		let texto = 'broadcast|'+my_username+'|'+event.target.value
-		console.log("el mensaje a enviar es: "+texto)
-		client.send(texto);
+		if(event.target.value !=''){
+			console.log(event.target.value)
+			this.setState({lastMessage: event.target.value})
+			let texto = 'broadcast|'+my_username+'|'+event.target.value
+			console.log("el mensaje a enviar es: "+texto)
+			client.send(texto);
+		}
 		//Clean box
 		event.target.value = ''
 	}
