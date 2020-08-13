@@ -3,8 +3,9 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 // import { guard } from './arbitro.js'
-//import { guard,baron } from './arbitro.js'
-import { client } from 'websocket';
+//let arbitro = require('./arbitro.js').guard
+//import arbitro from './arbitro.js';
+//import { client } from 'websocket';
 
 let cont = 0;
 let servidores = []
@@ -17,7 +18,41 @@ const cards = [
     'baron', 'handmaid', 'handmaid', 'prince',
     'prince', 'king', 'countess', 'princess'
 ]
-
+/**
+ * Metodo para devolver si adivino al utilizar carta de Guardia
+ * que dependiendo si devuelve true signfica que el usaurio advino la carta
+ * del contrincante
+ * @param {*} cartaContrincante
+ * @param {*} cartaAdivinar
+ */
+function guard(cartaContrincante,cartaAdivinar){
+    console.log("la carta verdadera",cartaContrincante)
+    console.log("la carta adivinar",cartaAdivinar)
+    if(cartaContrincante.localeCompare(cartaAdivinar) == 0){
+        return true;
+    }else{
+        return false;
+    }
+}
+/**
+ * Metodo para devolver que dependiendo el valor del contrincante es que se devuelve
+ * Si el valor es 1 significa que el usuario gano y sale el contrincante
+ * Si el valor es -1 significa que el usuario perdio y se queda el contrincante
+ * Si el valor es 0 significa empate
+ * @param {*} miCarta 
+ * @param {*} cartaUsuario 
+ */
+function baron(miCarta,cartaUsuario){
+    if(miCarta > cartaUsuario){
+        return 1;
+    }else
+    if(cartaUsuario > miCarta){
+        return -1;
+    }else
+    if(cartaUsuario == miCarta){
+        return 0;
+    }
+}
 function shuffle(array) {
     array.sort(() => Math.random() - 0.5);
 }
@@ -123,15 +158,20 @@ function crearSala() {
                     client.sendUTF(mensajeAEnviar);
                 })
             }
-            // if(entradaCliente[0].localeCompare("jugar") == 0){
-            //     let cartaAJugar = entradaCliente[1];
-            //     let cartaContrincante = entradaCliente[4];
-            //     let cartaContrincanteReal = usuarios[puerto]["1"]["cartas"];
-            //     if(cartaAJugar.localeCompare("guard")==0){
-            //         let res = guard(cartaContrincante,cartaContrincanteReal);
-            //         client.sendUTF("guard|"+res);
-            //     }
-            // }
+            if(entradaCliente[0].localeCompare("jugar") == 0){
+                let cartaAJugar = entradaCliente[2];
+                let cartaContrincante = entradaCliente[4];
+
+                let num = Object.keys(usuarios[puerto]).find(key => usuarios[puerto][key] === entradaCliente[3]);
+                console.log("el num del usuario es",num)
+                let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
+
+                if(cartaAJugar.localeCompare("guard")==0){
+                    let res = guard(cartaContrincante,cartaContrincanteReal);
+                    
+                    connection.sendUTF("guard|"+res);
+                }
+            }
         
         });
         connection.on('close', function (reasonCode, description) {

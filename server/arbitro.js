@@ -6,7 +6,7 @@
  * @param {*} cartaContrincante
  * @param {*} cartaAdivinar
  */
-export function guard(cartaContrincante,cartaAdivinar){
+function guard(cartaContrincante,cartaAdivinar){
     if(cartaContrincante.localeCompare(cartaAdivinar) == 0){
         return true;
     }else{
@@ -21,7 +21,7 @@ export function guard(cartaContrincante,cartaAdivinar){
  * @param {*} miCarta 
  * @param {*} cartaUsuario 
  */
-export function baron(miCarta,cartaUsuario){
+function baron(miCarta,cartaUsuario){
     if(miCarta > cartaUsuario){
         return 1;
     }else
@@ -33,4 +33,5 @@ export function baron(miCarta,cartaUsuario){
     }
 }
 
+export default { guard, baron }
 
