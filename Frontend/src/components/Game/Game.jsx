@@ -121,6 +121,10 @@ export default class Game extends React.Component {
 				})
 				console.log(self.state.messages_array)
 			}
+			if (entradaServer[0].localeCompare('guard') === 0) {
+				console.log("De haber jugado al guard")
+				console.log(entradaServer[1])
+			}
 		};
 	}
 
@@ -201,6 +205,8 @@ export default class Game extends React.Component {
 
 	showSome(stringPlay) {
 		console.log(stringPlay)
+		client.send(stringPlay);
+		
 	}
 
 	render() {

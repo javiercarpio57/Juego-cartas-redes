@@ -162,7 +162,7 @@ function crearSala() {
                 let cartaAJugar = entradaCliente[2];
                 let cartaContrincante = entradaCliente[4];
 
-                let num = Object.keys(usuarios[puerto]).find(key => usuarios[puerto][key] === entradaCliente[3]);
+                let num = getKeyByValue(usuarios[puerto],entradaCliente[3])
                 console.log("el num del usuario es",num)
                 let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
 
@@ -179,6 +179,9 @@ function crearSala() {
         });
     });
 }
-
+function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+  }
+  
 
 crearSala();
