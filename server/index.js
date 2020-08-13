@@ -16,7 +16,7 @@ let usuarios = {}
 let PORT = 4200
 let cards = [
     'guard','guard','guard','guard',
-    'guard','priest','priest','baron','baron','baron','baron','baron','baron','baron','baron',
+    'guard','priest','priest','baron',
     'baron','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
