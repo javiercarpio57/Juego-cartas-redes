@@ -20,6 +20,17 @@ let cards = [
     'baron','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
+
+let diccionarioCartas = {
+    'guard': '1',
+    'priest': '2',
+    'baron':'3',
+    'handmaid': '4',
+    'prince': '5',
+    'king': '6',
+    'countess': '7',
+    'princess': '8'
+}
 /**
  * Metodo para devolver si adivino al utilizar carta de Guardia
  * que dependiendo si devuelve true signfica que el usaurio advino la carta
@@ -48,7 +59,7 @@ function baron(miCarta,cartaUsuario){
     if(miCarta > cartaUsuario){
         return 1;
     }else
-    if(cartaUsuario > miCarta){
+    if(miCarta < cartaUsuario){
         return -1;
     }else
     if(cartaUsuario == miCarta){
@@ -162,8 +173,8 @@ function crearSala() {
             }
             if(entradaCliente[0].localeCompare("jugar") == 0){
                 let cartaAJugar = entradaCliente[2];
-                let cartaContrincante = entradaCliente[4];
-                let rival = entradaCliente[3]
+                let rival = entradaCliente[3];
+                let miUsuario = entradaCliente[1];
                 console.log("usuarios[puerto] es",usuarios[puerto])
                 console.log("entradaCliente[3] es",entradaCliente[3])
                 console.log("Object.keys(object) es",Object.keys(usuarios[puerto]))
@@ -173,6 +184,7 @@ function crearSala() {
                 let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
 
                 if(cartaAJugar.localeCompare("guard")==0){
+                    let cartaContrincante = entradaCliente[4];
                     let res = guard(cartaContrincante,cartaContrincanteReal);
                     
                     connection.sendUTF("guard|"+res);
@@ -184,6 +196,23 @@ function crearSala() {
                     let res = cartaContrincanteReal[0]
                     
                     connection.sendUTF("priest|"+res);
+                }
+                if(cartaAJugar.localeCompare("baron"==0)){
+                    let primera = diccionarioCartas[cartaAJugar];
+                    let segunda = diccionarioCartas[cartaContrincanteReal[0]];
+                    console.log("Primera"+primera+"-- Segunda"+segunda);
+                    let res = baron(primera,segunda);
+                    let perdedor = "";
+                    // Usuario que jugo carta gano
+                    if(res == 1){
+                        perdedor = rival;
+                    }else
+                    if(res == -1){ //Jugador contrario gano
+                        perdedor = miUsuario;
+                    }else{
+                        perdedor = "-";
+                    }
+                    connection.sendUTF("baron|"+perdedor);
                 }
             }
         

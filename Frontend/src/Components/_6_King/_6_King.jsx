@@ -31,7 +31,6 @@ export default class _6_King extends React.Component {
     play(me) {
 		const play = `jugar|${me}|king|${this.state.formValue.usuario_seleccionado}`
 		this.props.jugarCarta(play)
-        // this.props.onPlay(this.state.formValue.usuario_seleccionado)
         this.close()
     }
 	
