@@ -1,0 +1,69 @@
+
+.panel-names {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.player1 {
+    width: 40%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    p {
+        font-style: 'italic';
+        font-family: 'Snell Roundhand';
+        font-size: 25px;
+        color: white;
+    }
+}
+
+.player2 {
+    height: 100%;
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    p {
+        transform: rotate(90deg);
+        font-style: 'italic';
+        font-family: 'Snell Roundhand';
+        font-size: 25px;
+        color: white;
+    }
+}
+
+.player3 {
+    width: 40%;
+    height: 37%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+
+    p {
+        font-style: 'italic';
+        font-family: 'Snell Roundhand';
+        font-size: 25px;
+        color: white;
+    }
+}
+
+.player4 {
+    height: 100%;
+    width: 20%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    p {
+        transform: rotate(-90deg);
+        font-style: 'italic';
+        font-family: 'Snell Roundhand';
+        font-size: 25px;
+        color: white;
+    }
+}
+
