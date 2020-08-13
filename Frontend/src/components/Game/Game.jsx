@@ -12,8 +12,8 @@ let my_username = ''
 let my_code = ''
 
 let cards = [
-    'guard','guard','guard','guard',
-    'guard','priest','priest','baron',
+    'guard','guard','guard','priest',
+    'priest','priest','priest','baron',
     'baron','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
@@ -130,6 +130,7 @@ export default class Game extends React.Component {
 				//"guard|"+tu+"|"+rival+"|"+res
 				console.log("El que tiro",entradaServer[1])
 				console.log("El que recibio",entradaServer[2])
+				
 				if(entradaServer[1].localeCompare(my_username)==0){
 					if(entradaServer[3].localeCompare("true")==0){
 						console.log("le atino")
@@ -144,12 +145,17 @@ export default class Game extends React.Component {
 						console.log("Te atacaron pero no te afecto")
 					}
 				}
-				
-				
 			}
 			if (entradaServer[0].localeCompare('priest') === 0) {
-				console.log("De haber jugado al priest")
-				console.log("La carta de tu rival es",entradaServer[1])
+				if(entradaServer[1].localeCompare(my_username) == 0){
+					console.log("La carta de " + entradaServer[2] + " es " + entradaServer[3])
+				}
+				if(entradaServer[2].localeCompare(my_username) == 0){
+					console.log(entradaServer[1] + " vio tu carta")
+				}
+
+				
+				
 			}
 			
 			if (entradaServer[0].localeCompare('baron') === 0) {

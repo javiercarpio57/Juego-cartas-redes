@@ -9,8 +9,8 @@ let sockets = []
 let usuarios = {}
 let PORT = 4200
 let cards = [
-    'guard','guard','guard','guard',
-    'guard','priest','priest','baron',
+    'guard','guard','guard','priest',
+    'priest','priest','priest','baron',
     'baron','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
@@ -169,35 +169,35 @@ function crearSala() {
                 })
             }
             if(entradaCliente[0].localeCompare("jugar") == 0){
+
                 let tu = entradaCliente[1]
                 let cartaAJugar = entradaCliente[2].toLowerCase()
                 let rival = entradaCliente[3]
+                
                 let num = getKeyByValue(usuarios[puerto],rival)
                 console.log("el num del usuario es",num)
                 let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
-                
 
                 if(cartaAJugar.localeCompare("guard")==0){
+
                     let adivinanza = entradaCliente[4].toLowerCase()
-                    console.log("usuarios[puerto] es",usuarios[puerto])
-                    console.log("VOS SOS",tu)
-                    console.log("TU CARTA TIRADA ES",cartaAJugar)
-                    console.log("TU RIVAL ES",rival)
-                    console.log("LA CARTA QUE ADIVINASTE ES",adivinanza)
-        
                     let res = guard(adivinanza,cartaContrincanteReal[0]);
 
                     socketsClients.forEach(function (client) {
                         client.sendUTF("guard|"+tu+"|"+rival+"|"+res);
                     })
                    
-
-
                 }else
                 if(cartaAJugar.localeCompare("priest")==0){
-                    console.log("la carta de tu rival es",cartaContrincanteReal[0])
+
+                    console.log("La carta de tu rival es",cartaContrincanteReal[0])
                     let res = cartaContrincanteReal[0]
-                    connection.sendUTF("priest|"+res);
+                    //connection.sendUTF("priest|"+res);
+
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("priest|"+tu+"|"+rival+"|"+res);
+                    })
+
                 }else
                 if(cartaAJugar.localeCompare("baron")==0){
                     let primera = diccionarioCartas[cartaAJugar];
