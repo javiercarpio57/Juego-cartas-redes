@@ -6,7 +6,7 @@ import Card from '../Card/Card.jsx'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 
-const usuarios = ['Javi', 'Guille', 'Gustavo', 'Uri']
+const usuarios = ['javi', 'guille', 'gustavo', 'uri']
 let my_user = ''
 
 let my_username = ''
