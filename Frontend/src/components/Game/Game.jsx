@@ -130,7 +130,22 @@ export default class Game extends React.Component {
 				//"guard|"+tu+"|"+rival+"|"+res
 				console.log("El que tiro",entradaServer[1])
 				console.log("El que recibio",entradaServer[2])
-				console.log("le atino?",entradaServer[3])
+				if(entradaServer[1].localeCompare(my_username)==0){
+					if(entradaServer[3].localeCompare("true")==0){
+						console.log("le atino")
+					}else{
+						console.log("Fallaste jeje")
+					}
+				}
+				if(entradaServer[2].localeCompare(my_username)==0){
+					if(entradaServer[3].localeCompare("true")==0){
+						console.log("Te atacaron")
+					}else{
+						console.log("Te atacaron pero no te afecto")
+					}
+				}
+				
+				
 			}
 			if (entradaServer[0].localeCompare('priest') === 0) {
 				console.log("De haber jugado al priest")
@@ -218,6 +233,7 @@ export default class Game extends React.Component {
 	}
 
 	showSome(stringPlay) {
+		console.log("Al haber jugado una carta le mandamos al server:")
 		console.log(stringPlay)
 		client.send(stringPlay);
 	}

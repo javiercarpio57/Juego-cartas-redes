@@ -2,12 +2,6 @@
 
 var WebSocketServer = require('websocket').server;
 var http = require('http');
-// import { guard } from './arbitro.js'
-//import { guard,baron } from './arbitro.js'
-// import { client } from 'websocket';
-//let arbitro = require('./arbitro.js').guard
-//import arbitro from './arbitro.js';
-//import { client } from 'websocket';
 
 let cont = 0;
 let servidores = []
@@ -176,38 +170,36 @@ function crearSala() {
             }
             if(entradaCliente[0].localeCompare("jugar") == 0){
                 let tu = entradaCliente[1]
-                let cartaAJugar = entradaCliente[2];
-                let rival = entradaCliente[3];
-                let miUsuario = entradaCliente[1];
-                let cartaContrincante = entradaCliente[4];
-                
-                
-                console.log("usuarios[puerto] es",usuarios[puerto])
-                console.log("VOS SOS",entradaCliente[1])
-                console.log("TU CARTA TIRADA ES",entradaCliente[2])
-                console.log("TU RIVAL ES",entradaCliente[3])
-                console.log("LA CARTA QUE ADIVINASTE ES",entradaCliente[4])
-
-                console.log("Object.keys(object) es",Object.keys(usuarios[puerto]))
-                let num = getKeyByValue(usuarios[puerto],entradaCliente[3])
-
+                let cartaAJugar = entradaCliente[2].toLowerCase()
+                let rival = entradaCliente[3]
+                let num = getKeyByValue(usuarios[puerto],rival)
                 console.log("el num del usuario es",num)
                 let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
+                
 
                 if(cartaAJugar.localeCompare("guard")==0){
-                    let cartaContrincante = entradaCliente[4];
-                    let res = guard(cartaContrincante,cartaContrincanteReal);
+                    let adivinanza = entradaCliente[4].toLowerCase()
+                    console.log("usuarios[puerto] es",usuarios[puerto])
+                    console.log("VOS SOS",tu)
+                    console.log("TU CARTA TIRADA ES",cartaAJugar)
+                    console.log("TU RIVAL ES",rival)
+                    console.log("LA CARTA QUE ADIVINASTE ES",adivinanza)
+        
+                    let res = guard(adivinanza,cartaContrincanteReal[0]);
+
                     socketsClients.forEach(function (client) {
                         client.sendUTF("guard|"+tu+"|"+rival+"|"+res);
                     })
                    
-                }
+
+
+                }else
                 if(cartaAJugar.localeCompare("priest")==0){
                     console.log("la carta de tu rival es",cartaContrincanteReal[0])
                     let res = cartaContrincanteReal[0]
                     connection.sendUTF("priest|"+res);
-                }
-                if(cartaAJugar.localeCompare("baron"==0)){
+                }else
+                if(cartaAJugar.localeCompare("baron")==0){
                     let primera = diccionarioCartas[cartaAJugar];
                     let segunda = diccionarioCartas[cartaContrincanteReal[0]];
                     console.log("Primera"+primera+"-- Segunda"+segunda);
@@ -218,7 +210,7 @@ function crearSala() {
                         perdedor = rival;
                     }else
                     if(res == -1){ //Jugador contrario gano
-                        perdedor = miUsuario;
+                        perdedor = tu;
                     }else{
                         perdedor = "-";
                     }
