@@ -127,7 +127,10 @@ export default class Game extends React.Component {
 			}
 			if (entradaServer[0].localeCompare('guard') === 0) {
 				console.log("De haber jugado al guard")
-				console.log(entradaServer[1])
+				//"guard|"+tu+"|"+rival+"|"+res
+				console.log("El que tiro",entradaServer[1])
+				console.log("El que recibio",entradaServer[2])
+				console.log("le atino?",entradaServer[3])
 			}
 			if (entradaServer[0].localeCompare('priest') === 0) {
 				console.log("De haber jugado al priest")

@@ -139,7 +139,8 @@ function crearSala() {
 
                 temp = {
                     "username": entradaCliente[1],
-                    "cartas": []
+                    "cartas": [],
+                    "invencible": false
                 }
 
                 usuarios[puerto][usuariosIngresados] = temp;
@@ -164,7 +165,9 @@ function crearSala() {
             if (entradaCliente[0].localeCompare("broadcast") == 0) {
 
                 let usuarioMensaje = entradaCliente[1];
+                console.log("usuarioMensaje",usuarioMensaje)
                 let mensajeChat = entradaCliente[2];
+                console.log("mensajeChat",mensajeChat)
                 let mensajeAEnviar = "chatc|"+usuarioMensaje+"|"+mensajeChat
 
                 socketsClients.forEach(function (client) {
@@ -172,11 +175,19 @@ function crearSala() {
                 })
             }
             if(entradaCliente[0].localeCompare("jugar") == 0){
+                let tu = entradaCliente[1]
                 let cartaAJugar = entradaCliente[2];
                 let rival = entradaCliente[3];
                 let miUsuario = entradaCliente[1];
+                let cartaContrincante = entradaCliente[4];
+                
+                
                 console.log("usuarios[puerto] es",usuarios[puerto])
-                console.log("entradaCliente[3] es",entradaCliente[3])
+                console.log("VOS SOS",entradaCliente[1])
+                console.log("TU CARTA TIRADA ES",entradaCliente[2])
+                console.log("TU RIVAL ES",entradaCliente[3])
+                console.log("LA CARTA QUE ADIVINASTE ES",entradaCliente[4])
+
                 console.log("Object.keys(object) es",Object.keys(usuarios[puerto]))
                 let num = getKeyByValue(usuarios[puerto],entradaCliente[3])
 
@@ -186,15 +197,14 @@ function crearSala() {
                 if(cartaAJugar.localeCompare("guard")==0){
                     let cartaContrincante = entradaCliente[4];
                     let res = guard(cartaContrincante,cartaContrincanteReal);
-                    
-                    connection.sendUTF("guard|"+res);
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("guard|"+tu+"|"+rival+"|"+res);
+                    })
+                   
                 }
                 if(cartaAJugar.localeCompare("priest")==0){
-                    //jugar | javi | priest | gusta 
-                    //Puedes ver la carta de un jugador que tú escojas.
                     console.log("la carta de tu rival es",cartaContrincanteReal[0])
                     let res = cartaContrincanteReal[0]
-                    
                     connection.sendUTF("priest|"+res);
                 }
                 if(cartaAJugar.localeCompare("baron"==0)){
@@ -214,6 +224,13 @@ function crearSala() {
                     }
                     connection.sendUTF("baron|"+perdedor);
                 }
+                /*if(cartaAJugar.localeCompare("handmaid")==0){
+                    //jugar | javi | handmaid | javi *este no se usaria*
+                    
+                    //console.log("la carta de tu rival es",cartaContrincanteReal[0])
+                    //let res = cartaContrincanteReal[0]
+                    connection.sendUTF("handmaid|"+res);
+                }*/
             }
         
         });
