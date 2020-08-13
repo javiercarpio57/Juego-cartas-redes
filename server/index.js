@@ -202,17 +202,12 @@ function crearSala() {
                     let segunda = diccionarioCartas[cartaContrincanteReal[0]];
                     console.log("Primera"+primera+"-- Segunda"+segunda);
                     let res = baron(primera,segunda);
-                    let perdedor = "";
-                    // Usuario que jugo carta gano
-                    if(res == 1){
-                        perdedor = rival;
-                    }else
-                    if(res == -1){ //Jugador contrario gano
-                        perdedor = miUsuario;
-                    }else{
-                        perdedor = "-";
-                    }
-                    connection.sendUTF("baron|"+perdedor);
+                    connection.sendUTF("baron|"+res.toString());
+                }
+                if(cartaAJugar.localeCompare("prince")==0){
+                    let primera = diccionarioCartas[cartaAJugar];
+                    let segunda = diccionarioCartas[cartaContrincanteReal[0]];
+
                 }
             }
         
