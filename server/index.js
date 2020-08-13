@@ -9,8 +9,8 @@ let sockets = []
 let usuarios = {}
 let PORT = 4200
 let cards = [
-    'guard','guard','guard','priest',
-    'priest','priest','priest','baron',
+    'guard','guard','baron','guard',
+    'guard','baron','priest','baron',
     'baron','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
@@ -200,11 +200,17 @@ function crearSala() {
 
                 }else
                 if(cartaAJugar.localeCompare("baron")==0){
+
+                    // Este se debe modificar cuando se tengan 2 cartas debido a que es el valor de tu otra carta contra la del rival no el valor del baron 
+
                     let primera = diccionarioCartas[cartaAJugar];
                     let segunda = diccionarioCartas[cartaContrincanteReal[0]];
-                    console.log("Primera"+primera+"-- Segunda"+segunda);
+
+                    console.log("Primera "+primera+" -- Segunda "+segunda);
+
                     let res = baron(primera,segunda);
                     let perdedor = "";
+
                     // Usuario que jugo carta gano
                     if(res == 1){
                         perdedor = rival;
@@ -214,7 +220,12 @@ function crearSala() {
                     }else{
                         perdedor = "-";
                     }
-                    connection.sendUTF("baron|"+perdedor);
+                    //baron | quién tiró | quién recibió | -1/0/1
+
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("baron|"+tu+"|"+rival+"|"+perdedor);
+                    })
+
                 }
                 /*if(cartaAJugar.localeCompare("handmaid")==0){
                     //jugar | javi | handmaid | javi *este no se usaria*

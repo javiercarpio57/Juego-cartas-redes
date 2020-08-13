@@ -12,8 +12,8 @@ let my_username = ''
 let my_code = ''
 
 let cards = [
-    'guard','guard','guard','priest',
-    'priest','priest','priest','baron',
+    'guard','guard','baron','guard',
+    'guard','baron','priest','baron',
     'baron','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
@@ -152,15 +152,32 @@ export default class Game extends React.Component {
 				}
 				if(entradaServer[2].localeCompare(my_username) == 0){
 					console.log(entradaServer[1] + " vio tu carta")
-				}
-
-				
-				
+				}				
 			}
-			
 			if (entradaServer[0].localeCompare('baron') === 0) {
-				console.log("De haber jugado al baron");
-				console.log("El perdedor es"+entradaServer[1]);
+				//"baron|"+tu+"|"+rival+"|"+perdedor
+
+				if(entradaServer[1].localeCompare(my_username) == 0){// Si yo soy el que tiro la carta
+					if(entradaServer[3].localeCompare(entradaServer[1]) == 0 ){// Si el perdedor soy yo
+						console.log( entradaServer[2] + " tiene una carta mas alta que la tuya, perdiste");
+					}else
+					if(entradaServer[3].localeCompare(entradaServer[2]) == 0 ){// Si el perdedor es el rival
+						console.log("Tu carta es mas alta que la de "+entradaServer[2]+" ganaste");
+					}else{
+						console.log("Empate");
+					}
+				}
+				if(entradaServer[2].localeCompare(my_username) == 0){// Si yo soy el que recibio la carta
+					if(entradaServer[3].localeCompare(entradaServer[1]) == 0 ){// Si yo soy el ganador 
+						console.log("Te ataco "+ entradaServer[1] + " pero tu carta es mas alta, ganaste");					
+					}else
+					if(entradaServer[3].localeCompare(entradaServer[2]) == 0 ){//Si yo soy el que perdedor
+
+						console.log("Te ataco "+ entradaServer[1] + " y tiene una carta mas alta que la tuya, perdiste");
+					}else{
+						console.log("Empate");
+					}
+				}
 			}
 		};
 	}
