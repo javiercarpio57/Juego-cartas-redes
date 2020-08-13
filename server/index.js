@@ -263,6 +263,19 @@ function crearSala() {
                 })
                 
             }
+            //Esto es para cambiar de turno y asignar una carta al siguiente usuario
+            turnoJugador++;
+            if(turnoJugador > 4){
+                turnoJugador = 1;
+            }
+            let card = stack.pop();
+            usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
+            let siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
+            console.log("CARTA 1"+usuarios[puerto][turnoJugador.toString()]["cartas"][0]);
+            socketsClients.forEach(function (client) {
+                client.sendUTF("turnoactual|"+siguienteJugador)+"|"+usuarios[puerto][turnoJugador.toString()]["cartas"][0]+"|"
+                +usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+            })            
 
         }
         

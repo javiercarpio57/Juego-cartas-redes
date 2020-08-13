@@ -97,6 +97,9 @@ export default class Game extends React.Component {
 			if (entradaServer[0].localeCompare('turno') === 0) {
 				console.log("Asignar cartas"+entradaServer);
 			}
+			if (entradaServer[0].localeCompare('turnoactual') === 0) {
+				console.log("Cartas del siguiente usuario"+entradaServer);
+			}
 			if (entradaServer[0].localeCompare('cartas') === 0) {
 				const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
 				console.log("Tu carta es", mi_carta)
