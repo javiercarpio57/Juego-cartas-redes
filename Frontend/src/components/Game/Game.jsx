@@ -93,6 +93,10 @@ export default class Game extends React.Component {
 					is_host: my_code == '1'
 				})
 			}
+			//Se ejecuta la primera vez que cuando inicia el juego ahi entran las cartas
+			if (entradaServer[0].localeCompare('turno') === 0) {
+				console.log("Asignar cartas"+entradaServer);
+			}
 			if (entradaServer[0].localeCompare('cartas') === 0) {
 				const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
 				console.log("Tu carta es", mi_carta)
