@@ -5,6 +5,8 @@ import { Modal, Loader, Button, Input } from 'rsuite'
 import Card from '../Card/Card.jsx'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
+import PanelNames from '../PanelNames/PanelNames.jsx'
+
 let my_user = ''
 let my_username = ''
 let my_code = ''
@@ -218,11 +220,11 @@ export default class Game extends React.Component {
 	}
 
 	render() {
-		
-		
 		const { show, my_cards, messages_array, connected_users } = this.state
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
+				<PanelNames names={connected_users} pivot={my_username} />
+
 				<div className='player-spot-horizontal'>
 					{
 						my_cards.map((card, index) => {
@@ -244,10 +246,10 @@ export default class Game extends React.Component {
 							<Card name = 'player2' cardImagen= 'unknown-card' enable={true} />
 						</div>
 						<div className='player-2-card-2'>
-							<Card name = 'player2' cardImagen= 'unknown-card' enable={true} me={false} />
+							{/* <Card name = 'player2' cardImagen= 'unknown-card' enable={true} me={false} /> */}
 						</div>
 						<div className='discard-pile-player-2'>
-							<Card name = 'player2' cardImagen= 'guard' enable={true} />							
+							{/* <Card name = 'player2' cardImagen= 'guard' enable={true} />							 */}
 						</div>
 					</div>
 
@@ -263,10 +265,10 @@ export default class Game extends React.Component {
 
 					<div className='player-spot-vertical-right'>
 						<div className='discard-pile-player-4'>
-							<Card name = 'player4' cardImagen= 'priest' enable={true} />
+							{/* <Card name = 'player4' cardImagen= 'priest' enable={true} /> */}
 						</div>
 						<div className='player-4-card-2'>
-							<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
+							{/* <Card name = 'player4' cardImagen= 'unknown-card' enable={true} /> */}
 						</div>
 						<div className='player-4'>
 							<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
@@ -275,16 +277,15 @@ export default class Game extends React.Component {
 				</div>
 				<div className='player-spot-horizontal-top'>
 					<div className='discard-pile-player-3'> 
-						<Card name = 'player3' cardImagen= 'prince' enable={true} />
+						{/* <Card name = 'player3' cardImagen= 'prince' enable={true} /> */}
 					</div>
 					<div className='player-3-card-2'>
-						<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
+						{/* <Card name = 'player3' cardImagen= 'unknown-card' enable={true} /> */}
 					</div>
 					<div className='player-3'>
 						<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
 					</div>
 				</div>
-
 
 				<Modal show={show}>
 					<Modal.Header closeButton={false}>
