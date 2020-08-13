@@ -310,7 +310,7 @@ export default class Game extends React.Component {
 							<div className='chat-Size'>{messages_array.map((d) => <li key={d.mensaje}>{d.mensaje}</li>)}</div>
 						</div>
 						<div className='center-chat-input'>
-							<Input style={{ height: 30, fontSize: 12, width: 200 }} placeholder='Chat' onPressEnter={this.sendChat}/>
+							<Input style={{ height: 30, fontSize: 12 }} placeholder='Chat' onPressEnter={this.sendChat}/>
 						</div>
 					</div>
 

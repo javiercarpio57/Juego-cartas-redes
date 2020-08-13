@@ -143,7 +143,7 @@
 }
 
 .center-chat{
-    width: 200px;
+    width: 250px;
     height: 250px;
     position: relative;
     display: grid;
@@ -171,7 +171,12 @@
 }
 
 .chat-Size{
-    
+    height: 100%;
+    width: 250px;
+    overflow-y: scroll;
+    text-align: left;
+    overflow-x: visible;
+    overflow-wrap: break-word;
 }
 
 .player-2-card-2{
