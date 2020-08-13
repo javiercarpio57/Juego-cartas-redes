@@ -14,11 +14,11 @@ let servidores = []
 let sockets = []
 let usuarios = {}
 let PORT = 4200
-const cards = [
-    'guard', 'guard', 'guard', 'guard',
-    'guard', 'priest', 'priest', 'baron',
-    'baron', 'handmaid', 'handmaid', 'prince',
-    'prince', 'king', 'countess', 'princess'
+let cards = [
+    'guard','guard','guard','guard',
+    'guard','priest','priest','baron',
+    'baron','handmaid', 'handmaid','prince',
+    'prince','king','countess','princess'
 ]
 /**
  * Metodo para devolver si adivino al utilizar carta de Guardia
@@ -163,6 +163,7 @@ function crearSala() {
             if(entradaCliente[0].localeCompare("jugar") == 0){
                 let cartaAJugar = entradaCliente[2];
                 let cartaContrincante = entradaCliente[4];
+                let rival = entradaCliente[3]
                 console.log("usuarios[puerto] es",usuarios[puerto])
                 console.log("entradaCliente[3] es",entradaCliente[3])
                 console.log("Object.keys(object) es",Object.keys(usuarios[puerto]))
@@ -175,6 +176,14 @@ function crearSala() {
                     let res = guard(cartaContrincante,cartaContrincanteReal);
                     
                     connection.sendUTF("guard|"+res);
+                }
+                if(cartaAJugar.localeCompare("priest")==0){
+                    //jugar | javi | priest | gusta 
+                    //Puedes ver la carta de un jugador que tú escojas.
+                    console.log("la carta de tu rival es",cartaContrincanteReal[0])
+                    let res = cartaContrincanteReal[0]
+                    
+                    connection.sendUTF("priest|"+res);
                 }
             }
         
