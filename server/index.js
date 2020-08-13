@@ -2,12 +2,6 @@
 
 var WebSocketServer = require('websocket').server;
 var http = require('http');
-// import { guard } from './arbitro.js'
-//import { guard,baron } from './arbitro.js'
-// import { client } from 'websocket';
-//let arbitro = require('./arbitro.js').guard
-//import arbitro from './arbitro.js';
-//import { client } from 'websocket';
 
 let cont = 0;
 let servidores = []
@@ -15,9 +9,9 @@ let sockets = []
 let usuarios = {}
 let PORT = 4200
 let cards = [
-    'guard','guard','guard','guard',
-    'guard','priest','priest','baron',
-    'baron','handmaid', 'handmaid','prince',
+    'guard','guard','handmaid','handmaid',
+    'handmaid','handmaid','handmaid','handmaid',
+    'handmaid','handmaid', 'handmaid','prince',
     'prince','king','countess','princess'
 ]
 
@@ -139,7 +133,8 @@ function crearSala() {
 
                 temp = {
                     "username": entradaCliente[1],
-                    "cartas": []
+                    "cartas": [],
+                    "invencible": false
                 }
 
                 usuarios[puerto][usuariosIngresados] = temp;
@@ -164,7 +159,9 @@ function crearSala() {
             if (entradaCliente[0].localeCompare("broadcast") == 0) {
 
                 let usuarioMensaje = entradaCliente[1];
+                console.log("usuarioMensaje",usuarioMensaje)
                 let mensajeChat = entradaCliente[2];
+                console.log("mensajeChat",mensajeChat)
                 let mensajeAEnviar = "chatc|"+usuarioMensaje+"|"+mensajeChat
 
                 socketsClients.forEach(function (client) {
@@ -172,43 +169,82 @@ function crearSala() {
                 })
             }
             if(entradaCliente[0].localeCompare("jugar") == 0){
-                let cartaAJugar = entradaCliente[2];
-                let rival = entradaCliente[3];
-                let miUsuario = entradaCliente[1];
-                console.log("usuarios[puerto] es",usuarios[puerto])
-                console.log("entradaCliente[3] es",entradaCliente[3])
-                console.log("Object.keys(object) es",Object.keys(usuarios[puerto]))
-                let num = getKeyByValue(usuarios[puerto],entradaCliente[3])
 
+                let tu = entradaCliente[1]
+                let cartaAJugar = entradaCliente[2].toLowerCase()
+                let rival = entradaCliente[3]
+                
+                let num = getKeyByValue(usuarios[puerto],rival)
                 console.log("el num del usuario es",num)
                 let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
 
                 if(cartaAJugar.localeCompare("guard")==0){
-                    let cartaContrincante = entradaCliente[4];
-                    let res = guard(cartaContrincante,cartaContrincanteReal);
-                    
-                    connection.sendUTF("guard|"+res);
-                }
+
+                    let adivinanza = entradaCliente[4].toLowerCase()
+                    let res = guard(adivinanza,cartaContrincanteReal[0]);
+
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("guard|"+tu+"|"+rival+"|"+res);
+                    })
+                   
+                }else
                 if(cartaAJugar.localeCompare("priest")==0){
-                    //jugar | javi | priest | gusta 
-                    //Puedes ver la carta de un jugador que tú escojas.
-                    console.log("la carta de tu rival es",cartaContrincanteReal[0])
+
+                    console.log("La carta de tu rival es",cartaContrincanteReal[0])
                     let res = cartaContrincanteReal[0]
-                    
-                    connection.sendUTF("priest|"+res);
-                }
-                if(cartaAJugar.localeCompare("baron"==0)){
-                    let primera = diccionarioCartas[cartaAJugar];
-                    let segunda = diccionarioCartas[cartaContrincanteReal[0]];
-                    console.log("Primera"+primera+"-- Segunda"+segunda);
-                    let res = baron(primera,segunda);
-                    connection.sendUTF("baron|"+res.toString());
-                }
-                if(cartaAJugar.localeCompare("prince")==0){
+                    //connection.sendUTF("priest|"+res);
+
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("priest|"+tu+"|"+rival+"|"+res);
+                    })
+
+                }else
+                if(cartaAJugar.localeCompare("baron")==0){
+
+                    // Este se debe modificar cuando se tengan 2 cartas debido a que es el valor de tu otra carta contra la del rival no el valor del baron 
+
                     let primera = diccionarioCartas[cartaAJugar];
                     let segunda = diccionarioCartas[cartaContrincanteReal[0]];
 
+                    console.log("Primera "+primera+" -- Segunda "+segunda);
+
+                    let res = baron(primera,segunda);
+                    let perdedor = "";
+
+                    // Usuario que jugo carta gano
+                    if(res == 1){
+                        perdedor = rival;
+                    }else
+                    if(res == -1){ //Jugador contrario gano
+                        perdedor = tu;
+                    }else{
+                        perdedor = "-";
+                    }
+                    //baron | quién tiró | quién recibió | -1/0/1
+
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("baron|"+res.toString());
+                    })
+
                 }
+            if(cartaAJugar.localeCompare("prince")==0){
+                let primera = diccionarioCartas[cartaAJugar];
+                let segunda = diccionarioCartas[cartaContrincanteReal[0]];
+
+            }
+
+            if(cartaAJugar.localeCompare("handmaid")==0){
+
+                // Este se debe modificar cuando se tengan turnos para regresar a la normalidad a un jugador
+
+                //jugar|gustavo|handmaid|gustavo
+                usuarios[puerto][num]["invencible"] = true
+                console.log(usuarios[puerto])
+                socketsClients.forEach(function (client) {
+                    client.sendUTF("handmaid|"+tu);
+                })
+                
+            }
             }
         
         });
