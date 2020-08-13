@@ -134,6 +134,10 @@ export default class Game extends React.Component {
 				console.log("La carta de tu rival es",entradaServer[1])
 			}
 			
+			if (entradaServer[0].localeCompare('baron') === 0) {
+				console.log("De haber jugado al baron");
+				console.log("El perdedor es"+entradaServer[1]);
+			}
 		};
 	}
 
