@@ -36,7 +36,8 @@ export default class Game extends React.Component {
 			my_cards: [],
 			discarded_cards: [],
 			messages_array: [],
-			is_host: false			
+			is_host: false,
+			connected_users: []
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
@@ -105,9 +106,14 @@ export default class Game extends React.Component {
 			if (entradaServer[0].localeCompare('usuarios') === 0) {
 				console.log("Lista de Usuarios conectados")
 				let i = 0
-				for(i = 1; i<(entradaServer.length)-1; i=i+2){
+				const con_u = []
+				for(i = 1; i< (entradaServer.length) -1; i = i + 2) {
+					con_u.push(entradaServer[i+1])
 					console.log("ID: "+entradaServer[i]+" Username: "+entradaServer[i+1])
 				}
+				self.setState ({
+					connected_users: con_u
+				})
 			}
 			if (entradaServer[0].localeCompare('chatc') === 0) {
 				console.log("Mensaje para broadcast")
@@ -123,8 +129,6 @@ export default class Game extends React.Component {
 			}
 		};
 	}
-
-	
 
 	getNewCard(newCard) {
 		const item = newCard
@@ -295,6 +299,15 @@ export default class Game extends React.Component {
 									:
 								null
 							}
+							<p>Usuarios conectados:</p>
+							<div className='display-names'>
+								{
+									this.state.connected_users.map((user, index) => {
+										return <p>{user}</p>
+									})
+								}
+							</div>
+							<br />
 							<div style={{ textAlign: 'center' }}>
 								<Loader size="md" />
 							</div>
