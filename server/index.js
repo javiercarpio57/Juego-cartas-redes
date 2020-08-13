@@ -2,6 +2,7 @@
 
 var WebSocketServer = require('websocket').server;
 var http = require('http');
+const { client } = require('websocket');
 
 let cont = 0;
 let servidores = []
@@ -10,9 +11,9 @@ let usuarios = {}
 let PORT = 4200
 let cards = [
     'guard','guard','handmaid','handmaid',
-    'handmaid','handmaid','handmaid','handmaid',
-    'handmaid','handmaid', 'handmaid','prince',
-    'prince','king','countess','princess'
+    'handmaid','prince',
+    'prince','king','countess','countess','countess','countess'
+    ,'princess', 'countess'
 ]
 
 let diccionarioCartas = {
@@ -77,6 +78,7 @@ function crearSala() {
     let cartaServer = cards
     let socketsClients = []
     usuarios[puerto] = {}
+    let turnoJugador = 0;
     //=====================================
     //============== Revolver a cartas 
     shuffle(cartaServer)
@@ -150,6 +152,23 @@ function crearSala() {
                 socketsClients.forEach(function (client) {
                     client.sendUTF(personas);
                 })
+                if(usuariosIngresados == 4){
+                    usuarios[puerto]["1"]["cartas"].push(card);
+                    let usuario1 = usuarios[puerto]["1"]["username"];
+                    let carta11 = usuarios[puerto]["1"]["cartas"][0];
+                    let carta12 = usuarios[puerto]["1"]["cartas"][1];
+                    let usuario2 = usuarios[puerto]["2"]["username"];
+                    let carta2 = usuarios[puerto]["2"]["cartas"][0];
+                    let usuario3 = usuarios[puerto]["3"]["username"];
+                    let carta3 = usuarios[puerto]["3"]["cartas"][0];
+                    let usuario4 = usuarios[puerto]["4"]["username"];
+                    let carta4 = usuarios[puerto]["4"]["cartas"][0];
+                    turnoJugador++;
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("turno|"+usuario1+"|"+carta11+"|"+carta12+"|"+usuario2+"|"
+                        +carta2+"|"+usuario3+"|"+carta3+"|"+usuario4+"|"+carta4);
+                    });
+                }
             } else
             if (entradaCliente[0].localeCompare("iniciar") == 0) {
                 socketsClients.forEach(function (client) {
@@ -232,7 +251,6 @@ function crearSala() {
                 let segunda = diccionarioCartas[cartaContrincanteReal[0]];
 
             }
-
             if(cartaAJugar.localeCompare("handmaid")==0){
 
                 // Este se debe modificar cuando se tengan turnos para regresar a la normalidad a un jugador
@@ -245,7 +263,8 @@ function crearSala() {
                 })
                 
             }
-            }
+
+        }
         
         });
         connection.on('close', function (reasonCode, description) {
