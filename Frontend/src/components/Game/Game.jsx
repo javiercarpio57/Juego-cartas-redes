@@ -16,7 +16,7 @@ let cards = [
 	'guard','priest','priest','baron',
 	'baron','handmaid', 'handmaid','prince',
 	'prince','king','countess','princess'
-]
+    ]
 
 const has_to_play_other = ['guard', 'priest', 'baron', 'handmaid', 'princess']
 const has_to_play_countess = ['prince', 'king']
@@ -287,6 +287,17 @@ export default class Game extends React.Component {
 					console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
 				}else{
 					console.log("cambiaron las cartas de "+entradaServer[2])
+				}
+				
+			}
+
+			//==================== COUNTNESS ====================
+			if (entradaServer[0].localeCompare('countess') === 0) {
+				//prince | quién tiró | quién recibe | nueva_carta
+				if(entradaServer[2].localeCompare(my_username) == 0){
+					console.log("Jugaste countess")
+				}else{
+					console.log("Jugaron countess")
 				}
 				
 			}
