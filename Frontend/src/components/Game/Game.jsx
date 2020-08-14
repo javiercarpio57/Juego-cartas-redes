@@ -105,6 +105,9 @@ export default class Game extends React.Component {
 					self.getNewCard(entradaServer[pos + 2])
 				}
 				console.log("Asignar cartas"+entradaServer);
+				self.setState({
+					show: false
+				})
 			}
 
 			if (entradaServer[0].localeCompare('turnoactual') === 0) {
