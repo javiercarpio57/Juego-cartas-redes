@@ -92,6 +92,13 @@ export default class Game extends React.Component {
 					is_host: my_code == '1'
 				})
 			}
+			//Se ejecuta la primera vez que cuando inicia el juego ahi entran las cartas
+			if (entradaServer[0].localeCompare('turno') === 0) {
+				console.log("Asignar cartas"+entradaServer);
+			}
+			if (entradaServer[0].localeCompare('turnoactual') === 0) {
+				console.log("Cartas del siguiente usuario"+entradaServer);
+			}
 			if (entradaServer[0].localeCompare('cartas') === 0) {
 				const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
 				console.log("Tu carta es", mi_carta)
@@ -323,11 +330,13 @@ export default class Game extends React.Component {
 
 	sendChat(event){
 		//Send to Server chat
-		console.log(event.target.value)
-		this.setState({lastMessage: event.target.value})
-		let texto = 'broadcast|'+my_username+'|'+event.target.value
-		console.log("el mensaje a enviar es: "+texto)
-		client.send(texto);
+		if(event.target.value !=''){
+			console.log(event.target.value)
+			this.setState({lastMessage: event.target.value})
+			let texto = 'broadcast|'+my_username+'|'+event.target.value
+			console.log("el mensaje a enviar es: "+texto)
+			client.send(texto);
+		}
 		//Clean box
 		event.target.value = ''
 	}
@@ -391,7 +400,7 @@ export default class Game extends React.Component {
 							<div className='chat-Size'>{messages_array.map((d) => <li key={d.mensaje}>{d.mensaje}</li>)}</div>
 						</div>
 						<div className='center-chat-input'>
-							<Input style={{ height: 30, fontSize: 12, width: 200 }} placeholder='Chat' onPressEnter={this.sendChat}/>
+							<Input style={{ height: 30, fontSize: 12 }} placeholder='Chat' onPressEnter={this.sendChat}/>
 						</div>
 					</div>
 
