@@ -179,11 +179,7 @@ export default class Game extends React.Component {
 					}
 				}
 
-				console.log("ANTES DE DISCARD CARDSSS")
-				console.log(self.state.discarded_cards)
 				self.discardCards(entradaServer[0], entradaServer[1])
-				console.log("DESPUES DE DISCARD CARDS")
-				console.log(self.state.discarded_cards)
 
 				self.ShowNotification (titleNotification, bodyNotification, my_icon)
 			}
@@ -206,6 +202,9 @@ export default class Game extends React.Component {
 					bodyNotification = `${entradaServer[1]} vio la carta de ${entradaServer[2]}`
 					my_icon = 'info'
 				}
+
+				self.discardCards(entradaServer[0], entradaServer[1])
+
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 			
@@ -253,6 +252,9 @@ export default class Game extends React.Component {
 					bodyNotification = `${entradaServer[1]} ha empatado contra ${entradaServer[2]}`
 					my_icon = 'info'
 				}
+
+				self.discardCards(entradaServer[0], entradaServer[1])
+
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 			
@@ -272,6 +274,9 @@ export default class Game extends React.Component {
 					my_icon = 'warning'
 					console.log("Cuidado "+ entradaServer[1]+" es invencible por un turno.")
 				}
+				
+				self.discardCards(entradaServer[0], entradaServer[1])
+
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 // ======================================================================
