@@ -87,6 +87,7 @@ function crearSala() {
     let personas = 'usuarios|'
     let repartoInicial = 'cartas|'
     cartaServer.forEach(carta => stack.push(carta))
+    console.log("Mira al Stack cuando se crea"+stack);
     //========================================
     //============ Creacion de nuevo socket para sala
     servidores[turno] = http.createServer(function (request, response) {
@@ -399,6 +400,13 @@ function crearSala() {
                     console.log("Se jugo a la condesa")
                     socketsClients.forEach(function (client) {
                         client.sendUTF("countess|"+tu);
+                    })
+                }else
+                if(cartaAJugar.localeCompare("princess")==0){
+                    usuarios[puerto][numTuyo]["vivo"] = false;
+                    console.log("Se jugo a a la princesa");
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("princess|"+tu);
                     })
                 }
             //Esto es para cambiar de turno y asignar una carta al siguiente usuario
