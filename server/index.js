@@ -206,6 +206,10 @@ function crearSala() {
 
                     let adivinanza = entradaCliente[4].toLowerCase()
                     let res = guard(adivinanza,cartaContrincanteReal[0]);
+                    //Si adivine la carta
+                    if(res){
+                        usuarios[puerto][num]["vivo"] = false;
+                    }
 
                     socketsClients.forEach(function (client) {
                         client.sendUTF("guard|"+tu+"|"+rival+"|"+res);
@@ -243,9 +247,11 @@ function crearSala() {
                     // Usuario que jugo carta gano
                     if(res == 1){
                         perdedor = rival;
+                        usuarios[puerto][num]["vivo"] = false;
                     }else
                     if(res == -1){ //Jugador contrario gano
                         perdedor = tu;
+                        usuarios[puerto][numTuyo]["vivo"] = false;
                     }else{
                         perdedor = "-";
                     }
