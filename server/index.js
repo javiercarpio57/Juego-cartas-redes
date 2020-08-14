@@ -10,9 +10,7 @@ let usuarios = {}
 let PORT = 4200
 let cards = [
     'guard','guard','handmaid','handmaid',
-    'handmaid','handmaid','handmaid','handmaid',
-    'handmaid','handmaid', 'handmaid','prince',
-    'prince','king','countess','princess'
+	'prince', 'prince','king','countess','princess'
 ]
 
 let diccionarioCartas = {
@@ -25,6 +23,7 @@ let diccionarioCartas = {
     'countess': '7',
     'princess': '8'
 }
+
 /**
  * Metodo para devolver si adivino al utilizar carta de Guardia
  * que dependiendo si devuelve true signfica que el usaurio advino la carta
