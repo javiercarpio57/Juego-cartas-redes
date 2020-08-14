@@ -34,7 +34,10 @@ export default class Game extends React.Component {
 			messages_array: [],
 			is_host: false,
 			connected_users: [],
-			alive: true
+			alive: true,
+			j2_alive: true,
+			j3_alive: true,
+			j4_alive: true
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
@@ -149,6 +152,8 @@ export default class Game extends React.Component {
 					if(entradaServer[3].localeCompare("true") == 0){
 						bodyNotification = `Acertaste contra ${entradaServer[2]}. Lo has eliminado.`
 						my_icon = 'success'
+
+						self.killPlayer(entradaServer[2])
 						console.log("le atino")
 					}else{
 						bodyNotification = `Fallaste contra ${entradaServer[2]}.`
@@ -172,8 +177,9 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 					if(entradaServer[3].localeCompare("true") == 0) {
 						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]}. ${entradaServer[2]} ha sido eliminado.`
+						self.killPlayer(entradaServer[2])
 					} else {
-						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]}. ${entradaServer[2]} sigue en el juego.`
+						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]} pero ha fallado. ${entradaServer[2]} sigue en el juego.`
 					}
 				}
 
@@ -218,6 +224,8 @@ export default class Game extends React.Component {
 					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
 						bodyNotification = `Tu carta es más alta que la de ${entradaServer[2]}, ganaste`
 						my_icon = 'success'
+
+						self.killPlayer(entradaServer[2])
 						console.log("Tu carta es mas alta que la de "+entradaServer[2]+" ganaste");
 					} else {
 						bodyNotification = `Has empatado contra ${entradaServer[2]}`
@@ -228,7 +236,8 @@ export default class Game extends React.Component {
 					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si yo soy el ganador 
 						bodyNotification = `Te atacó ${entradaServer[1]} pero tu carta es más alta, ganaste`
 						my_icon = 'success'
-						console.log("Te ataco "+ entradaServer[1] + " pero tu carta es mas alta, ganaste");					
+						self.killPlayer(entradaServer[1])
+						console.log("Te ataco "+ entradaServer[1] + " pero tu carta es mas alta, ganaste")
 					} else if(entradaServer[3].localeCompare(entradaServer[2]) == 0){//Si yo soy el que perdedor
 						bodyNotification = `Te atacó ${entradaServer[1]}, y tiene una carta más alta que la tuya, perdiste`
 						my_icon = 'error'
@@ -248,6 +257,7 @@ export default class Game extends React.Component {
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 			
+			// ==================== HANDMAID ====================
 			if (entradaServer[0].localeCompare('handmaid') === 0) {
 				const titleNotification = `${entradaServer[1]} jugó a HANDMAID`
 				let bodyNotification = ''
@@ -269,11 +279,33 @@ export default class Game extends React.Component {
 		};
 	}
 
+	killPlayer(player) {
+		const my_pos = this.state.connected_users.indexOf(my_username)
+		console.log('JUGADORES:', my_pos, this.state.connected_users)
+		console.log('AHHH:', (my_pos + 1) % 4, this.state.connected_users[(my_pos + 1) % 4])
+		console.log('AHHH:', (my_pos + 2) % 4, this.state.connected_users[(my_pos + 2) % 4])
+		console.log('AHHH:', (my_pos + 3) % 4, this.state.connected_users[(my_pos + 3) % 4])
+		console.log('MATAR A:', player, this.state.connected_users[(my_pos + 1) % 4], this.state.connected_users[(my_pos + 2) % 4], this.state.connected_users[(my_pos + 3) % 4])
+		if (player.localeCompare(this.state.connected_users[(my_pos + 1) % 4]) == 0) {
+			this.setState ({
+				j2_alive: false
+			})
+		} else if (player.localeCompare(this.state.connected_users[(my_pos + 2) % 4]) == 0) {
+			this.setState ({
+				j3_alive: false
+			})
+		} else if (player.localeCompare(this.state.connected_users[(my_pos + 3) % 4]) == 0) {
+			this.setState ({
+				j4_alive: false
+			})
+		}
+	}
+
 	ShowNotification (title, description, my_icon) {
 		Notification[my_icon] ({
 			title,
 			placement: 'bottomEnd',
-			duration: 10000,
+			duration: 0,
 			description: <div style={{width: '250px'}}><p>{description}</p></div>
 		})
 	}
@@ -360,10 +392,16 @@ export default class Game extends React.Component {
 	}
 
 	render() {
-		const { show, my_cards, messages_array, connected_users, alive } = this.state
+		const { show, my_cards, messages_array, connected_users, alive, j2_alive, j3_alive, j4_alive } = this.state
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
-				<PanelNames names={connected_users} pivot={my_username} />
+				<PanelNames names={connected_users}
+							pivot={my_username}
+							jugador1_alive={alive}
+							jugador2_alive={j2_alive}
+							jugador3_alive={j3_alive}
+							jugador4_alive={j4_alive}
+				/>
 
 				<div className='player-spot-horizontal'>
 					{
@@ -380,6 +418,16 @@ export default class Game extends React.Component {
 									/>
 						})
 					}
+					<Card
+						name={'guard'}
+						cardImagen={'guard'}
+						me={true}
+						users={connected_users}
+						my_user={my_username}
+						enable={true}
+						jugarCarta={this.showSome.bind(this)}
+						alive={alive}
+					/>
 				</div>
 				<div className='spot-organization-horizontal'>
 					<div className='player-spot-vertical-left'>

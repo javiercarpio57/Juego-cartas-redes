@@ -67,3 +67,39 @@
     }
 }
 
+.eliminado-j1 {
+    position: absolute;
+    width: 100%;
+    bottom: 70px;
+    padding-left: 25%;
+    padding-right: 25%;
+    z-index: 1;
+}
+
+.eliminado-j2 {
+    transform: rotate(90deg);
+    position: absolute;
+    top: 45%;
+    left: -8%;
+    z-index: 1;
+    width: 30%;
+}
+
+.eliminado-j3 {
+    position: absolute;
+    width: 100%;
+    top: 70px;
+    padding-left: 25%;
+    padding-right: 25%;
+    z-index: 1;
+}
+
+.eliminado-j4 {
+    transform: rotate(-90deg);
+    position: absolute;
+    top: 45%;
+    z-index: 1;
+    width: 30%;
+    right: -8%;
+}
+
