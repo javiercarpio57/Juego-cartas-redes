@@ -82,21 +82,32 @@
 }
 
 .player-spot-horizontal {
-    width: 40%;
+    width: 50%;
     height: 27%;
     display: grid;
     align-items: center;
     justify-content: space-around;
-    grid-template-columns: 20% 20% 60%;
+    grid-template-columns: 15% 35% 50%;
+}
+
+.player-1-card-2{
+
+}
+
+.discard-pile-player-1{
+    position: relative;
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    margin-left: 30px;
 }
 
 .player-spot-horizontal-top {
-    width: 40%;
+    width: 50%;
     height: 27%;
     display: grid;
     align-items: center;
     justify-content: space-around;
-    grid-template-columns: 60% 20% 20%;
+    grid-template-columns: 60% 25% 15%;
 }
 
 .player-spot-vertical-left {
@@ -105,7 +116,7 @@
     display: grid;
     align-items: center;
     justify-content: space-around;
-    grid-template-rows: 20% 20% 60%;
+    grid-template-rows: 15% 35% 50%;
 }
 
 .player-spot-vertical-right {
@@ -193,18 +204,26 @@
 
 .discard-pile-player-2{
     transform: rotate(90deg);
+    position: relative;
+    display: grid;
+    margin-bottom: 20px;
+    grid-template-columns: 20% 20% 20% 20% 20%;
 }
 
 .discard-pile-player-3{
     transform: rotate(180deg);
     position: relative;
-    display: flex;
-    justify-content: flex-end;
+    display: grid;
+    margin-right: 30px;
+    grid-template-columns: 20% 20% 20% 20% 20%;
 }
 
 .discard-pile-player-4{
     transform: rotate(270deg);
-    justify-content: end;
+    position: relative;
+    display: grid;
+    margin-bottom: 20px;
+    grid-template-columns: 20% 20% 20% 20% 20%;
 }
 
 .max-height {

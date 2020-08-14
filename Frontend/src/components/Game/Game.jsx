@@ -179,6 +179,12 @@ export default class Game extends React.Component {
 					}
 				}
 
+				console.log("ANTES DE DISCARD CARDSSS")
+				console.log(self.state.discarded_cards)
+				self.discardCards(entradaServer[0], entradaServer[1])
+				console.log("DESPUES DE DISCARD CARDS")
+				console.log(self.state.discarded_cards)
+
 				self.ShowNotification (titleNotification, bodyNotification, my_icon)
 			}
 			
@@ -250,6 +256,8 @@ export default class Game extends React.Component {
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 			
+
+			//==================== HANDMAID ====================
 			if (entradaServer[0].localeCompare('handmaid') === 0) {
 				const titleNotification = `${entradaServer[1]} jugó a HANDMAID`
 				let bodyNotification = ''
@@ -358,11 +366,27 @@ export default class Game extends React.Component {
 	showSome(cardName, stringPlay) {
 		console.log("Al haber jugado una carta le mandamos al server:")
 		console.log(stringPlay)
-		client.send(stringPlay);
+		client.send(stringPlay)		
 	}
 
+	discardCards(cardName, player){
+		let obj = {
+			name: cardName,
+			player: player
+		}
+		let array_descartadas = this.state.discarded_cards
+		array_descartadas.push(obj)
+		this.setState(
+			{
+				discarded_cards: array_descartadas
+			}
+		)
+	}
+
+
 	render() {
-		const { show, my_cards, messages_array, connected_users, alive } = this.state
+		const { show, my_cards, messages_array, connected_users, alive, discarded_cards } = this.state
+		const my_pos = connected_users.indexOf(my_username)
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
 				<PanelNames names={connected_users} pivot={my_username} />
@@ -382,6 +406,43 @@ export default class Game extends React.Component {
 									/>
 						})
 					}
+					<div className='player-1-card-2'>
+						{
+							my_cards.map((card, index) => {
+								return <Card key={card.name + '_'+ index}
+											name={card.name}
+											cardImagen={card.name}
+											me={true}
+											users={connected_users}
+											my_user={my_username}
+											enable={card.is_enable}
+											jugarCarta={this.showSome.bind(this)}
+											alive={alive}
+										/>
+							})
+						}
+						
+					</div>
+					<div className='discard-pile-player-1'>
+						{
+							discarded_cards.map((card,index) => {
+								if(card.player==my_username){
+									return <Card key={card.name + '_'+ index}
+									name={card.name}
+									cardImagen={card.name}
+									me={true}
+									users={connected_users}
+									my_user={my_username}
+									enable={true}
+									alive={false}
+									/>
+								}
+								else{
+									return null
+								}
+							})
+						}
+					</div>
 				</div>
 				<div className='spot-organization-horizontal'>
 					<div className='player-spot-vertical-left'>
@@ -393,6 +454,24 @@ export default class Game extends React.Component {
 						</div>
 						<div className='discard-pile-player-2'>
 							{/* <Card name = 'player2' cardImagen= 'guard' enable={true} />							 */}
+							{
+								discarded_cards.map((card,index) => {
+									if(card.player==connected_users[(my_pos + 1) % 4]){
+										return <Card key={card.name + '_'+ index}
+										name={card.name}
+										cardImagen={card.name}
+										me={false}
+										users={connected_users}
+										my_user={my_username}
+										enable={true}
+										alive={false}
+										/>
+									}
+									else{
+										return null
+									}
+								})
+							}
 						</div>
 					</div>
 
@@ -409,6 +488,24 @@ export default class Game extends React.Component {
 					<div className='player-spot-vertical-right'>
 						<div className='discard-pile-player-4'>
 							{/* <Card name = 'player4' cardImagen= 'priest' enable={true} /> */}
+							{
+								discarded_cards.map((card,index) => {
+									if(card.player==connected_users[(my_pos + 3) % 4]){
+										return <Card key={card.name + '_'+ index}
+										name={card.name}
+										cardImagen={card.name}
+										me={false}
+										users={connected_users}
+										my_user={my_username}
+										enable={true}
+										alive={false}
+										/>
+									}
+									else{
+										return null
+									}
+								})
+							}
 						</div>
 						<div className='player-4-card-2'>
 							{/* <Card name = 'player4' cardImagen= 'unknown-card' enable={true} /> */}
@@ -421,6 +518,24 @@ export default class Game extends React.Component {
 				<div className='player-spot-horizontal-top'>
 					<div className='discard-pile-player-3'> 
 						{/* <Card name = 'player3' cardImagen= 'prince' enable={true} /> */}
+						{
+								discarded_cards.map((card,index) => {
+									if(card.player==connected_users[(my_pos + 2) % 4]){
+										return <Card key={card.name + '_'+ index}
+										name={card.name}
+										cardImagen={card.name}
+										me={false}
+										users={connected_users}
+										my_user={my_username}
+										enable={true}
+										alive={false}
+										/>
+									}
+									else{
+										return null
+									}
+								})
+							}
 					</div>
 					<div className='player-3-card-2'>
 						{/* <Card name = 'player3' cardImagen= 'unknown-card' enable={true} /> */}
