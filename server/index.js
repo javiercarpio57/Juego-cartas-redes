@@ -10,8 +10,10 @@ let sockets = []
 let usuarios = {}
 let PORT = 4200
 let cards = [
-    'guard','guard','handmaid','handmaid',
-	'prince', 'prince','king','countess','princess'
+    'guard', 'guard', 'guard', 'guard',
+    'guard', 'priest', 'priest', 'baron',
+    'baron', 'handmaid', 'handmaid', 'prince',
+    'prince', 'king', 'countess', 'princess'
 ]
 
 let diccionarioCartas = {
@@ -135,7 +137,8 @@ function crearSala() {
                 temp = {
                     "username": entradaCliente[1],
                     "cartas": [],
-                    "invencible": false
+                    "invencible": false,
+                    "vivo": true
                 }
 
                 usuarios[puerto][usuariosIngresados] = temp;
@@ -144,6 +147,7 @@ function crearSala() {
                 connection.sendUTF(mensaje);
 
                 let card = stack.pop();
+                console.log("conectarmeASala las cartas son"+stack)
                 let indice = usuariosIngresados.toString();
 
                 usuarios[puerto][indice]["cartas"].push(card)
@@ -191,9 +195,11 @@ function crearSala() {
                 let tu = entradaCliente[1]
                 let cartaAJugar = entradaCliente[2].toLowerCase()
                 let rival = entradaCliente[3]
-                
+                let numTuyo = getKeyByValue(usuarios[puerto],tu)
+                console.log("el num del usuario es",numTuyo)
+
                 let num = getKeyByValue(usuarios[puerto],rival)
-                console.log("el num del usuario es",num)
+                console.log("el num del rival es",num)
                 let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
 
                 if(cartaAJugar.localeCompare("guard")==0){
@@ -204,6 +210,9 @@ function crearSala() {
                     socketsClients.forEach(function (client) {
                         client.sendUTF("guard|"+tu+"|"+rival+"|"+res);
                     })
+                   usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                   console.log(usuarios[puerto])
+                   //fruits.splice(0, 1);        // Removes the first element of fruits 
                    
                 }else
                 if(cartaAJugar.localeCompare("priest")==0){
@@ -215,6 +224,8 @@ function crearSala() {
                     socketsClients.forEach(function (client) {
                         client.sendUTF("priest|"+tu+"|"+rival+"|"+res);
                     })
+                    usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                    console.log(usuarios[puerto])
 
                 }else
                 if(cartaAJugar.localeCompare("baron")==0){
@@ -243,6 +254,8 @@ function crearSala() {
                     socketsClients.forEach(function (client) {
                         client.sendUTF("baron|"+res.toString());
                     })
+                    usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                    console.log(usuarios[puerto])
 
                 }
             if(cartaAJugar.localeCompare("prince")==0){
@@ -260,6 +273,8 @@ function crearSala() {
                 socketsClients.forEach(function (client) {
                     client.sendUTF("handmaid|"+tu);
                 })
+                usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                console.log(usuarios[puerto])
                 
             }
             //Esto es para cambiar de turno y asignar una carta al siguiente usuario
@@ -268,12 +283,15 @@ function crearSala() {
                 turnoJugador = 1;
             }
             let card = stack.pop();
+            console.log("Jugar las cartas son"+stack)
             usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
             let siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
-            console.log("CARTA 1"+usuarios[puerto][turnoJugador.toString()]["cartas"][0]);
+
+            let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
+            let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+
             socketsClients.forEach(function (client) {
-                client.sendUTF("turnoactual|"+siguienteJugador)+"|"+usuarios[puerto][turnoJugador.toString()]["cartas"][0]+"|"
-                +usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+                client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
             })            
 
         }

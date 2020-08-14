@@ -12,8 +12,10 @@ let my_username = ''
 let my_code = ''
 
 let cards = [
-	'guard','guard','handmaid','handmaid',
-	'prince', 'prince','king','countess','princess'
+    'guard', 'guard', 'guard', 'guard',
+    'guard', 'priest', 'priest', 'baron',
+    'baron', 'handmaid', 'handmaid', 'prince',
+    'prince', 'king', 'countess', 'princess'
 ]
 
 const has_to_play_other = ['guard', 'priest', 'baron', 'handmaid', 'princess']
