@@ -111,15 +111,15 @@ export default class Game extends React.Component {
 				console.log("Cartas del siguiente usuario"+entradaServer);
 			}
 
-			if (entradaServer[0].localeCompare('cartas') === 0) {
-				const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
-				console.log("Tu carta es", mi_carta)
-				self.setState({
-					show: false
-				})
-				self.getNewCard(mi_carta)
-			}
-			
+			// if (entradaServer[0].localeCompare('cartas') === 0) {
+			// 	const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
+			// 	console.log("Tu carta es", mi_carta)
+			// 	self.setState({
+			// 		show: false
+			// 	})
+			// 	// self.getNewCard(mi_carta)
+			// }
+
 			if (entradaServer[0].localeCompare('usuarios') === 0) {
 				console.log("Lista de Usuarios conectados")
 				let i = 0
