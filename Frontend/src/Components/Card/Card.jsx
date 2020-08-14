@@ -18,8 +18,8 @@ export default class Card extends React.Component {
 		}
 	}
 
-	chooseCard(name, me, enable) {
-		if (me && enable) {
+	chooseCard(name, me, enable, alive) {
+		if (me && enable && alive) {
 			this.setState({
 				playingCard: name
 			})
@@ -28,7 +28,7 @@ export default class Card extends React.Component {
 	}
 
 	render(){
-		const { name, cardImagen, me, users, my_user, enable, jugarCarta } = this.props
+		const { name, cardImagen, me, users, my_user, enable, jugarCarta, alive } = this.props
 		let css = ''
 		if (enable) {
 			css = `${cardImagen}`
@@ -37,7 +37,7 @@ export default class Card extends React.Component {
 		}
 		return (
 			<div>
-				<div className={css} onClick={() => this.chooseCard(name, me, enable)} />
+				<div className={css} onClick={() => this.chooseCard(name, me, enable, alive)} />
 				{
 					this.state.playingCard === 'guard'
 						?

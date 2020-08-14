@@ -1,7 +1,7 @@
 import React from 'react'
 import './Game.scss'
 
-import { Modal, Loader, Button, Input } from 'rsuite'
+import { Modal, Loader, Button, Input, Notification } from 'rsuite'
 import Card from '../Card/Card.jsx'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
@@ -12,10 +12,8 @@ let my_username = ''
 let my_code = ''
 
 let cards = [
-    'guard','guard','handmaid','handmaid',
-    'handmaid','handmaid','handmaid','handmaid',
-    'handmaid','handmaid', 'handmaid','prince',
-    'prince','king','countess','princess'
+	'guard','guard','handmaid','handmaid',
+	'prince', 'prince','king','countess','princess'
 ]
 
 const has_to_play_other = ['guard', 'priest', 'baron', 'handmaid', 'princess']
@@ -35,7 +33,8 @@ export default class Game extends React.Component {
 			discarded_cards: [],
 			messages_array: [],
 			is_host: false,
-			connected_users: []
+			connected_users: [],
+			alive: true
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
@@ -125,70 +124,151 @@ export default class Game extends React.Component {
 				})
 				console.log(self.state.messages_array)
 			}
+
+// ======================= JUEGO DE CARTAS =============================
+
+			// ==================== GUARD ====================
 			if (entradaServer[0].localeCompare('guard') === 0) {
 				console.log("De haber jugado al guard")
 				//"guard|"+tu+"|"+rival+"|"+res
 				console.log("El que tiro",entradaServer[1])
 				console.log("El que recibio",entradaServer[2])
+
+				const titleNotification = `${entradaServer[1]} jugó a GUARD`
+				let bodyNotification = ''
+				let my_icon = ''
 				
-				if(entradaServer[1].localeCompare(my_username)==0){
-					if(entradaServer[3].localeCompare("true")==0){
+				if(entradaServer[1].localeCompare(my_username) == 0) {
+					if(entradaServer[3].localeCompare("true") == 0){
+						bodyNotification = `Acertaste contra ${entradaServer[2]}. Lo has eliminado.`
+						my_icon = 'success'
 						console.log("le atino")
 					}else{
+						bodyNotification = `Fallaste contra ${entradaServer[2]}.`
+						my_icon = 'error'
 						console.log("Fallaste jeje")
 					}
-				}
-				if(entradaServer[2].localeCompare(my_username)==0){
-					if(entradaServer[3].localeCompare("true")==0){
+				} else if (entradaServer[2].localeCompare(my_username) == 0) {
+					if(entradaServer[3].localeCompare("true") == 0) {
+						bodyNotification = `${entradaServer[1]} te ha atacado. Te han eliminado.`
+						my_icon = 'error'
+						self.setState ({
+							alive: false
+						})
 						console.log("Te atacaron")
-					}else{
+					} else {
+						bodyNotification = `${entradaServer[1]} te ha atacado pero ha fallado.`
+						my_icon = 'warning'
 						console.log("Te atacaron pero no te afecto")
 					}
+				} else {
+					my_icon = 'info'
+					if(entradaServer[3].localeCompare("true") == 0) {
+						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]}. ${entradaServer[2]} ha sido eliminado.`
+					} else {
+						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]}. ${entradaServer[2]} sigue en el juego.`
+					}
 				}
+
+				self.ShowNotification (titleNotification, bodyNotification, my_icon)
 			}
+			
+			// ==================== PRIEST ====================
 			if (entradaServer[0].localeCompare('priest') === 0) {
-				if(entradaServer[1].localeCompare(my_username) == 0){
+				const titleNotification = `${entradaServer[1]} jugó a PRIEST`
+				let bodyNotification = ''
+				let my_icon = ''
+
+				if (entradaServer[1].localeCompare(my_username) == 0) {
+					bodyNotification = `La carta de ${entradaServer[2]} es ${entradaServer[3]}`
+					my_icon = 'success'
 					console.log("La carta de " + entradaServer[2] + " es " + entradaServer[3])
-				}
-				if(entradaServer[2].localeCompare(my_username) == 0){
+				} else if (entradaServer[2].localeCompare(my_username) == 0) {
+					bodyNotification = `${entradaServer[1]} vio tu carta`
+					my_icon = 'warning'
 					console.log(entradaServer[1] + " vio tu carta")
-				}				
+				} else {
+					bodyNotification = `${entradaServer[1]} vio la carta de ${entradaServer[2]}`
+					my_icon = 'info'
+				}
+				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
+			
+			// ==================== BARON ====================
 			if (entradaServer[0].localeCompare('baron') === 0) {
-				//"baron|"+tu+"|"+rival+"|"+perdedor
+				const titleNotification = `${entradaServer[1]} jugó a BARON`
+				let bodyNotification = ''
+				let my_icon = ''
 
-				if(entradaServer[1].localeCompare(my_username) == 0){// Si yo soy el que tiro la carta
-					if(entradaServer[3].localeCompare(entradaServer[1]) == 0 ){// Si el perdedor soy yo
+				if (entradaServer[1].localeCompare(my_username) == 0) {// Si yo soy el que tiro la carta
+					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si el perdedor soy yo
+						bodyNotification = `${entradaServer[2]} tiene una carta más alta que la tuya, perdiste`
+						my_icon = 'error'
+						self.setState ({
+							alive: false
+						})
 						console.log( entradaServer[2] + " tiene una carta mas alta que la tuya, perdiste");
-					}else
-					if(entradaServer[3].localeCompare(entradaServer[2]) == 0 ){// Si el perdedor es el rival
+					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
+						bodyNotification = `Tu carta es más alta que la de ${entradaServer[2]}, ganaste`
+						my_icon = 'success'
 						console.log("Tu carta es mas alta que la de "+entradaServer[2]+" ganaste");
-					}else{
+					} else {
+						bodyNotification = `Has empatado contra ${entradaServer[2]}`
+						my_icon = 'warning'
 						console.log("Empate");
 					}
-				}
-				if(entradaServer[2].localeCompare(my_username) == 0){// Si yo soy el que recibio la carta
-					if(entradaServer[3].localeCompare(entradaServer[1]) == 0 ){// Si yo soy el ganador 
+				} else if (entradaServer[2].localeCompare(my_username) == 0) {// Si yo soy el que recibio la carta
+					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si yo soy el ganador 
+						bodyNotification = `Te atacó ${entradaServer[1]} pero tu carta es más alta, ganaste`
+						my_icon = 'success'
 						console.log("Te ataco "+ entradaServer[1] + " pero tu carta es mas alta, ganaste");					
-					}else
-					if(entradaServer[3].localeCompare(entradaServer[2]) == 0 ){//Si yo soy el que perdedor
-
+					} else if(entradaServer[3].localeCompare(entradaServer[2]) == 0){//Si yo soy el que perdedor
+						bodyNotification = `Te atacó ${entradaServer[1]}, y tiene una carta más alta que la tuya, perdiste`
+						my_icon = 'error'
+						self.setState ({
+							alive: false
+						})
 						console.log("Te ataco "+ entradaServer[1] + " y tiene una carta mas alta que la tuya, perdiste");
-					}else{
-						console.log("Empate");
+					} else {
+						bodyNotification = `Has empatado contra ${entradaServer[2]}`
+						console.log("Empate")
+						my_icon = 'warning'
 					}
+				} else {
+					bodyNotification = `${entradaServer[1]} ha empatado contra ${entradaServer[2]}`
+					my_icon = 'info'
 				}
-			}if (entradaServer[0].localeCompare('handmaid') === 0) {
-				//"baron|"+tu+"|"+rival+"|"+perdedor
+				self.ShowNotification(titleNotification, bodyNotification, my_icon)
+			}
+			
+			if (entradaServer[0].localeCompare('handmaid') === 0) {
+				const titleNotification = `${entradaServer[1]} jugó a HANDMAID`
+				let bodyNotification = ''
+				let my_icon = ''
+
 				if(entradaServer[1].localeCompare(my_username) == 0){
+					bodyNotification = 'Eres invencible por un turno'
+					my_icon = 'success'
 					console.log("Eres invencible por un turno")
 				}else{
+					bodyNotification = `Cuidado ${entradaServer[1]} es invencible por un turno.`
+					my_icon = 'warning'
 					console.log("Cuidado "+ entradaServer[1]+" es invencible por un turno.")
 				}
-				
-				
+				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
+// ======================================================================
+
 		};
+	}
+
+	ShowNotification (title, description, my_icon) {
+		Notification[my_icon] ({
+			title,
+			placement: 'bottomEnd',
+			duration: 10000,
+			description: <div style={{width: '250px'}}><p>{description}</p></div>
+		})
 	}
 
 	getNewCard(newCard) {
@@ -271,7 +351,7 @@ export default class Game extends React.Component {
 	}
 
 	render() {
-		const { show, my_cards, messages_array, connected_users } = this.state
+		const { show, my_cards, messages_array, connected_users, alive } = this.state
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
 				<PanelNames names={connected_users} pivot={my_username} />
@@ -287,6 +367,7 @@ export default class Game extends React.Component {
 										 my_user={my_username}
 										 enable={card.is_enable}
 										 jugarCarta={this.showSome.bind(this)}
+										 alive={alive}
 									/>
 						})
 					}
