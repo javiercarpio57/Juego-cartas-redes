@@ -291,6 +291,9 @@ export default class Game extends React.Component {
 			//==================== PRINCE ====================
 			if (entradaServer[0].localeCompare('prince') === 0) {
 				//prince | quién tiró | quién recibe | nueva_carta
+				const titleNotification = `${entradaServer[1]} jugó a PRINCE`
+				let bodyNotification = ''
+				let my_icon = ''
 				if(entradaServer[2].localeCompare(my_username) == 0){
 					console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
 				}else{
@@ -472,7 +475,7 @@ export default class Game extends React.Component {
 						})
 					}
 					<div className='player-1-card-2'>
-						{
+						{/* {
 							my_cards.map((card, index) => {
 								return <Card key={card.name + '_'+ index}
 											name={card.name}
@@ -485,7 +488,7 @@ export default class Game extends React.Component {
 											alive={alive}
 										/>
 							})
-						}
+						} */}
 						
 					</div>
 					<div className='discard-pile-player-1'>
