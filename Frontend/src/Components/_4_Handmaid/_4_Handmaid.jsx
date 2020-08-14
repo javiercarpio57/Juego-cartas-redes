@@ -27,7 +27,7 @@ export default class _4_Handmaid extends React.Component {
 
     play(me) {
         const play = `jugar|${me}|handmaid|${me}`
-		this.props.jugarCarta(play)
+		this.props.jugarCarta('handmaid', play)
         this.close()
     }
 	

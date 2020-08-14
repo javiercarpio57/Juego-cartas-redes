@@ -30,7 +30,7 @@ export default class _2_Priest extends React.Component {
 
     play(me) {
 		const play = `jugar|${me}|priest|${this.state.formValue.usuario_seleccionado}`
-		this.props.jugarCarta(play)
+		this.props.jugarCarta('priest', play)
         this.close()
     }
 	

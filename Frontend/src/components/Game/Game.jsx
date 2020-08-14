@@ -353,7 +353,7 @@ export default class Game extends React.Component {
 	//		this.state.discarded_cards.push(this.Card)
 	}
 
-	showSome(stringPlay) {
+	showSome(cardName, stringPlay) {
 		console.log("Al haber jugado una carta le mandamos al server:")
 		console.log(stringPlay)
 		client.send(stringPlay);

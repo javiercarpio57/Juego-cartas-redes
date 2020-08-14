@@ -70,7 +70,7 @@ export default class _1_Guard extends React.Component {
     play(m) {
         const carta = this.state.formValue.carta_seleccionada.toLowerCase()
         let play = `jugar|${m}|guard|${this.state.formValue.usuario_seleccionado}|${carta}`
-        this.props.jugarCarta(play)
+        this.props.jugarCarta('guard', play)
         this.close()
     }
 	

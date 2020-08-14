@@ -27,7 +27,7 @@ export default class _7_Countess extends React.Component {
 
     play(me) {
         const play = `jugar|${me}|princess|${me}`
-		this.props.jugarCarta(play)
+		this.props.jugarCarta('princess', play)
         this.close()
     }
 	
