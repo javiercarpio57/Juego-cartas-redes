@@ -99,11 +99,18 @@ export default class Game extends React.Component {
 			}
 			//Se ejecuta la primera vez que cuando inicia el juego ahi entran las cartas
 			if (entradaServer[0].localeCompare('turno') === 0) {
+				const pos = entradaServer.indexOf(my_username)
+				self.getNewCard(entradaServer[pos + 1])
+				if (self.state.is_host) {
+					self.getNewCard(entradaServer[pos + 2])
+				}
 				console.log("Asignar cartas"+entradaServer);
 			}
+
 			if (entradaServer[0].localeCompare('turnoactual') === 0) {
 				console.log("Cartas del siguiente usuario"+entradaServer);
 			}
+
 			if (entradaServer[0].localeCompare('cartas') === 0) {
 				const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
 				console.log("Tu carta es", mi_carta)
@@ -112,6 +119,7 @@ export default class Game extends React.Component {
 				})
 				self.getNewCard(mi_carta)
 			}
+			
 			if (entradaServer[0].localeCompare('usuarios') === 0) {
 				console.log("Lista de Usuarios conectados")
 				let i = 0
