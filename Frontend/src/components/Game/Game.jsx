@@ -12,10 +12,10 @@ let my_username = ''
 let my_code = ''
 
 let cards = [
-    'guard', 'guard', 'guard', 'guard',
-    'guard', 'priest', 'priest', 'baron',
-    'baron', 'handmaid', 'handmaid', 'prince',
-    'prince', 'king', 'countess', 'princess'
+	'guard','guard','guard','guard',
+	'guard','priest','priest','baron',
+	'baron','handmaid', 'handmaid','prince',
+	'prince','king','countess','princess'
 ]
 
 const has_to_play_other = ['guard', 'priest', 'baron', 'handmaid', 'princess']
@@ -279,6 +279,19 @@ export default class Game extends React.Component {
 
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
+
+			//==================== PRINCE ====================
+			if (entradaServer[0].localeCompare('prince') === 0) {
+				//prince | quién tiró | quién recibe | nueva_carta
+				if(entradaServer[2].localeCompare(my_username) == 0){
+					console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
+				}else{
+					console.log("cambiaron las cartas de "+entradaServer[2])
+				}
+				
+			}
+
+			
 // ======================================================================
 
 		};
