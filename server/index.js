@@ -13,7 +13,7 @@ let cards = [
     'guard', 'guard', 'guard', 'guard',
     'guard', 'priest', 'priest', 'baron',
     'baron', 'handmaid', 'handmaid', 'prince',
-    'prince', 'king', 'countess', 'princess'
+    'prince', 'king','king','king','king','king','king','countess', 'princess'
 ]
 
 let diccionarioCartas = {
@@ -282,6 +282,41 @@ function crearSala() {
                 usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
                 console.log(usuarios[puerto])
                 
+            }
+            if(cartaAJugar.localeCompare("king")==0){
+                let cartaContrincante = usuarios[puerto][num]["cartas"][0];
+                let indiceRey = usuarios[puerto][numTuyo]["cartas"].indexOf("king");
+                let cartaAIntercambiar = "";
+                let cartaNuevamia = "";
+                let cartaNuevaCon = "";
+                if(indiceRey == 0){
+                    cartaAIntercambiar = usuarios[puerto][numTuyo]["cartas"][1];
+                    console.log("Entro al if");
+                    console.log("Carta a intercambiar"+cartaAIntercambiar);
+                    console.log("Antes de intercambio"+JSON.stringify(usuarios));
+                    let temp = cartaContrincante;
+                    usuarios[puerto][num]["cartas"][0] = cartaAIntercambiar;
+                    usuarios[puerto][numTuyo]["cartas"][1] = temp;
+                    console.log("Despues de intercambio"+JSON.stringify(usuarios));
+                    cartaNuevamia = usuarios[puerto][numTuyo]["cartas"][1];
+                    cartaNuevaCon = usuarios[puerto][num]["cartas"][0];
+                }else{
+                    cartaAIntercambiar = usuarios[puerto][numTuyo]["cartas"][0];
+                    console.log("Se fue al else");
+                    console.log("Antes de intercambio"+JSON.stringify(usuarios));
+                    console.log("Antes de intercambio"+usuarios);
+                    let temp = cartaContrincante;
+                    usuarios[puerto][num]["cartas"][0] = cartaAIntercambiar;
+                    usuarios[puerto][numTuyo]["cartas"][0] = temp;
+                    console.log("Despues de intercambio"+JSON.stringify(usuarios));
+                    cartaNuevamia = usuarios[puerto][numTuyo]["cartas"][0];
+                    cartaNuevaCon = usuarios[puerto][num]["cartas"][0];
+                }
+                socketsClients.forEach(function (client) {
+                    client.sendUTF("king|"+tu+"|"+rival+"|"+cartaNuevamia+"|"+cartaNuevaCon);
+                })
+                usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                console.log(usuarios[puerto])
             }
             //Esto es para cambiar de turno y asignar una carta al siguiente usuario
             turnoJugador++;
