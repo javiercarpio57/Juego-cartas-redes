@@ -1,7 +1,7 @@
 import React from 'react'
 import './Game.scss'
 
-import { Modal, Loader, Input, Notification } from 'rsuite'
+import { Modal, Loader, Input, Notification, Alert } from 'rsuite'
 import Card from '../Card/Card.jsx'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
@@ -52,11 +52,12 @@ export default class Game extends React.Component {
 			j2_alive: true,
 			j3_alive: true,
 			j4_alive: true,
-			player_turn: ''
+			player_turn: '',
+			inmunes: []
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
-		this.getNewCard = this.getNewCard.bind(this)
+		this.GetNewCard = this.GetNewCard.bind(this)
 		this.sendChat = this.sendChat.bind(this)
 	}
 
@@ -99,6 +100,7 @@ export default class Game extends React.Component {
 			let mensaje= e.data
 			let entradaServer = mensaje.split("|");
 			console.log(entradaServer)
+
 			if (typeof e.data === 'string') {
 				console.log("El Server Manda: '" + e.data + "'");
 			}
@@ -113,9 +115,9 @@ export default class Game extends React.Component {
 			//Se ejecuta la primera vez que cuando inicia el juego ahi entran las cartas
 			if (entradaServer[0].localeCompare('turno') === 0) {
 				const pos = entradaServer.indexOf(my_username)
-				self.getNewCard(entradaServer[pos + 1])
+				self.GetNewCard(entradaServer[pos + 1])
 				if (self.state.is_host) {
-					self.getNewCard(entradaServer[pos + 2])
+					self.GetNewCard(entradaServer[pos + 2])
 				}
 
 				console.log("Asignar cartas"+entradaServer);
@@ -131,12 +133,17 @@ export default class Game extends React.Component {
 				})
 
 				if (entradaServer[1].localeCompare(my_username) == 0) {
+
+					if (self.state.inmunes.includes(entradaServer[1])) {
+						self.RemoveInmune(entradaServer[1])
+					}
+
 					console.log('ENTRADA SERVER:', entradaServer)
 					const mi_lista = []
 					mi_lista.push(entradaServer[2])
 					mi_lista.push(entradaServer[3])
 					console.log('MI_LISTA:', mi_lista)
-					self.replaceMyCards(mi_lista)
+					self.ReplaceMyCards(mi_lista)
 				} else {
 					console.log('MIS CARTAS AHORA:', self.state.my_cards)
 				}
@@ -155,6 +162,7 @@ export default class Game extends React.Component {
 					connected_users: con_u
 				})
 			}
+
 			if (entradaServer[0].localeCompare('chatc') === 0) {
 				console.log("Mensaje para broadcast")
 				let mensaje = (entradaServer[1]+": "+entradaServer[2])
@@ -166,6 +174,15 @@ export default class Game extends React.Component {
 					messages_array: mensajeArray					
 				})
 				console.log(self.state.messages_array)
+			}
+
+			if (entradaServer[0].localeCompare('ganador') === 0) {
+				// TODO: LLAMAR A RESET
+				if (entradaServer[1].localeCompare(my_username) === 0) {
+					Alert.success(`Has ganado esta ronda. Felicidades.`)
+				} else {
+					Alert.success(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`)
+				}
 			}
 
 // ======================= JUEGO DE CARTAS =============================
@@ -186,7 +203,7 @@ export default class Game extends React.Component {
 						bodyNotification = `Acertaste contra ${entradaServer[2]}. Lo has eliminado.`
 						my_icon = 'success'
 
-						self.killPlayer(entradaServer[2])
+						self.KillPlayer(entradaServer[2])
 						console.log("le atino")
 					} else {
 						bodyNotification = `Fallaste contra ${entradaServer[2]}.`
@@ -210,7 +227,7 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 					if(entradaServer[3].localeCompare("true") == 0) {
 						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]}. ${entradaServer[2]} ha sido eliminado.`
-						self.killPlayer(entradaServer[2])
+						self.KillPlayer(entradaServer[2])
 					} else {
 						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]} pero ha fallado. ${entradaServer[2]} sigue en el juego.`
 					}
@@ -261,7 +278,7 @@ export default class Game extends React.Component {
 						bodyNotification = `Tu carta es más alta que la de ${entradaServer[2]}, ganaste`
 						my_icon = 'success'
 						
-						self.killPlayer(entradaServer[2])
+						self.KillPlayer(entradaServer[2])
 						console.log("Tu carta es mas alta que la de "+entradaServer[2]+" ganaste");
 					} else {
 						bodyNotification = `Has empatado contra ${entradaServer[2]}`
@@ -272,7 +289,7 @@ export default class Game extends React.Component {
 					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si yo soy el ganador 
 						bodyNotification = `Te atacó ${entradaServer[1]} pero tu carta es más alta, ganaste`
 						my_icon = 'success'
-						self.killPlayer(entradaServer[1])
+						self.KillPlayer(entradaServer[1])
 						console.log("Te ataco "+ entradaServer[1] + " pero tu carta es mas alta, ganaste")
 					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {//Si yo soy el que perdedor
 						bodyNotification = `Te atacó ${entradaServer[1]}, y tiene una carta más alta que la tuya, perdiste`
@@ -290,11 +307,11 @@ export default class Game extends React.Component {
 					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si el perdedor soy yo
 						bodyNotification = `${entradaServer[2]} tiene una carta más alta que ${entradaServer[1]}, ${entradaServer[1]} ha perdido`
 						my_icon = 'info'
-						self.killPlayer(entradaServer[3])
+						self.KillPlayer(entradaServer[3])
 					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
 						bodyNotification = `${entradaServer[1]} tiene una carta más alta que ${entradaServer[2]}, ${entradaServer[2]} ha perdido`
 						my_icon = 'info'
-						self.killPlayer(entradaServer[3])
+						self.KillPlayer(entradaServer[3])
 					} else {
 						bodyNotification = `${entradaServer[1]} ha empatado con ${entradaServer[1]}`
 						my_icon = 'info'
@@ -315,11 +332,12 @@ export default class Game extends React.Component {
 					bodyNotification = 'Eres invencible por un turno'
 					my_icon = 'success'
 					console.log("Eres invencible por un turno")
-				}else{
+				} else {
 					bodyNotification = `Cuidado ${entradaServer[1]} es invencible por un turno.`
 					my_icon = 'warning'
 					console.log("Cuidado "+ entradaServer[1]+" es invencible por un turno.")
 				}
+				self.CreateInmune(entradaServer[1])
 				
 				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
@@ -336,12 +354,12 @@ export default class Game extends React.Component {
 					bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
 					my_icon = 'success'
 					self.discardCards(entradaServer[0], entradaServer[1])
-					self.replaceMyCards([entradaServer[3]])
+					self.ReplaceMyCards([entradaServer[3]])
 					console.log(`Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`)
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {
 					bodyNotification = `${entradaServer[1]} cambió tu carta, tu nueva carta es ${entradaServer[3]}`
 					my_icon = 'warning'
-					self.replaceMyCards([entradaServer[3]])
+					self.ReplaceMyCards([entradaServer[3]])
 					console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
 				} else {
 					bodyNotification = `${entradaServer[1]} cambió las cartas de ${entradaServer[2]}`
@@ -384,14 +402,40 @@ export default class Game extends React.Component {
 					my_icon = 'success'
 					bodyNotification = `${entradaServer[1]} jugó a princess`
 				}
-				self.killPlayer(entradaServer[1])
+				self.KillPlayer(entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 // ======================================================================
 		};
 	}
 
-	replaceMyCards(newCard) {
+	CreateInmune(player) {
+		console.log('CREANDO INMUNIDAD A:', player)
+		this.setState (state => {
+			const eliminados = [...state.disabled_users, player]
+			const inmunesss = [...state.inmunes, player]
+			
+			console.log('INMUNES:', inmunesss)
+			console.log('INMUNES-ELIMINADOS:', eliminados)
+			return {
+				disabled_users: eliminados,
+				inmunes: inmunesss
+			}
+		})
+	}
+
+	RemoveInmune(player) {
+		const nuevos_eliminados = this.state.disabled_players.filter(item => item !== player)
+		const nuevo_inmunes = this.state.inmunes.filter(item => item !== player)
+
+		console.log('NUEVO INMUNES:', nuevo_inmunes)
+		this.setState ({
+			disabled_players: nuevos_eliminados,
+			inmunes: nuevo_inmunes
+		})
+	}
+
+	ReplaceMyCards(newCard) {
 		console.log('NEWCARD:', newCard)
 		const temp_card = []
 		newCard.map((nombre, index) => {
@@ -407,7 +451,7 @@ export default class Game extends React.Component {
 		})
 	}
 
-	killPlayer(player) {
+	KillPlayer(player) {
 		const my_pos = this.state.connected_users.indexOf(my_username)
 		
 		this.setState (state => {
@@ -448,7 +492,7 @@ export default class Game extends React.Component {
 		})
 	}
 
-	getNewCard(newCard) {
+	GetNewCard(newCard) {
 		const item = newCard
 		cards.splice(cards.indexOf(item), 1)
 
@@ -462,7 +506,7 @@ export default class Game extends React.Component {
 		this.setState({
 			my_cards: temp_card
 		})
-		this.checkMyCards()
+		this.CheckMyCards()
 	}
 
 	clearCards() {
@@ -477,7 +521,7 @@ export default class Game extends React.Component {
 		})
 	}
 
-	checkMyCards() {
+	CheckMyCards() {
 		let tmp_cards = this.state.my_cards
 
 		if (tmp_cards.length === 2) {
@@ -572,7 +616,7 @@ export default class Game extends React.Component {
 			})
 		
 		} else {
-			this.killPlayer(player)
+			this.KillPlayer(player)
 		}
 	}
 
