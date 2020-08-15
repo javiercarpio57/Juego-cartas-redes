@@ -195,11 +195,11 @@ export default class Game extends React.Component {
 			}
 
 			if (entradaServer[0].localeCompare('ganador') === 0) {
-				// TODO: LLAMAR A RESET
+				self.resetVariables()
 				if (entradaServer[1].localeCompare(my_username) === 0) {
-					Alert.success(`Has ganado esta ronda. Felicidades.`)
+					Alert.success(`Has ganado esta ronda. Felicidades.`, 10000)
 				} else {
-					Alert.success(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`)
+					Alert.success(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`, 15000)
 				}
 			}
 
@@ -361,6 +361,28 @@ export default class Game extends React.Component {
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
+			// ==================== KING ====================
+			if (entradaServer[0].localeCompare(CARDS.KING) === 0) {
+				const titleNotification = `${entradaServer[1]} jugó a KING`
+				let bodyNotification = ''
+				let my_icon = ''
+
+				if (entradaServer[1].localeCompare(my_username)) {
+					self.discardCards(entradaServer[0], entradaServer[1])
+					self.ReplaceMyCards([entradaServer[4]])
+					bodyNotification = `Has intercambiado carta con ${entradaServer[2]}`
+					my_icon = 'success'
+				} else if (entradaServer[2].localeCompare(my_username)) {
+					self.ReplaceMyCards([entradaServer[3]])
+					bodyNotification = `${entradaServer[1]} ha intercambiado carta contigo`
+					my_icon = 'warning'
+				} else {
+					bodyNotification = `${entradaServer[1]} ha intercambiado carta con ${entradaServer[2]}`
+					my_icon = 'info'
+				}
+				self.ShowNotification(titleNotification, bodyNotification, my_icon)
+			}
+
 			// ==================== PRINCE ====================
 			if (entradaServer[0].localeCompare('prince') === 0) {
 				//prince | quién tiró | quién recibe | nueva_carta
@@ -387,7 +409,7 @@ export default class Game extends React.Component {
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
-			// ==================== COUNTNESS ====================
+			// ==================== COUNTESS ====================
 			if (entradaServer[0].localeCompare('countess') === 0) {
 				const titleNotification = `${entradaServer[1]} jugó a COUNTESS`
 				let bodyNotification = ''
@@ -609,7 +631,8 @@ export default class Game extends React.Component {
 	}
 
 	discardCards(cardName, player){
-		if (cardName !== CARDS.PRINCESS) {		
+		if (cardName !== CARDS.PRINCESS) {	
+			console.log('DESCARTANDO:', cardName)	
 			let array_descartadas = this.state.discarded_cards	
 			let mis_cartas = this.state.my_cards
 
