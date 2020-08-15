@@ -220,6 +220,8 @@ function crearSala() {
 
                 if(cartaAJugar.localeCompare("guard")==0){
 
+                    let idGuard = usuarios[puerto][numTuyo]["cartas"].indexOf("guard")
+
                     let adivinanza = entradaCliente[4].toLowerCase()
                     let res = guard(adivinanza,cartaContrincanteReal[0]);
                     //Si adivine la carta
@@ -230,13 +232,14 @@ function crearSala() {
                     socketsClients.forEach(function (client) {
                         client.sendUTF("guard|"+tu+"|"+rival+"|"+res);
                     })
-                   usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                   console.log("El guard esta en la posicion "+idGuard+" y sera descartada")
+                   usuarios[puerto][numTuyo]["cartas"].splice(idGuard,1)
                    console.log(usuarios[puerto])
                    //fruits.splice(0, 1);        // Removes the first element of fruits 
                    
                 }else
                 if(cartaAJugar.localeCompare("priest")==0){
-
+                    let idPriest = usuarios[puerto][numTuyo]["cartas"].indexOf("priest")
                     console.log("La carta de tu rival es",cartaContrincanteReal[0])
                     let res = cartaContrincanteReal[0]
                     //connection.sendUTF("priest|"+res);
@@ -244,7 +247,8 @@ function crearSala() {
                     socketsClients.forEach(function (client) {
                         client.sendUTF("priest|"+tu+"|"+rival+"|"+res);
                     })
-                    usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                    console.log("El priest esta en la posicion "+idPriest+" y sera descartada")
+                    usuarios[puerto][numTuyo]["cartas"].splice(idPriest,1)
                     console.log(usuarios[puerto])
 
                 }else
@@ -286,13 +290,14 @@ function crearSala() {
                     socketsClients.forEach(function (client) {
                         client.sendUTF("baron|"+tu+"|"+rival+"|"+perdedor);
                     })
-                    usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                    console.log("El priest esta en la posicion "+idbar+" y sera descartada")
+                    usuarios[puerto][numTuyo]["cartas"].splice(idbar,1)
                     console.log(usuarios[puerto])
 
                 }else
                 if(cartaAJugar.localeCompare("prince")==0){
                     console.log(usuarios[puerto])
-
+                    let idPrince = usuarios[puerto][numTuyo]["cartas"].indexOf("prince")
                     if(num == numTuyo){ // El usuario uso prince en si mismo
                         console.log("El usuario uso prince en si mismo")
 
@@ -311,7 +316,7 @@ function crearSala() {
                                 socketsClients.forEach(function (client) {
                                     client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio");
                                 })
-                                usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                                usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
 
 
                             }else{ // Si la carta es no es princesa le cambiamos la carta
@@ -322,7 +327,7 @@ function crearSala() {
                                 socketsClients.forEach(function (client) {
                                     client.sendUTF("prince|"+tu+"|"+rival+"|"+card);
                                 })
-                                usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                                usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
                             }                        
 
                         }else{ // El prince del usuario esta en la posicion 0 por lo que eliminaremos la posicion 1
@@ -337,7 +342,7 @@ function crearSala() {
                                 socketsClients.forEach(function (client) {
                                     client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio");
                                 })
-                                usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                                usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
 
                             }else{ // Si la carta es no es princesa le cambiamos la carta
                                 //console.log("cambiamos la carta de "+usuarios[puerto][num]["cartas"][1])
@@ -348,7 +353,7 @@ function crearSala() {
                                 socketsClients.forEach(function (client) {
                                     client.sendUTF("prince|"+tu+"|"+rival+"|"+card);
                                 })
-                                usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                                usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
                             }
                         }
 
@@ -365,7 +370,7 @@ function crearSala() {
                             socketsClients.forEach(function (client) {
                                 client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio");
                             })
-                            usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                            usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
 
                         }else{ // Si la carta es no es princesa le cambiamos la carta
                             
@@ -380,25 +385,26 @@ function crearSala() {
                             socketsClients.forEach(function (client) {
                                 client.sendUTF("prince|"+tu+"|"+rival+"|"+card);
                             })
-                            usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                            usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
                         }                    
                     }
                 }else
                 if(cartaAJugar.localeCompare("handmaid")==0){
 
                     // Este se debe modificar cuando se tengan turnos para regresar a la normalidad a un jugador
-
+                    let idHandmaid = usuarios[puerto][numTuyo]["cartas"].indexOf("handmaid")
                     //jugar|gustavo|handmaid|gustavo
                     usuarios[puerto][num]["invencible"] = true
                     console.log(usuarios[puerto])
                     socketsClients.forEach(function (client) {
                         client.sendUTF("handmaid|"+tu);
                     })
-                    usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                    usuarios[puerto][numTuyo]["cartas"].splice(idHandmaid,1)
                     console.log(usuarios[puerto])
                     
                 }else
                 if(cartaAJugar.localeCompare("king")==0){
+                    let idKing = usuarios[puerto][numTuyo]["cartas"].indexOf("king")
                     let cartaContrincante = usuarios[puerto][num]["cartas"][0];
                     let indiceRey = usuarios[puerto][numTuyo]["cartas"].indexOf("king");
                     let cartaAIntercambiar = "";
@@ -430,11 +436,12 @@ function crearSala() {
                     socketsClients.forEach(function (client) {
                         client.sendUTF("king|"+tu+"|"+rival+"|"+cartaNuevamia+"|"+cartaNuevaCon);
                     })
-                    usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                    usuarios[puerto][numTuyo]["cartas"].splice(idKing,1)
                     console.log(usuarios[puerto])
                 }else
                 if(cartaAJugar.localeCompare("countess")==0){
-                    usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+                    let idCountess = usuarios[puerto][numTuyo]["cartas"].indexOf("countess")
+                    usuarios[puerto][numTuyo]["cartas"].splice(idCountess,1)
                     console.log("Se jugo a la condesa")
                     socketsClients.forEach(function (client) {
                         client.sendUTF("countess|"+tu);
