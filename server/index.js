@@ -481,6 +481,23 @@ function crearSala() {
                 socketsClients.forEach(function (client) {
                     client.sendUTF("ganador|"+usuarios[puerto][indice]["username"]);
                 });
+                // Limpieza de variables para siguiente ronda
+                cartaServer = cards;
+                shuffle(cartaServer);
+                stack = [];
+                cartaServer.forEach(carta => stack.push(carta));
+                Object.keys(usuarios[puerto]).map((key,index)=>{
+                    let card = stack.pop();
+                    usuarios[puerto][key]["cartas"] = [card];
+                    usuarios[puerto][key]["invencible"] = false;
+                    usuarios[puerto][key]["vivo"] = true;
+                    turnoJugador = 1;
+                })
+                console.log("Limpieza");
+                console.log(usuarios[puerto]);
+                //Pendiente de mañana
+                //Asignar su siguiente carta al turno 1 y mandarla
+                //Mandar todas las cartas de nuevo al cliente sus usuarios con sus respectivas cartas
             }else{
                 console.log("Esto tiene el array"+estado_de_jugadores+"y el valor de perdedores es"+cont_perdedores);
                 let card = stack.pop();
