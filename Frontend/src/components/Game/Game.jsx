@@ -168,6 +168,25 @@ export default class Game extends React.Component {
 				console.log(self.state.messages_array)
 			}
 
+			if (entradaServer[0].localeCompare('final') === 0){
+				console.log('FINALISTAS')
+				
+				let finalistas = []
+				let jugador = ''
+				let carta = ''
+				for(var i = 1; i<entradaServer.length; i = i+2){
+					jugador = entradaServer[i]
+					carta = entradaServer[i+1]
+					finalistas.push({
+						name: jugador,
+						card: carta
+					})
+				}
+
+				compararCartas(finalistas)
+
+			}
+
 // ======================= JUEGO DE CARTAS =============================
 
 			// ==================== GUARD ====================
@@ -407,6 +426,8 @@ export default class Game extends React.Component {
 		})
 	}
 
+	
+
 	killPlayer(player) {
 		const my_pos = this.state.connected_users.indexOf(my_username)
 		
@@ -475,6 +496,10 @@ export default class Game extends React.Component {
 		this.setState({
 			my_cards: tmp_cards
 		})
+	}
+
+	compararCartas(finalistas){
+		let highestCard = ''
 	}
 
 	checkMyCards() {
