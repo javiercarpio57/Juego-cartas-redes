@@ -65,9 +65,15 @@ function shuffle(array) {
     array.sort(() => Math.random() - 0.5);
 }
 
-function originIsAllowed(origin) {
+function originIsAllowed(origin,cantjugadores) {
     // put logic here to detect whether the specified origin is allowed.
-    return true;
+    if(cantjugadores<4){
+        console.log("Esto es el true de ORIGINISALLOWED "+cantjugadores);
+        return true;
+    }else{
+        console.log("esto es el false de ORIGINISALLOWED "+cantjugadores);
+        return false;
+    }
 }
 
 function crearSala() {
@@ -104,7 +110,7 @@ function crearSala() {
     //=================================================
     //=========== Conexion de socket general => Aqui se desarrolla el intercambio servidor cliente
     sockets[turno].on('request', function (request) {
-        if (!originIsAllowed(request.origin)) {
+        if (!originIsAllowed(request.origin,usuariosIngresados)) {
             request.reject();
             console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
             return;
@@ -473,7 +479,6 @@ function crearSala() {
             Object.keys(usuarios[puerto]).map((key,index)=>{
                 estado_de_jugadores.push(usuarios[puerto][key]["vivo"]);
                 if(usuarios[puerto][key]["vivo"] == false){
-                    console.log("Entro al iffff"+estado_de_jugadores);
                     cont_perdedores++;
                 }
             })
@@ -523,19 +528,37 @@ function crearSala() {
                 }
             }else{
                 console.log("Esto tiene el array"+estado_de_jugadores+"y el valor de perdedores es"+cont_perdedores);
-                let card = stack.pop();
-                console.log("Jugar las cartas son"+stack)
-                usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
-                console.log(usuarios[puerto])
 
-                siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
+                if(stack.length != 0 ){
+                    let card = stack.pop();
+                    console.log("Jugar las cartas son"+stack)
+                    usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
+                    console.log(usuarios[puerto])
 
-                let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
-                let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+                    siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
 
-                socketsClients.forEach(function (client) {
-                    client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
-                })
+                    let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
+                    let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
+                    })
+                }else{
+                    //.send(‘final | jugador1 | carta | jugador2 | carta | jugador3 | carta | 
+                    let listaJug = 'final|'
+                    Object.keys(usuarios[puerto]).map((key,index)=>{
+
+                        if(usuarios[puerto][key]["vivo"] == true){
+                            listaJug = listaJug+usuarios[puerto][key]["username"]+"|"+usuarios[puerto][key]["cartas"]+"|"
+                        }
+                        
+                    })
+                    
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF(listaJug);
+                    })
+                }
+                
             }
         }
         
