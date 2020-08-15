@@ -125,18 +125,11 @@ export default class Game extends React.Component {
 					mi_lista.push(entradaServer[3])
 					console.log('MI_LISTA:', mi_lista)
 					self.replaceMyCards(mi_lista)
+				} else {
+					console.log('MIS CARTAS AHORA:', self.state.my_cards)
 				}
 				console.log("Cartas del siguiente usuario"+entradaServer);
 			}
-
-			// if (entradaServer[0].localeCompare('cartas') === 0) {
-			// 	const mi_carta = entradaServer[entradaServer.indexOf(my_code) + 1]
-			// 	console.log("Tu carta es", mi_carta)
-			// 	self.setState({
-			// 		show: false
-			// 	})
-			// 	// self.getNewCard(mi_carta)
-			// }
 
 			if (entradaServer[0].localeCompare('usuarios') === 0) {
 				console.log("Lista de Usuarios conectados")
@@ -176,18 +169,19 @@ export default class Game extends React.Component {
 				let bodyNotification = ''
 				let my_icon = ''
 				
-				if(entradaServer[1].localeCompare(my_username) == 0) {
-					if(entradaServer[3].localeCompare("true") == 0){
+				if (entradaServer[1].localeCompare(my_username) == 0) {
+					if (entradaServer[3].localeCompare("true") == 0){
 						bodyNotification = `Acertaste contra ${entradaServer[2]}. Lo has eliminado.`
 						my_icon = 'success'
 
 						self.killPlayer(entradaServer[2])
 						console.log("le atino")
-					}else{
+					} else {
 						bodyNotification = `Fallaste contra ${entradaServer[2]}.`
 						my_icon = 'error'
 						console.log("Fallaste jeje")
 					}
+					self.discardCards(entradaServer[0], entradaServer[1])
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {
 					if(entradaServer[3].localeCompare("true") == 0) {
 						bodyNotification = `${entradaServer[1]} te ha atacado. Te han eliminado.`
@@ -211,7 +205,6 @@ export default class Game extends React.Component {
 					}
 				}
 
-				self.discardCards(entradaServer[0], entradaServer[1])
 
 				self.ShowNotification (titleNotification, bodyNotification, my_icon)
 			}
@@ -225,6 +218,7 @@ export default class Game extends React.Component {
 				if (entradaServer[1].localeCompare(my_username) == 0) {
 					bodyNotification = `La carta de ${entradaServer[2]} es ${entradaServer[3]}`
 					my_icon = 'success'
+					self.discardCards(entradaServer[0], entradaServer[1])
 					console.log("La carta de " + entradaServer[2] + " es " + entradaServer[3])
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {
 					bodyNotification = `${entradaServer[1]} vio tu carta`
@@ -235,7 +229,6 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 				}
 
-				self.discardCards(entradaServer[0], entradaServer[1])
 
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
@@ -245,7 +238,7 @@ export default class Game extends React.Component {
 				const titleNotification = `${entradaServer[1]} jugó a BARON`
 				let bodyNotification = ''
 				let my_icon = ''
-
+				
 				if (entradaServer[1].localeCompare(my_username) == 0) {// Si yo soy el que tiro la carta
 					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si el perdedor soy yo
 						bodyNotification = `${entradaServer[2]} tiene una carta más alta que la tuya, perdiste`
@@ -257,7 +250,7 @@ export default class Game extends React.Component {
 					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
 						bodyNotification = `Tu carta es más alta que la de ${entradaServer[2]}, ganaste`
 						my_icon = 'success'
-
+						
 						self.killPlayer(entradaServer[2])
 						console.log("Tu carta es mas alta que la de "+entradaServer[2]+" ganaste");
 					} else {
@@ -265,6 +258,7 @@ export default class Game extends React.Component {
 						my_icon = 'warning'
 						console.log("Empate");
 					}
+					self.discardCards(entradaServer[0], entradaServer[1])
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {// Si yo soy el que recibio la carta
 					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si yo soy el ganador 
 						bodyNotification = `Te atacó ${entradaServer[1]} pero tu carta es más alta, ganaste`
@@ -288,7 +282,6 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 				}
 
-				self.discardCards(entradaServer[0], entradaServer[1])
 
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
@@ -302,6 +295,7 @@ export default class Game extends React.Component {
 				if(entradaServer[1].localeCompare(my_username) == 0){
 					bodyNotification = 'Eres invencible por un turno'
 					my_icon = 'success'
+					self.discardCards(entradaServer[0], entradaServer[1])
 					console.log("Eres invencible por un turno")
 				}else{
 					bodyNotification = `Cuidado ${entradaServer[1]} es invencible por un turno.`
@@ -309,7 +303,6 @@ export default class Game extends React.Component {
 					console.log("Cuidado "+ entradaServer[1]+" es invencible por un turno.")
 				}
 				
-				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
@@ -323,6 +316,7 @@ export default class Game extends React.Component {
 				if(entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0){
 					bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
 					my_icon = 'success'
+					self.discardCards(entradaServer[0], entradaServer[1])
 					self.replaceMyCards([entradaServer[3]])
 					console.log(`Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`)
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {
@@ -335,7 +329,6 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 					console.log("cambiaron las cartas de "+entradaServer[2])
 				}
-				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
@@ -402,9 +395,10 @@ export default class Game extends React.Component {
 		const temp_card = this.state.my_cards
 		temp_card.push({
 			is_enable: true,
-			name: item,
+			name: item
 		})
 
+		console.log('GET NEW CARD:', temp_card)
 		this.setState({
 			my_cards: temp_card
 		})
@@ -477,16 +471,16 @@ export default class Game extends React.Component {
 	}
 
 	discardCards(cardName, player){
-
 		let mis_cartas = this.state.my_cards
 		mis_cartas.splice(mis_cartas.indexOf(cardName), 1)
-
+		
 		let obj = {
 			name: cardName,
 			player: player
 		}
 		let array_descartadas = this.state.discarded_cards
 		array_descartadas.push(obj)
+		console.log('DISCARD CARD:', this.state.my_cards)
 		this.setState(
 			{
 				discarded_cards: array_descartadas,
@@ -526,7 +520,7 @@ export default class Game extends React.Component {
 									/>
 						})
 					}
-					<div className='player-1-card-2'>
+					{/* <div class Name='player-1-card-2'> */}
 						{/* {
 							my_cards.map((card, index) => {
 								return <Card key={card.name + '_'+ index}
@@ -542,7 +536,7 @@ export default class Game extends React.Component {
 							})
 						} */}
 						
-					</div>
+					{/* </div> */}
 					<div className='discard-pile-player-1'>
 						{
 							discarded_cards.map((card,index) => {
