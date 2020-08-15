@@ -39,12 +39,14 @@ export default class Card extends React.Component {
 		let disabled_with_me = []
 
 		if (disabled_players) {
+			disabled_without_me = disabled_players
 			disabled_with_me = disabled_players
-			if (disabled_players.length > 0) {
-				disabled_without_me = disabled_players.splice(disabled_players.indexOf(my_user), 1)
+
+			if (disabled_without_me.includes(my_user)) {
+				const index = disabled_without_me.indexOf(my_user)
+				disabled_without_me.splice(index, 1)
 			}
 		}
-		
 
 		return (
 			<div>

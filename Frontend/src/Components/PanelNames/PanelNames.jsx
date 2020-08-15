@@ -74,9 +74,15 @@ export default class Card extends React.Component {
                     null
                 }
 
-                <Popover visible style={{ margin: '15px' }}>
-                    <h4 style={styles}>{titulo}</h4>
-                </Popover>
+                {
+                    player_turn
+                        ?
+                    <Popover visible style={{ margin: '15px' }}>
+                        <h4 style={styles}>{titulo}</h4>
+                    </Popover>
+                        :
+                    null
+                }
             </div>
 		)
 	}

@@ -274,7 +274,7 @@ export default class Game extends React.Component {
 						my_icon = 'success'
 						self.killPlayer(entradaServer[1])
 						console.log("Te ataco "+ entradaServer[1] + " pero tu carta es mas alta, ganaste")
-					} else if(entradaServer[3].localeCompare(entradaServer[2]) == 0){//Si yo soy el que perdedor
+					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {//Si yo soy el que perdedor
 						bodyNotification = `Te atacó ${entradaServer[1]}, y tiene una carta más alta que la tuya, perdiste`
 						my_icon = 'error'
 						self.setState ({
@@ -287,8 +287,18 @@ export default class Game extends React.Component {
 						my_icon = 'warning'
 					}
 				} else {
-					bodyNotification = `${entradaServer[1]} ha empatado contra ${entradaServer[2]}`
-					my_icon = 'info'
+					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si el perdedor soy yo
+						bodyNotification = `${entradaServer[2]} tiene una carta más alta que ${entradaServer[1]}, ${entradaServer[1]} ha perdido`
+						my_icon = 'info'
+						self.killPlayer(entradaServer[3])
+					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
+						bodyNotification = `${entradaServer[1]} tiene una carta más alta que ${entradaServer[2]}, ${entradaServer[2]} ha perdido`
+						my_icon = 'info'
+						self.killPlayer(entradaServer[3])
+					} else {
+						bodyNotification = `${entradaServer[1]} ha empatado con ${entradaServer[1]}`
+						my_icon = 'info'
+					}
 				}
 
 				self.discardCards(entradaServer[0], entradaServer[1])
@@ -400,16 +410,19 @@ export default class Game extends React.Component {
 	killPlayer(player) {
 		const my_pos = this.state.connected_users.indexOf(my_username)
 		
-		const disabled = this.state.disabled_users
-		disabled.push(player)
-		this.setState ({
-			disabled_users: disabled
+		this.setState (state => {
+			console.log('ELIMINARON A:', player)
+			const eliminados = [...state.disabled_users, player]
+
+			return {
+				disabled_users: eliminados
+			}
 		})
+		console.log('ELIMINADOS:', this.state.disabled_users)
 
 		if (player.localeCompare(this.state.connected_users[(my_pos + 1) % 4]) == 0) {
-			
 			this.setState ({
-				j2_alive: false
+				j2_alive: false,
 			})
 		} else if (player.localeCompare(this.state.connected_users[(my_pos + 2) % 4]) == 0) {
 			this.setState ({
