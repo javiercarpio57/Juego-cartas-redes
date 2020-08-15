@@ -35,8 +35,7 @@ let diccionarioCartas = {
  * @param {*} cartaAdivinar
  */
 function guard(cartaContrincante,cartaAdivinar){
-    console.log("la carta verdadera",cartaContrincante)
-    console.log("la carta adivinar",cartaAdivinar)
+    
     if(cartaContrincante.localeCompare(cartaAdivinar) == 0){
         return true;
     }else{
@@ -87,7 +86,7 @@ function crearSala() {
     let personas = 'usuarios|'
     let repartoInicial = 'cartas|'
     cartaServer.forEach(carta => stack.push(carta))
-    console.log("Mira al Stack cuando se crea"+stack);
+    console.log("Mira al Stack cuando se crea "+stack);
     //========================================
     //============ Creacion de nuevo socket para sala
     servidores[turno] = http.createServer(function (request, response) {
@@ -121,7 +120,7 @@ function crearSala() {
 
             //====== Formato de envio de juego   => instruccion | username | target 
             if (entradaCliente[0].localeCompare("dondeConecto") == 0) {
-                console.log("entro a preguntar y el valor de cont es: " + cont);
+                
                 cont++;
                 nuevopuerto = PORT + cont;
                 connection.sendUTF(nuevopuerto.toString());
@@ -143,20 +142,24 @@ function crearSala() {
                 }
 
                 usuarios[puerto][usuariosIngresados] = temp;
-                console.log( usuarios[puerto])
+                
                 let mensaje = "conectado|" + usuariosIngresados
                 connection.sendUTF(mensaje);
 
                 let card = stack.pop();
-                console.log("conectarmeASala las cartas son"+stack)
+                console.log("conectarmeASala las cartas son "+stack)
                 let indice = usuariosIngresados.toString();
 
                 usuarios[puerto][indice]["cartas"].push(card)
+
+                console.log(usuarios[puerto])
+
                 repartoInicial = repartoInicial + usuariosIngresados + "|" + card + "|"
                 socketsClients.forEach(function (client) {
                     client.sendUTF(personas);
                 })
                 if(usuariosIngresados == 4){
+                    let card = stack.pop();
                     usuarios[puerto]["1"]["cartas"].push(card);
                     let usuario1 = usuarios[puerto]["1"]["username"];
                     let carta11 = usuarios[puerto]["1"]["cartas"][0];
@@ -172,7 +175,8 @@ function crearSala() {
                         client.sendUTF("turno|"+usuario1+"|"+carta11+"|"+carta12+"|"+usuario2+"|"
                         +carta2+"|"+usuario3+"|"+carta3+"|"+usuario4+"|"+carta4);
                     });
-                    console.log("Las cartas de los usuarios son "+usuarios[puerto])
+                    console.log("Las cartas de los usuarios son")
+                    console.log(usuarios[puerto]) 
                 }
             } else
             if (entradaCliente[0].localeCompare("iniciar") == 0) {
@@ -417,6 +421,8 @@ function crearSala() {
             let card = stack.pop();
             console.log("Jugar las cartas son"+stack)
             usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
+            console.log(usuarios[puerto])
+
             let siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
 
             let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
