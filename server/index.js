@@ -288,7 +288,7 @@ function crearSala() {
                     //baron | quién tiró | quién recibió | -1/0/1
 
                     socketsClients.forEach(function (client) {
-                        client.sendUTF("baron|"+tu+"|"+rival+"|"+perdedor);
+                        client.sendUTF("baron|"+tu+"|"+rival+"|"+perdedor+"|"+cartaContrincanteReal[0]);
                     })
                     console.log("El priest esta en la posicion "+idbar+" y sera descartada")
                     usuarios[puerto][numTuyo]["cartas"].splice(idbar,1)

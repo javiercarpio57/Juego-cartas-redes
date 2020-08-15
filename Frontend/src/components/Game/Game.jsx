@@ -29,6 +29,17 @@ let cards = [
 	'prince','king','countess','princess'
     ]
 
+const CARDSVAL = {
+	'guard': 1,
+	'priest': 2,
+	'baron': 3,
+	'handmaid': 4,
+	'prince': 5,
+	'king': 6,
+	'countess': 7,
+	'princess': 8,
+}
+
 const has_to_play_other = ['guard', 'priest', 'baron', 'handmaid', 'princess']
 const has_to_play_countess = ['prince', 'king']
 
@@ -568,6 +579,9 @@ export default class Game extends React.Component {
 
 	compararCartas(finalistas){
 		let highestCard = ''
+		console.log("FINALISTAS:",finalistas)
+		console.log("TABLA DE VALORES:", CARDSVAL)
+
 	}
 
 	CheckMyCards() {
@@ -610,7 +624,7 @@ export default class Game extends React.Component {
 	}
 
 	resetVariables(){
-		setState({
+		this.setState({
 			my_cards: [],
 			discarded_cards: [],
 			alive: true,
