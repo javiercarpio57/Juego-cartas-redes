@@ -74,12 +74,9 @@ export default class Card extends React.Component {
                     null
                 }
 
-                <div style={{ padding: '15px' }}>
-                    <Popover visible>
-                        <h1>{titulo}</h1>
-                    </Popover>
-                </div>
-
+                <Popover visible style={{ margin: '15px' }}>
+                    <h4>{titulo}</h4>
+                </Popover>
             </div>
 		)
 	}
