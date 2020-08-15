@@ -35,7 +35,7 @@ export default class _6_King extends React.Component {
     }
 	
 	render(){
-        const { my_user, users } = this.props
+        const { my_user, users, disabled } = this.props
 
         const all_users = []
         for (let i = 0; i < users.length; i++) {
@@ -64,6 +64,7 @@ export default class _6_King extends React.Component {
                                         data={all_users}
                                         style={{ width: '100%' }}
                                         placeholder='Escoge un usuario'
+                                        disabledItemValues={disabled}
                             />
                         </FormGroup>
                     </Form>

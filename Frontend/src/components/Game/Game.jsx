@@ -152,8 +152,7 @@ export default class Game extends React.Component {
 					console.log("ID: "+entradaServer[i]+" Username: "+entradaServer[i+1])
 				}
 				self.setState ({
-					connected_users: con_u,
-					disabled_users: con_u
+					connected_users: con_u
 				})
 			}
 			if (entradaServer[0].localeCompare('chatc') === 0) {
@@ -521,13 +520,14 @@ export default class Game extends React.Component {
 	discardCards(cardName, player){
 		if (cardName !== CARDS.PRINCESS) {		
 			let array_descartadas = this.state.discarded_cards	
+			let mis_cartas = this.state.my_cards
+
 			if(player === this.state.my_username){
-				let mis_cartas = this.state.my_cards
 				mis_cartas.splice(mis_cartas.indexOf(cardName), 1)
 				let obj = {
 					name: cardName,
 					player: player
-				}				
+				}
 				array_descartadas.push(obj)				
 			}
 			else{
@@ -549,7 +549,7 @@ export default class Game extends React.Component {
 
 
 	render() {
-		const { show, my_cards, messages_array, connected_users, alive, discarded_cards, j2_alive, j3_alive, j4_alive, player_turn } = this.state
+		const { show, my_cards, messages_array, connected_users, alive, discarded_cards, j2_alive, j3_alive, j4_alive, player_turn, disabled_users } = this.state
 		const my_pos = connected_users.indexOf(my_username)
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
@@ -576,6 +576,7 @@ export default class Game extends React.Component {
 											jugarCarta={this.showSome.bind(this)}
 											is_my_turn={my_username===player_turn}
 											alive={alive}
+											disabled_players={disabled_users}
 										/>
 							})
 						}
