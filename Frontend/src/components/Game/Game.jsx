@@ -516,6 +516,18 @@ export default class Game extends React.Component {
 
 	}
 
+	resetVariables(){
+		setState({
+			my_cards: [],
+			discarded_cards: [],
+			alive: true,
+			j2_alive: true,
+			j3_alive: true,
+			j4_alive: true,
+
+		})
+	}
+
 	useCard(stringPlay) {
 		console.log('TO PLAY:', stringPlay)
 	}
