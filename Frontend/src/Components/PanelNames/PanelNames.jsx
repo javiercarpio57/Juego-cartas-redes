@@ -4,8 +4,13 @@ import './style.scss'
 
 export default class Card extends React.Component {
 	render(){
-        const { names, pivot, jugador1_alive, jugador2_alive, jugador3_alive, jugador4_alive } = this.props
+        const { names, pivot, jugador1_alive, jugador2_alive, jugador3_alive, jugador4_alive, player_turn } = this.props
         const my_pos = names.indexOf(pivot)
+
+        const styles = {
+            fontStyle: 'italic',
+            fontFamily: 'Snell Roundhand'
+        }
 
 		return (
 			<div className='panel-names'>
@@ -67,6 +72,10 @@ export default class Card extends React.Component {
                         :
                     null
                 }
+
+                <div style={{ position: 'absolute', top: '0', marginLeft: '10px', color: 'white'}}>
+                    <h2 style={styles}>Turno de {player_turn}</h2>
+                </div>
 
             </div>
 		)

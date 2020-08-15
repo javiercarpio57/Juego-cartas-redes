@@ -39,7 +39,8 @@ export default class Game extends React.Component {
 			alive: true,
 			j2_alive: true,
 			j3_alive: true,
-			j4_alive: true
+			j4_alive: true,
+			player_turn: ''
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
@@ -104,13 +105,27 @@ export default class Game extends React.Component {
 				if (self.state.is_host) {
 					self.getNewCard(entradaServer[pos + 2])
 				}
+
 				console.log("Asignar cartas"+entradaServer);
 				self.setState({
-					show: false
+					show: false,
+					player_turn: entradaServer[1]
 				})
 			}
 
 			if (entradaServer[0].localeCompare('turnoactual') === 0) {
+				self.setState({
+					player_turn: entradaServer[1]
+				})
+
+				if (entradaServer[1].localeCompare(my_username) == 0) {
+					console.log('ENTRADA SERVER:', entradaServer)
+					const mi_lista = []
+					mi_lista.push(entradaServer[2])
+					mi_lista.push(entradaServer[3])
+					console.log('MI_LISTA:', mi_lista)
+					self.replaceMyCards(mi_lista)
+				}
 				console.log("Cartas del siguiente usuario"+entradaServer);
 			}
 
@@ -295,7 +310,6 @@ export default class Game extends React.Component {
 				}
 				
 				self.discardCards(entradaServer[0], entradaServer[1])
-
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
@@ -305,12 +319,24 @@ export default class Game extends React.Component {
 				const titleNotification = `${entradaServer[1]} jugó a PRINCE`
 				let bodyNotification = ''
 				let my_icon = ''
-				if(entradaServer[2].localeCompare(my_username) == 0){
+
+				if(entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0){
+					bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
+					my_icon = 'success'
+					self.replaceMyCards([entradaServer[3]])
+					console.log(`Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`)
+				} else if (entradaServer[2].localeCompare(my_username) == 0) {
+					bodyNotification = `${entradaServer[1]} cambió tu carta, tu nueva carta es ${entradaServer[3]}`
+					my_icon = 'warning'
+					self.replaceMyCards([entradaServer[3]])
 					console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
-				}else{
+				} else {
+					bodyNotification = `${entradaServer[1]} cambió las cartas de ${entradaServer[2]}`
+					my_icon = 'info'
 					console.log("cambiaron las cartas de "+entradaServer[2])
 				}
-				
+				self.discardCards(entradaServer[0], entradaServer[1])
+				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
 			//==================== COUNTNESS ====================
@@ -323,20 +349,28 @@ export default class Game extends React.Component {
 				}
 				
 			}
-
-			
 // ======================================================================
-
 		};
+	}
+
+	replaceMyCards(newCard) {
+		console.log('NEWCARD:', newCard)
+		const temp_card = []
+		newCard.map((nombre, index) => {
+			temp_card.push({
+				is_enable: true,
+				name: nombre,
+			})
+		})
+		
+		console.log('MIS NUEVAS CARTAS:', temp_card)
+		this.setState({
+			my_cards: temp_card
+		})
 	}
 
 	killPlayer(player) {
 		const my_pos = this.state.connected_users.indexOf(my_username)
-		console.log('JUGADORES:', my_pos, this.state.connected_users)
-		console.log('AHHH:', (my_pos + 1) % 4, this.state.connected_users[(my_pos + 1) % 4])
-		console.log('AHHH:', (my_pos + 2) % 4, this.state.connected_users[(my_pos + 2) % 4])
-		console.log('AHHH:', (my_pos + 3) % 4, this.state.connected_users[(my_pos + 3) % 4])
-		console.log('MATAR A:', player, this.state.connected_users[(my_pos + 1) % 4], this.state.connected_users[(my_pos + 2) % 4], this.state.connected_users[(my_pos + 3) % 4])
 		if (player.localeCompare(this.state.connected_users[(my_pos + 1) % 4]) == 0) {
 			this.setState ({
 				j2_alive: false
@@ -443,6 +477,10 @@ export default class Game extends React.Component {
 	}
 
 	discardCards(cardName, player){
+
+		let mis_cartas = this.state.my_cards
+		mis_cartas.splice(mis_cartas.indexOf(cardName), 1)
+
 		let obj = {
 			name: cardName,
 			player: player
@@ -451,14 +489,15 @@ export default class Game extends React.Component {
 		array_descartadas.push(obj)
 		this.setState(
 			{
-				discarded_cards: array_descartadas
+				discarded_cards: array_descartadas,
+				my_cards: mis_cartas
 			}
 		)
 	}
 
 
 	render() {
-		const { show, my_cards, messages_array, connected_users, alive, discarded_cards, j2_alive, j3_alive, j4_alive } = this.state
+		const { show, my_cards, messages_array, connected_users, alive, discarded_cards, j2_alive, j3_alive, j4_alive, player_turn } = this.state
 		const my_pos = connected_users.indexOf(my_username)
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
@@ -468,10 +507,11 @@ export default class Game extends React.Component {
 							jugador2_alive={j2_alive}
 							jugador3_alive={j3_alive}
 							jugador4_alive={j4_alive}
+							player_turn={player_turn}
 				/>
 
 				<div className='player-spot-horizontal'>
-					{
+					{	
 						my_cards.map((card, index) => {
 							return <Card key={card.name + '_'+ index}
 										 name={card.name}
@@ -481,6 +521,7 @@ export default class Game extends React.Component {
 										 my_user={my_username}
 										 enable={card.is_enable}
 										 jugarCarta={this.showSome.bind(this)}
+										 is_my_turn={my_username===player_turn}
 										 alive={alive}
 									/>
 						})
@@ -523,16 +564,24 @@ export default class Game extends React.Component {
 						}
 					</div>
 				</div>
+
 				<div className='spot-organization-horizontal'>
 					<div className='player-spot-vertical-left'>
 						<div className='player-2'>
 							<Card name = 'player2' cardImagen= 'unknown-card' enable={true} />
 						</div>
-						<div className='player-2-card-2'>
-							{/* <Card name = 'player2' cardImagen= 'unknown-card' enable={true} me={false} /> */}
-						</div>
+
+						{
+							player_turn.localeCompare(connected_users[(my_pos + 1) %  4]) === 0
+								?
+							<div className='player-2-card-2'>
+								<Card name = 'player2' cardImagen= 'unknown-card' enable={true} me={false} />
+							</div>
+								:
+							null
+						}
+
 						<div className='discard-pile-player-2'>
-							{/* <Card name = 'player2' cardImagen= 'guard' enable={true} />							 */}
 							{
 								discarded_cards.map((card,index) => {
 									if(card.player==connected_users[(my_pos + 1) % 4]){
@@ -586,9 +635,17 @@ export default class Game extends React.Component {
 								})
 							}
 						</div>
-						<div className='player-4-card-2'>
-							{/* <Card name = 'player4' cardImagen= 'unknown-card' enable={true} /> */}
-						</div>
+						
+						{
+							player_turn.localeCompare(connected_users[(my_pos + 3) %  4]) === 0
+								?
+							<div className='player-4-card-2'>
+								<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
+							</div>
+								:
+							null
+						}
+
 						<div className='player-4'>
 							<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
 						</div>
@@ -596,7 +653,6 @@ export default class Game extends React.Component {
 				</div>
 				<div className='player-spot-horizontal-top'>
 					<div className='discard-pile-player-3'> 
-						{/* <Card name = 'player3' cardImagen= 'prince' enable={true} /> */}
 						{
 								discarded_cards.map((card,index) => {
 									if(card.player==connected_users[(my_pos + 2) % 4]){
@@ -616,9 +672,17 @@ export default class Game extends React.Component {
 								})
 							}
 					</div>
-					<div className='player-3-card-2'>
-						{/* <Card name = 'player3' cardImagen= 'unknown-card' enable={true} /> */}
-					</div>
+
+					{
+						player_turn.localeCompare(connected_users[(my_pos + 2) %  4]) === 0
+							?
+						<div className='player-3-card-2'>
+							<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
+						</div>
+							:
+						null
+					}
+
 					<div className='player-3'>
 						<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
 					</div>
@@ -630,7 +694,7 @@ export default class Game extends React.Component {
 							my_code == '1' || this.state.is_host ?
 							<Modal.Title>¿Todos los jugadores están unidos?</Modal.Title>
 								:
-							<Modal.Title>Esperando que el host inicie la partida</Modal.Title>
+							<Modal.Title>Esperando que 4 jugadores se conecten a la partida.</Modal.Title>
 						}
 					</Modal.Header>
 					<Modal.Body>
@@ -661,19 +725,6 @@ export default class Game extends React.Component {
 							</div>
 						</div>
 					</Modal.Body>
-					<Modal.Footer>
-						{
-							my_code == '1' || this.state.is_host
-								?
-							<div className='modal-buttons'>
-								<Button onClick={this.close} color="green" block>
-									Play
-								</Button>
-							</div>
-								:
-							null							
-						}
-					</Modal.Footer>
 				</Modal>
 			</div>
 		)
