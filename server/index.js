@@ -138,7 +138,8 @@ function crearSala() {
                     "username": entradaCliente[1],
                     "cartas": [],
                     "invencible": false,
-                    "vivo": true
+                    "vivo": true,
+                    "tokens": 0
                 }
 
                 usuarios[puerto][usuariosIngresados] = temp;
@@ -464,22 +465,38 @@ function crearSala() {
                 }
             }
 
-            
-            
-            let card = stack.pop();
-            console.log("Jugar las cartas son"+stack)
-            usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
-            console.log(usuarios[puerto])
-
-            siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
-
-            let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
-            let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
-
-            socketsClients.forEach(function (client) {
-                client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
+            let estado_de_jugadores = []
+            let cont_perdedores = 0
+            Object.keys(usuarios[puerto]).map((key,index)=>{
+                estado_de_jugadores.push(usuarios[puerto][key]["vivo"]);
+                if(usuarios[puerto][key]["vivo"] == false){
+                    console.log("Entro al iffff"+estado_de_jugadores);
+                    cont_perdedores++;
+                }
             })
+            if(cont_perdedores == 3){
+                indice = estado_de_jugadores.indexOf(true,0) + 1;
+                console.log("El ganador es"+usuarios[puerto][indice]["username"]);
+                usuarios[puerto][indice]["tokens"] = usuarios[puerto][indice]["tokens"]+1;
+                socketsClients.forEach(function (client) {
+                    client.sendUTF("ganador|"+usuarios[puerto][indice]["username"]);
+                });
+            }else{
+                console.log("Esto tiene el array"+estado_de_jugadores+"y el valor de perdedores es"+cont_perdedores);
+                let card = stack.pop();
+                console.log("Jugar las cartas son"+stack)
+                usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
+                console.log(usuarios[puerto])
 
+                siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
+
+                let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
+                let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+
+                socketsClients.forEach(function (client) {
+                    client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
+                })
+            }
         }
         
         });
