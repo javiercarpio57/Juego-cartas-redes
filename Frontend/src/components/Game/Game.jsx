@@ -47,6 +47,7 @@ export default class Game extends React.Component {
 			messages_array: [],
 			is_host: false,
 			connected_users: [],
+			disabled_users: [],
 			alive: true,
 			j2_alive: true,
 			j3_alive: true,
@@ -151,7 +152,8 @@ export default class Game extends React.Component {
 					console.log("ID: "+entradaServer[i]+" Username: "+entradaServer[i+1])
 				}
 				self.setState ({
-					connected_users: con_u
+					connected_users: con_u,
+					disabled_users: con_u
 				})
 			}
 			if (entradaServer[0].localeCompare('chatc') === 0) {
@@ -398,7 +400,15 @@ export default class Game extends React.Component {
 
 	killPlayer(player) {
 		const my_pos = this.state.connected_users.indexOf(my_username)
+		
+		const disabled = this.state.disabled_users
+		disabled.push(player)
+		this.setState ({
+			disabled_users: disabled
+		})
+
 		if (player.localeCompare(this.state.connected_users[(my_pos + 1) % 4]) == 0) {
+			
 			this.setState ({
 				j2_alive: false
 			})
@@ -582,7 +592,7 @@ export default class Game extends React.Component {
 									me={true}
 									users={connected_users}
 									my_user={my_username}
-									enable={true}
+									enable={false}
 									alive={false}
 									/>
 								}
@@ -619,7 +629,7 @@ export default class Game extends React.Component {
 										me={false}
 										users={connected_users}
 										my_user={my_username}
-										enable={true}
+										enable={false}
 										alive={false}
 										/>
 									}
@@ -653,7 +663,7 @@ export default class Game extends React.Component {
 										me={false}
 										users={connected_users}
 										my_user={my_username}
-										enable={true}
+										enable={false}
 										alive={false}
 										/>
 									}
@@ -690,7 +700,7 @@ export default class Game extends React.Component {
 										me={false}
 										users={connected_users}
 										my_user={my_username}
-										enable={true}
+										enable={false}
 										alive={false}
 										/>
 									}
