@@ -144,6 +144,7 @@ export default class Game extends React.Component {
 					mi_lista.push(entradaServer[3])
 					console.log('MI_LISTA:', mi_lista)
 					self.ReplaceMyCards(mi_lista)
+					self.CheckMyCards()
 				} else {
 					console.log('MIS CARTAS AHORA:', self.state.my_cards)
 				}
@@ -390,11 +391,13 @@ export default class Game extends React.Component {
 				let bodyNotification = ''
 				let my_icon = ''
 
-				if(entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0){
+				if (entradaServer[1].localeCompare(my_username) == 0) {
+					self.discardCards(entradaServer[0], entradaServer[1])
+				}
+
+				if (entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0) {
 					bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
 					my_icon = 'success'
-					self.discardCards(entradaServer[0], entradaServer[1])
-					self.ReplaceMyCards([entradaServer[3]])
 					console.log(`Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`)
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {
 					bodyNotification = `${entradaServer[1]} cambió tu carta, tu nueva carta es ${entradaServer[3]}`
