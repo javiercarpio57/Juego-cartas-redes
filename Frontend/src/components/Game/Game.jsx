@@ -550,23 +550,8 @@ export default class Game extends React.Component {
 				/>
 
 				<div className='player-spot-horizontal'>
-					{	
-						my_cards.map((card, index) => {
-							return <Card key={card.name + '_'+ index}
-										 name={card.name}
-										 cardImagen={card.name}
-										 me={true}
-										 users={connected_users}
-										 my_user={my_username}
-										 enable={card.is_enable}
-										 jugarCarta={this.showSome.bind(this)}
-										 is_my_turn={my_username===player_turn}
-										 alive={alive}
-									/>
-						})
-					}
-					{/* <div class Name='player-1-card-2'> */}
-						{/* {
+					<div className='player-1-cards'>
+						{	
 							my_cards.map((card, index) => {
 								return <Card key={card.name + '_'+ index}
 											name={card.name}
@@ -576,12 +561,13 @@ export default class Game extends React.Component {
 											my_user={my_username}
 											enable={card.is_enable}
 											jugarCarta={this.showSome.bind(this)}
+											is_my_turn={my_username===player_turn}
 											alive={alive}
 										/>
 							})
-						} */}
-						
-					{/* </div> */}
+						}
+					</div>					
+
 					<div className='discard-pile-player-1'>
 						{
 							discarded_cards.map((card,index) => {

@@ -241,8 +241,18 @@ function crearSala() {
                 if(cartaAJugar.localeCompare("baron")==0){
 
                     // Este se debe modificar cuando se tengan 2 cartas debido a que es el valor de tu otra carta contra la del rival no el valor del baron 
+                    let miOtraCarta = ''
+                    let idbar = usuarios[puerto][numTuyo]["cartas"].indexOf("baron")
+                    console.log("TU BARON ESTA EN LA POSCION ", idbar)
+                    if(idbar==0){//si el baron esta en la posicion 0 comparar la carta en la posicioni 1
+                        miOtraCarta = usuarios[puerto][numTuyo]["cartas"][1]
+                        console.log("Mi otra carta es",miOtraCarta)
+                    }else{//si el baron esta en la posicion 1 comparar la carta en la posicioni 0
+                        miOtraCarta = usuarios[puerto][numTuyo]["cartas"][0]
+                        console.log("Mi otra carta es",miOtraCarta)
+                    }
 
-                    let primera = diccionarioCartas[cartaAJugar];
+                    let primera = diccionarioCartas[miOtraCarta];
                     let segunda = diccionarioCartas[cartaContrincanteReal[0]];
 
                     console.log("Primera "+primera+" -- Segunda "+segunda);
