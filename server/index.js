@@ -493,6 +493,21 @@ function crearSala() {
                     usuarios[puerto][key]["vivo"] = true;
                     turnoJugador = 1;
                 })
+                let primero = stack.pop();
+                usuarios[puerto]["1"]["cartas"].push(primero);
+                let usuario1 = usuarios[puerto]["1"]["username"];
+                let carta11 = usuarios[puerto]["1"]["cartas"][0];
+                let carta12 = usuarios[puerto]["1"]["cartas"][1];
+                let usuario2 = usuarios[puerto]["2"]["username"];
+                let carta2 = usuarios[puerto]["2"]["cartas"][0];
+                let usuario3 = usuarios[puerto]["3"]["username"];
+                let carta3 = usuarios[puerto]["3"]["cartas"][0];
+                let usuario4 = usuarios[puerto]["4"]["username"];
+                let carta4 = usuarios[puerto]["4"]["cartas"][0];
+                socketsClients.forEach(function (client) {
+                    client.sendUTF("turno|"+usuario1+"|"+carta11+"|"+carta12+"|"+usuario2+"|"
+                    +carta2+"|"+usuario3+"|"+carta3+"|"+usuario4+"|"+carta4);
+                });
                 console.log("Limpieza");
                 console.log(usuarios[puerto]);
                 //Pendiente de mañana
