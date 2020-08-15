@@ -192,7 +192,6 @@ export default class Game extends React.Component {
 						my_icon = 'error'
 						console.log("Fallaste jeje")
 					}
-					self.discardCards(entradaServer[0], entradaServer[1])
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {
 					if(entradaServer[3].localeCompare("true") == 0) {
 						bodyNotification = `${entradaServer[1]} te ha atacado. Te han eliminado.`
@@ -216,7 +215,7 @@ export default class Game extends React.Component {
 					}
 				}
 
-
+				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification (titleNotification, bodyNotification, my_icon)
 			}
 			
@@ -229,7 +228,6 @@ export default class Game extends React.Component {
 				if (entradaServer[1].localeCompare(my_username) == 0) {
 					bodyNotification = `La carta de ${entradaServer[2]} es ${entradaServer[3]}`
 					my_icon = 'success'
-					self.discardCards(entradaServer[0], entradaServer[1])
 					console.log("La carta de " + entradaServer[2] + " es " + entradaServer[3])
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {
 					bodyNotification = `${entradaServer[1]} vio tu carta`
@@ -240,7 +238,7 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 				}
 
-
+				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 			
@@ -269,7 +267,6 @@ export default class Game extends React.Component {
 						my_icon = 'warning'
 						console.log("Empate");
 					}
-					self.discardCards(entradaServer[0], entradaServer[1])
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {// Si yo soy el que recibio la carta
 					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si yo soy el ganador 
 						bodyNotification = `Te atacó ${entradaServer[1]} pero tu carta es más alta, ganaste`
@@ -293,7 +290,7 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 				}
 
-
+				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 			
@@ -306,7 +303,6 @@ export default class Game extends React.Component {
 				if(entradaServer[1].localeCompare(my_username) == 0){
 					bodyNotification = 'Eres invencible por un turno'
 					my_icon = 'success'
-					self.discardCards(entradaServer[0], entradaServer[1])
 					console.log("Eres invencible por un turno")
 				}else{
 					bodyNotification = `Cuidado ${entradaServer[1]} es invencible por un turno.`
@@ -314,6 +310,7 @@ export default class Game extends React.Component {
 					console.log("Cuidado "+ entradaServer[1]+" es invencible por un turno.")
 				}
 				
+				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
@@ -512,23 +509,29 @@ export default class Game extends React.Component {
 	}
 
 	discardCards(cardName, player){
-		if (cardName !== CARDS.PRINCESS) {
-			let mis_cartas = this.state.my_cards
-			mis_cartas.splice(mis_cartas.indexOf(cardName), 1)
-			
-			let obj = {
-				name: cardName,
-				player: player
+		if (cardName !== CARDS.PRINCESS) {		
+			let array_descartadas = this.state.discarded_cards	
+			if(player === this.state.my_username){
+				let mis_cartas = this.state.my_cards
+				mis_cartas.splice(mis_cartas.indexOf(cardName), 1)
+				let obj = {
+					name: cardName,
+					player: player
+				}				
+				array_descartadas.push(obj)				
 			}
-			let array_descartadas = this.state.discarded_cards
-			array_descartadas.push(obj)
-			console.log('DISCARD CARD:', this.state.my_cards)
+			else{
+				let obj = {
+					name: cardName,
+					player: player
+				}
+				array_descartadas.push(obj)
+			}			
 			this.setState({
 				discarded_cards: array_descartadas,
 				my_cards: mis_cartas
 			})
-			console.log('DESCARTADAS:', this.state.discarded_cards)
-			console.log('MY CARDS:', this.state.my_cards)
+		
 		} else {
 			this.killPlayer(player)
 		}
@@ -595,7 +598,6 @@ export default class Game extends React.Component {
 						<div className='player-2'>
 							<Card name = 'player2' cardImagen= 'unknown-card' enable={true} />
 						</div>
-
 						{
 							player_turn.localeCompare(connected_users[(my_pos + 1) %  4]) === 0
 								?
