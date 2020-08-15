@@ -523,19 +523,37 @@ function crearSala() {
                 }
             }else{
                 console.log("Esto tiene el array"+estado_de_jugadores+"y el valor de perdedores es"+cont_perdedores);
-                let card = stack.pop();
-                console.log("Jugar las cartas son"+stack)
-                usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
-                console.log(usuarios[puerto])
 
-                siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
+                if(stack.length() != 0 ){
+                    let card = stack.pop();
+                    console.log("Jugar las cartas son"+stack)
+                    usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
+                    console.log(usuarios[puerto])
 
-                let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
-                let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+                    siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
 
-                socketsClients.forEach(function (client) {
-                    client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
-                })
+                    let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
+                    let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
+                    })
+                }else{
+                    //.send(‘final | jugador1 | carta | jugador2 | carta | jugador3 | carta | 
+                    let listaJug = 'final|'
+                    Object.keys(usuarios[puerto]).map((key,index)=>{
+
+                        if(usuarios[puerto][key]["vivo"] == true){
+                            listaJug = listaJug+usuarios[puerto][key]["username"]+"|"+usuarios[puerto][key]["cartas"]+"|"
+                        }
+                        
+                    })
+                    
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF(listaJug);
+                    })
+                }
+                
             }
         }
         
