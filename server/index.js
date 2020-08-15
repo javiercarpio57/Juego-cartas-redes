@@ -447,7 +447,7 @@ function crearSala() {
             usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
             console.log(usuarios[puerto])
 
-            let siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
+            siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
 
             let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
             let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
