@@ -132,12 +132,10 @@ export default class Game extends React.Component {
 					player_turn: entradaServer[1]
 				})
 
+				if (self.state.inmunes.includes(entradaServer[1])) {
+					self.RemoveInmune(entradaServer[1])
+				}
 				if (entradaServer[1].localeCompare(my_username) == 0) {
-
-					if (self.state.inmunes.includes(entradaServer[1])) {
-						self.RemoveInmune(entradaServer[1])
-					}
-
 					console.log('ENTRADA SERVER:', entradaServer)
 					const mi_lista = []
 					mi_lista.push(entradaServer[2])
@@ -468,14 +466,18 @@ export default class Game extends React.Component {
 	}
 
 	RemoveInmune(player) {
-		const nuevos_eliminados = this.state.disabled_players.filter(item => item !== player)
+		const nuevos_eliminados = this.state.disabled_users.filter(item => item !== player)
 		const nuevo_inmunes = this.state.inmunes.filter(item => item !== player)
 
+		console.log('QUITAR INMUNE DE:', player)
 		console.log('NUEVO INMUNES:', nuevo_inmunes)
+		console.log('NUEVO ELIMINADOS:', nuevos_eliminados)
 		this.setState ({
-			disabled_players: nuevos_eliminados,
+			disabled_users: nuevos_eliminados,
 			inmunes: nuevo_inmunes
 		})
+		console.log('NUEVO INMUNES 2:', nuevo_inmunes)
+		console.log('NUEVO ELIMINADOS 2:', nuevos_eliminados)
 	}
 
 	ReplaceMyCards(newCard) {
