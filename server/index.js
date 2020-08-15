@@ -524,7 +524,7 @@ function crearSala() {
             }else{
                 console.log("Esto tiene el array"+estado_de_jugadores+"y el valor de perdedores es"+cont_perdedores);
 
-                if(stack.length() != 0 ){
+                if(stack.length != 0 ){
                     let card = stack.pop();
                     console.log("Jugar las cartas son"+stack)
                     usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
