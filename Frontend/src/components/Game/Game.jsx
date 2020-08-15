@@ -536,8 +536,11 @@ export default class Game extends React.Component {
 			let mis_cartas = this.state.my_cards
 
 			if(player === my_username){
-				console.log('PLAYER:', player)
-				mis_cartas.splice(mis_cartas.indexOf(cardName), 1)
+				let indice = mis_cartas.indexOf(cardName)
+				if (indice === -1){
+					indice = 0
+				}
+				mis_cartas.splice(indice, 1)
 				let obj = {
 					name: cardName,
 					player: player
