@@ -511,7 +511,8 @@ export default class Game extends React.Component {
 	discardCards(cardName, player){
 		if (cardName !== CARDS.PRINCESS) {		
 			let array_descartadas = this.state.discarded_cards	
-			if(player === this.state.my_username){
+			if(player === my_username){
+				console.log('PLAYER:', player)
 				let mis_cartas = this.state.my_cards
 				mis_cartas.splice(mis_cartas.indexOf(cardName), 1)
 				let obj = {
