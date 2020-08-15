@@ -527,7 +527,7 @@ export default class Game extends React.Component {
 		Notification[my_icon] ({
 			title,
 			placement: 'bottomEnd',
-			duration: 0,
+			duration: 15000,
 			description: <div style={{width: '250px'}}><p>{description}</p></div>
 		})
 	}
