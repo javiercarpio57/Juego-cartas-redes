@@ -197,6 +197,9 @@ function crearSala() {
                     client.sendUTF(mensajeAEnviar);
                 })
             }
+            // if(entradaCliente[0].localeCompare("cerrar")==0){
+            //     client.clo
+            // }
             if(entradaCliente[0].localeCompare("jugar") == 0){
 
                 let tu = entradaCliente[1]
@@ -474,45 +477,50 @@ function crearSala() {
                     cont_perdedores++;
                 }
             })
+            //En caso de que gane un jugador
             if(cont_perdedores == 3){
                 indice = estado_de_jugadores.indexOf(true,0) + 1;
                 console.log("El ganador es"+usuarios[puerto][indice]["username"]);
                 usuarios[puerto][indice]["tokens"] = usuarios[puerto][indice]["tokens"]+1;
-                socketsClients.forEach(function (client) {
-                    client.sendUTF("ganador|"+usuarios[puerto][indice]["username"]);
-                });
-                // Limpieza de variables para siguiente ronda
-                cartaServer = cards;
-                shuffle(cartaServer);
-                stack = [];
-                cartaServer.forEach(carta => stack.push(carta));
-                Object.keys(usuarios[puerto]).map((key,index)=>{
-                    let card = stack.pop();
-                    usuarios[puerto][key]["cartas"] = [card];
-                    usuarios[puerto][key]["invencible"] = false;
-                    usuarios[puerto][key]["vivo"] = true;
-                    turnoJugador = 1;
-                })
-                let primero = stack.pop();
-                usuarios[puerto]["1"]["cartas"].push(primero);
-                let usuario1 = usuarios[puerto]["1"]["username"];
-                let carta11 = usuarios[puerto]["1"]["cartas"][0];
-                let carta12 = usuarios[puerto]["1"]["cartas"][1];
-                let usuario2 = usuarios[puerto]["2"]["username"];
-                let carta2 = usuarios[puerto]["2"]["cartas"][0];
-                let usuario3 = usuarios[puerto]["3"]["username"];
-                let carta3 = usuarios[puerto]["3"]["cartas"][0];
-                let usuario4 = usuarios[puerto]["4"]["username"];
-                let carta4 = usuarios[puerto]["4"]["cartas"][0];
-                socketsClients.forEach(function (client) {
-                    client.sendUTF("turno|"+usuario1+"|"+carta11+"|"+carta12+"|"+usuario2+"|"
-                    +carta2+"|"+usuario3+"|"+carta3+"|"+usuario4+"|"+carta4);
-                });
-                console.log("Limpieza");
-                console.log(usuarios[puerto]);
-                //Pendiente de mañana
-                //Asignar su siguiente carta al turno 1 y mandarla
-                //Mandar todas las cartas de nuevo al cliente sus usuarios con sus respectivas cartas
+                if(usuarios[puerto][indice]["tokens"] == 4){
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("ganadorsupremo|"+usuarios[puerto][indice]["username"]);
+                    });    
+                    sockets[turno].close();
+                }else{
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("ganador|"+usuarios[puerto][indice]["username"]);
+                    });
+                    // Limpieza de variables para siguiente ronda
+                    cartaServer = cards;
+                    shuffle(cartaServer);
+                    stack = [];
+                    cartaServer.forEach(carta => stack.push(carta));
+                    Object.keys(usuarios[puerto]).map((key,index)=>{
+                        let card = stack.pop();
+                        usuarios[puerto][key]["cartas"] = [card];
+                        usuarios[puerto][key]["invencible"] = false;
+                        usuarios[puerto][key]["vivo"] = true;
+                        turnoJugador = 1;
+                    })
+                    let primero = stack.pop();
+                    usuarios[puerto]["1"]["cartas"].push(primero);
+                    let usuario1 = usuarios[puerto]["1"]["username"];
+                    let carta11 = usuarios[puerto]["1"]["cartas"][0];
+                    let carta12 = usuarios[puerto]["1"]["cartas"][1];
+                    let usuario2 = usuarios[puerto]["2"]["username"];
+                    let carta2 = usuarios[puerto]["2"]["cartas"][0];
+                    let usuario3 = usuarios[puerto]["3"]["username"];
+                    let carta3 = usuarios[puerto]["3"]["cartas"][0];
+                    let usuario4 = usuarios[puerto]["4"]["username"];
+                    let carta4 = usuarios[puerto]["4"]["cartas"][0];
+                    socketsClients.forEach(function (client) {
+                        client.sendUTF("turno|"+usuario1+"|"+carta11+"|"+carta12+"|"+usuario2+"|"
+                        +carta2+"|"+usuario3+"|"+carta3+"|"+usuario4+"|"+carta4);
+                    });
+                    console.log("Limpieza");
+                    console.log(usuarios[puerto]);
+                }
             }else{
                 console.log("Esto tiene el array"+estado_de_jugadores+"y el valor de perdedores es"+cont_perdedores);
                 let card = stack.pop();
