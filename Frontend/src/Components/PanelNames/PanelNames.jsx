@@ -1,5 +1,5 @@
 import React from 'react'
-import { Message } from 'rsuite'
+import { Message, Popover } from 'rsuite'
 import './style.scss'
 
 export default class Card extends React.Component {
@@ -11,6 +11,7 @@ export default class Card extends React.Component {
             fontStyle: 'italic',
             fontFamily: 'Snell Roundhand'
         }
+        const titulo = `Turno de ${player_turn}`
 
 		return (
 			<div className='panel-names'>
@@ -73,8 +74,10 @@ export default class Card extends React.Component {
                     null
                 }
 
-                <div style={{ position: 'absolute', top: '0', marginLeft: '10px', color: 'white'}}>
-                    <h2 style={styles}>Turno de {player_turn}</h2>
+                <div style={{ padding: '15px' }}>
+                    <Popover visible>
+                        <h1>{titulo}</h1>
+                    </Popover>
                 </div>
 
             </div>
