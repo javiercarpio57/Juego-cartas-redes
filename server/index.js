@@ -352,6 +352,11 @@ function crearSala() {
                             usuarios[puerto][num]["vivo"] = false;
                             console.log("Murio")
 
+                            socketsClients.forEach(function (client) {
+                                client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio");
+                            })
+                            usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
+
                         }else{ // Si la carta es no es princesa le cambiamos la carta
                             
                             console.log("cambiamos la carta de "+usuarios[puerto][num]["cartas"][0])
@@ -361,6 +366,11 @@ function crearSala() {
                             usuarios[puerto][num]["cartas"].push(card);
                             console.log("por la carta de "+usuarios[puerto][num]["cartas"][0])
                             console.log(usuarios[puerto])
+
+                            socketsClients.forEach(function (client) {
+                                client.sendUTF("prince|"+tu+"|"+rival+"|"+card);
+                            })
+                            usuarios[puerto][numTuyo]["cartas"].splice(cartaAJugar,1)
                         }                    
                     }
                 }else
