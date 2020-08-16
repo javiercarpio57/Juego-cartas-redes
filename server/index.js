@@ -8,7 +8,8 @@ let cont = 0;
 let servidores = []
 let sockets = []
 let usuarios = {}
-let PORT = 4200
+let PORT = 4201
+let HOST = '0.0.0.0'
 let cards = [
 	'guard','guard','guard','guard',
 	'guard','priest','priest','baron',
@@ -100,8 +101,8 @@ function crearSala() {
         response.writeHead(404);
         response.end();
     });
-    servidores[turno].listen(puerto, function () {
-        console.log((new Date()) + ' Server is listening on port ' + puerto.toString());
+    servidores[turno].listen(puerto,HOST, function () {
+        console.log((new Date()) + ' Server is listening on'+HOST+':'+ puerto.toString());
     });
     sockets[turno] = new WebSocketServer({
         httpServer: servidores[turno],
@@ -497,6 +498,7 @@ function crearSala() {
                     }
                 }
             }
+	    console.log("Turno despues de los if de las validaciones "+turnoJugador);
 
             let estado_de_jugadores = []
             let cont_perdedores = 0
@@ -567,6 +569,7 @@ function crearSala() {
                     socketsClients.forEach(function (client) {
                         client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
                     })
+		    console.log("Turno actual"+siguienteJugador);
                 }else{
                     //.send(‘final | jugador1 | carta | jugador2 | carta | jugador3 | carta | 
                     let listaJug = 'final|'
