@@ -589,6 +589,20 @@ function crearSala() {
                 client.sendUTF("sinEfectoCliente|"+efectoTu+"|"+efectoCarta)
             })
             usuarios[puerto][numTuyo]["cartas"].splice(idSinEfecto,1)
+            
+            let card = stack.pop();
+            console.log("Jugar las cartas son"+stack)
+            usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
+            console.log(usuarios[puerto])
+
+            siguienteJugador = usuarios[puerto][turnoJugador.toString()]["username"];
+
+            let carta1 = usuarios[puerto][turnoJugador.toString()]["cartas"][0];
+            let carta2 = usuarios[puerto][turnoJugador.toString()]["cartas"][1];
+
+            socketsClients.forEach(function (client) {
+                client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
+            })
 
         }
         
