@@ -438,6 +438,7 @@ function crearSala() {
                                 socketsClients.forEach(function (client) {
                                     client.sendUTF("prince|"+tu+"|"+rival+"|"+card);
                                 })
+                                usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
                                 
                             }                    
                         }
