@@ -278,18 +278,26 @@ function crearSala() {
                     if(res == 1){
                         perdedor = rival;
                         usuarios[puerto][num]["vivo"] = false;
+                        socketsClients.forEach(function (client) {
+                            client.sendUTF("baron|"+tu+"|"+rival+"|"+perdedor+"|"+cartaContrincanteReal[0]);
+                        })
                     }else
                     if(res == -1){ //Jugador contrario gano
                         perdedor = tu;
                         usuarios[puerto][numTuyo]["vivo"] = false;
+                        socketsClients.forEach(function (client) {
+                            client.sendUTF("baron|"+tu+"|"+rival+"|"+perdedor+"|"+miOtraCarta);
+                        })
+                        
                     }else{
                         perdedor = "-";
+                        socketsClients.forEach(function (client) {
+                            client.sendUTF("baron|"+tu+"|"+rival+"|"+perdedor+"|-");
+                        })
                     }
                     //baron | quién tiró | quién recibió | -1/0/1
-
-                    socketsClients.forEach(function (client) {
-                        client.sendUTF("baron|"+tu+"|"+rival+"|"+perdedor+"|"+cartaContrincanteReal[0]);
-                    })
+                    
+                    
                     console.log("El priest esta en la posicion "+idbar+" y sera descartada")
                     usuarios[puerto][numTuyo]["cartas"].splice(idbar,1)
                     console.log(usuarios[puerto])
