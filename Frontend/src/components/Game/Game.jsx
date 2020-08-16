@@ -696,7 +696,9 @@ export default class Game extends React.Component {
 		let winner = 'ganadorEmpate|'
 		winner = winner+ganador
 
-		this.EnviarProtocolo('-',winner)
+		if (ganador === my_username) {
+			this.EnviarProtocolo('-',winner)
+		}
 
 	}
 
