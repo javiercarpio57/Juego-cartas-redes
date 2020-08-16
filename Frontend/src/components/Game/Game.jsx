@@ -70,7 +70,8 @@ export default class Game extends React.Component {
 			my_points: 2,
 			puntosj2: 0,
 			puntosj3: 0,
-			puntosj4: 0
+			puntosj4: 0,
+			has_ganador_supremo: null
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
@@ -207,7 +208,6 @@ export default class Game extends React.Component {
 				}
 
 				self.compararCartas(finalistas)
-				
 			}
 
 			if (entradaServer[0].localeCompare('ganador') === 0) {
@@ -217,6 +217,12 @@ export default class Game extends React.Component {
 				} else {
 					Alert.success(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`, 15000)
 				}
+			}
+
+			if (entradaServer[0].localeCompare('ganadorsupremo') === 0) {
+				self.setState({
+					has_ganador_supremo: entradaServer[1]
+				})
 			}
 
 			if (entradaServer[0].localeCompare('sinEfectoCliente') === 0) {
@@ -730,6 +736,11 @@ export default class Game extends React.Component {
 			j2_alive: true,
 			j3_alive: true,
 			j4_alive: true,
+			my_points: 2,
+			puntosj2: 0,
+			puntosj3: 0,
+			puntosj4: 0,
+			has_ganador_supremo: null
 		})
 	}
 
@@ -785,7 +796,7 @@ export default class Game extends React.Component {
 	render() {
 		const { show, my_cards, messages_array, connected_users, alive, discarded_cards, 
 			j2_alive, j3_alive, j4_alive, player_turn, disabled_users,
-			my_points, puntosj2, puntosj3, puntosj4 } = this.state
+			my_points, puntosj2, puntosj3, puntosj4, has_ganador_supremo } = this.state
 		const my_pos = connected_users.indexOf(my_username)
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
@@ -1002,6 +1013,16 @@ export default class Game extends React.Component {
 								<Loader size="md" />
 							</div>
 						</div>
+					</Modal.Body>
+				</Modal>
+
+
+				<Modal show={has_ganador_supremo !== null} backdrop='static'>
+					<Modal.Header closeButton={false}>
+						EL GANADOR ES: {has_ganador_supremo}
+					</Modal.Header>
+					<Modal.Body>
+						<div />
 					</Modal.Body>
 				</Modal>
 			</div>
