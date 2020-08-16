@@ -92,7 +92,7 @@ export default class Game extends React.Component {
 		my_username = this.props.location.state.username
 		puertoCodigo = this.props.location.state.puerto
 
-		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
+		let enlace = 'ws://172.31.30.254:'+this.props.location.state.puerto+'/'
 		client = new W3CWebSocket(enlace, 'echo-protocol');
 		
 		client.onopen = () => {

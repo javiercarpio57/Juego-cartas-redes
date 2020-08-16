@@ -575,7 +575,8 @@ function crearSala() {
             
             let numTuyo = getKeyByValue(usuarios[puerto],efectoTu)
 
-            let idSinEfecto = usuarios[puerto][numTuyo]["cartas"].indexOf(efectoCarta)
+            let idSinEfecto = usuarios[puerto][numTuyo]["cartas"].indexOf(efectoCarta);
+            turnoJugador++;
             socketsClients.forEach(function (client) {
                 client.sendUTF("sinEfectoCliente|"+efectoTu+"|"+efectoCarta)
             })
