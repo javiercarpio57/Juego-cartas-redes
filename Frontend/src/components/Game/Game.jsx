@@ -67,7 +67,7 @@ export default class Game extends React.Component {
 			j4_alive: true,
 			player_turn: '',
 			inmunes: [],
-			my_points: 2,
+			my_points: 0,
 			puntosj2: 0,
 			puntosj3: 0,
 			puntosj4: 0,
@@ -97,7 +97,7 @@ export default class Game extends React.Component {
 		my_username = this.props.location.state.username
 		puertoCodigo = this.props.location.state.puerto
 
-		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
+		let enlace = 'ws://3.135.137.126:'+this.props.location.state.puerto+'/'
 		client = new W3CWebSocket(enlace, 'echo-protocol');
 		
 		client.onopen = () => {
@@ -217,6 +217,7 @@ export default class Game extends React.Component {
 				} else {
 					Alert.success(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`, 15000)
 				}
+
 			}
 
 			if (entradaServer[0].localeCompare('ganadorsupremo') === 0) {
@@ -505,6 +506,29 @@ export default class Game extends React.Component {
 			}
 // ======================================================================
 		};
+	}
+
+	SumPoints(player) {
+		const index = this.state.connected_users.indexOf(player)
+
+		if (this.state.connected_users[index] === player) {
+			this.setState ({
+				my_points: this.state.my_points + 1
+			})
+		} else if (this.state.connected_users[(index + 1) % 4] === player) {
+			this.setState ({
+				puntosj2: this.state.puntosj2 + 1
+			})
+		} else if (this.state.connected_users[(index + 2) % 4] === player) {
+			this.setState ({
+				puntosj3: this.state.puntosj3 + 1
+			})
+		} else if (this.state.connected_users[(index + 3) % 4] === player) {
+			this.setState ({
+				puntosj4: this.state.puntosj4 + 1
+			})
+		}
+
 	}
 
 	CreateInmune(player) {
