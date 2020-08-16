@@ -596,7 +596,32 @@ function crearSala() {
             let numTuyo = getKeyByValue(usuarios[puerto],efectoTu)
 
             let idSinEfecto = usuarios[puerto][numTuyo]["cartas"].indexOf(efectoCarta);
-            turnoJugador++;
+            let siguienteJugador = turnoJugador+1;
+            if(siguienteJugador > 4){
+                siguienteJugador = 1;
+            }
+            //Esto es para cambiar de turno y asignar una carta al siguiente usuario
+            if( usuarios[puerto][siguienteJugador]["vivo"] == true){
+                turnoJugador++;
+                if(turnoJugador > 4){
+                    turnoJugador = 1;
+                }
+            }else
+            if(usuarios[puerto][siguienteJugador]["vivo"] == false){
+                turnoJugador += 2;
+                if(turnoJugador == 6){
+                    turnoJugador = 2;
+                }else
+                if(turnoJugador == 5){
+                    turnoJugador = 1;
+                }
+                if(usuarios[puerto][turnoJugador]["vivo"] == false){
+                    turnoJugador++;
+                    if(turnoJugador > 4){
+                        turnoJugador = 1;
+                    }
+                }
+            }
             socketsClients.forEach(function (client) {
                 client.sendUTF("sinEfectoCliente|"+efectoTu+"|"+efectoCarta)
             })
