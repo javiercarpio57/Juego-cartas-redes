@@ -215,6 +215,20 @@ export default class Game extends React.Component {
 				}
 			}
 
+			if (entradaServer[0].localeCompare('sinEfectoCliente') === 0) {
+				const titleNotification = `${entradaServer[1]} jugó a ${entradaServer[2]}`
+				let bodyNotification = `${entradaServer[1]} jugó a ${entradaServer[2]}, pero no tuvo ningún efecto`
+				let my_icon = ''
+
+				if (entradaServer[1].localeCompare(my_username) === 0) {
+					my_icon = 'warning'
+				} else {
+					my_icon = 'info'
+				}
+				self.discardCards(entradaServer[2], entradaServer[1])
+				self.ShowNotification(titleNotification, bodyNotification, my_icon)
+			}
+
 // ======================= JUEGO DE CARTAS =============================
 
 			// ==================== GUARD ====================
@@ -348,6 +362,9 @@ export default class Game extends React.Component {
 					}
 				}
 
+				if (entradaServer[3].localeCompare('-') !== 0) {
+					self.discardCards(entradaServer[4], entradaServer[3])
+				}
 				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
@@ -401,11 +418,7 @@ export default class Game extends React.Component {
 				const titleNotification = `${entradaServer[1]} jugó a PRINCE`
 				let bodyNotification = ''
 				let my_icon = ''
-
-				if (entradaServer[1].localeCompare(my_username) == 0) {
-					self.discardCards(entradaServer[0], entradaServer[1])
-				}
-
+				
 				if (entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0) {
 					bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
 					my_icon = 'success'
@@ -420,6 +433,7 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 					console.log("cambiaron las cartas de "+entradaServer[2])
 				}
+				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
