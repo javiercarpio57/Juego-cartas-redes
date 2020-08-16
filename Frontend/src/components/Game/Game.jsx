@@ -555,7 +555,7 @@ export default class Game extends React.Component {
 			
 			console.log('INMUNES:', inmunesss)
 			console.log('INMUNES-ELIMINADOS:', eliminados)
-			if (eliminados.length === 3) {
+			if (eliminados.length === 3 || eliminados.length === 4) {
 				const users = [...state.connected_users, SIN_EFECTO]
 				console.log('USUARIOS CON SIN EFECTO:', users)
 				return {
