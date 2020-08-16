@@ -640,6 +640,9 @@ export default class Game extends React.Component {
 			}
 		}
 
+		console.log("FINALISTAS:", finalistas)
+		console.log("GANADORES:", ganadores)
+
 		let ganador = ganadores[0]
 
 		if(ganadores.length>1){

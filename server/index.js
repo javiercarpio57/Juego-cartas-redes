@@ -306,6 +306,7 @@ function crearSala() {
                 if(cartaAJugar.localeCompare("prince")==0){
                     console.log(usuarios[puerto])
                     let idPrince = usuarios[puerto][numTuyo]["cartas"].indexOf("prince")
+                    let cartaAntigua = ' '
                     if(num == numTuyo){ // El usuario uso prince en si mismo
                         console.log("El usuario uso prince en si mismo")
 
@@ -316,24 +317,31 @@ function crearSala() {
                             let esPrincess = usuarios[puerto][num]["cartas"][0]
                             console.log("la carta es "+usuarios[puerto][num]["cartas"][0])
 
-                            if(esPrincess.localeCompare("princess")==0){ // Si la carta es princesa el jugador F 
+                            if(esPrincess.localeCompare("princess")==0){ // Si la carta es princesa el jugador F
+
+                                cartaAntigua = usuarios[puerto][num]["cartas"][0]
 
                                 usuarios[puerto][num]["vivo"] = false;
                                 console.log("Murio")
                                 //prince | quién tiró | quién recibe | nueva_carta
                                 socketsClients.forEach(function (client) {
-                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio");
+                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio|"+cartaAntigua);
                                 })
                                 usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
 
 
                             }else{ // Si la carta es no es princesa le cambiamos la carta
+                                cartaAntigua = usuarios[puerto][num]["cartas"][0]
+
                                 usuarios[puerto][num]["cartas"].splice(0,1)
+
                                 let card = stack.pop();
                                 usuarios[puerto][num]["cartas"].push(card);
+
                                 console.log(usuarios[puerto])
+                                
                                 socketsClients.forEach(function (client) {
-                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+card);
+                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+card+"|"+cartaAntigua);
                                 })
                                 usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
                             }                        
@@ -344,22 +352,24 @@ function crearSala() {
                             console.log("la carta es "+usuarios[puerto][num]["cartas"][1])
 
                             if(esPrincess.localeCompare("princess")==0){ // Si la carta es princesa el jugador F 
-
+                                cartaAntigua = usuarios[puerto][num]["cartas"][0]
                                 usuarios[puerto][num]["vivo"] = false;
                                 console.log("Murio")
                                 socketsClients.forEach(function (client) {
-                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio");
+                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio|"+cartaAntigua);
                                 })
                                 usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
 
                             }else{ // Si la carta es no es princesa le cambiamos la carta
                                 //console.log("cambiamos la carta de "+usuarios[puerto][num]["cartas"][1])
+                                cartaAntigua = usuarios[puerto][num]["cartas"][0]
+
                                 usuarios[puerto][num]["cartas"].splice(1,1)
                                 let card = stack.pop();
                                 usuarios[puerto][num]["cartas"].push(card);
                                 console.log(usuarios[puerto])
                                 socketsClients.forEach(function (client) {
-                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+card);
+                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+card+"|"+cartaAntigua);
                                 })
                                 usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
                             }
@@ -589,7 +599,7 @@ function crearSala() {
                 client.sendUTF("sinEfectoCliente|"+efectoTu+"|"+efectoCarta)
             })
             usuarios[puerto][numTuyo]["cartas"].splice(idSinEfecto,1)
-            
+
             let card = stack.pop();
             console.log("Jugar las cartas son"+stack)
             usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
