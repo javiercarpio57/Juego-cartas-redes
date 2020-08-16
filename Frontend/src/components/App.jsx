@@ -6,8 +6,6 @@ import { Button, Input, InputGroup, Icon, Alert } from 'rsuite'
 import './style.scss'
 import 'rsuite/dist/styles/rsuite-default.css'
 
-import ConfirmButton from './ConfirmButton/ConfirmButton.jsx'
-
 export default class App extends React.Component {
     constructor (props) {
         super(props)

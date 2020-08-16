@@ -24,8 +24,9 @@
     height: 100%;
     width: 20%;
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
 
     p {
         transform: rotate(90deg);
@@ -33,6 +34,11 @@
         font-family: 'Snell Roundhand';
         font-size: 25px;
         color: white;
+    }
+
+    .coin-LL {
+        margin-right: 5px;
+        margin-top: 5px;
     }
 }
 
@@ -55,8 +61,10 @@
     height: 100%;
     width: 20%;
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    justify-content: center;
+    align-items: flex-start;
 
     p {
         transform: rotate(-90deg);
@@ -64,6 +72,10 @@
         font-family: 'Snell Roundhand';
         font-size: 25px;
         color: white;
+    }
+
+    .coin-LL {
+        margin-bottom: 5px;
     }
 }
 
@@ -103,3 +115,8 @@
     right: -8%;
 }
 
+.help-btn {
+    bottom: 0;
+    margin: 15px;
+    position: absolute;
+}
