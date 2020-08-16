@@ -646,6 +646,7 @@ export default class Game extends React.Component {
 				}
 			}
 			if(finalistas[i].value > highestCard){
+				highestCard = finalistas[i].value
 				ganadores = []
 				ganadores.push(finalistas[i].name)
 			}
