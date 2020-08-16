@@ -616,6 +616,14 @@ function crearSala() {
                 client.sendUTF("turnoactual|"+siguienteJugador+"|"+carta1+"|"+carta2)
             })
 
+        }else
+        if(entradaCliente[0].localeCompare("ganadorEmpate") == 0){
+            
+            let ganadorEmpate = entradaCliente[1]
+            socketsClients.forEach(function (client) {
+                client.sendUTF("‘ganador|"+ganadorEmpate)
+            })
+
         }
         
         });
