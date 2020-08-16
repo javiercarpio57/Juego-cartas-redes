@@ -319,13 +319,12 @@ function crearSala() {
 
                             if(esPrincess.localeCompare("princess")==0){ // Si la carta es princesa el jugador F
 
-                                cartaAntigua = usuarios[puerto][num]["cartas"][0]
 
                                 usuarios[puerto][num]["vivo"] = false;
                                 console.log("Murio")
                                 //prince | quién tiró | quién recibe | nueva_carta
                                 socketsClients.forEach(function (client) {
-                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio|"+cartaAntigua);
+                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio|princess");
                                 })
                                 usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
 
@@ -352,17 +351,17 @@ function crearSala() {
                             console.log("la carta es "+usuarios[puerto][num]["cartas"][1])
 
                             if(esPrincess.localeCompare("princess")==0){ // Si la carta es princesa el jugador F 
-                                cartaAntigua = usuarios[puerto][num]["cartas"][0]
+                                cartaAntigua = usuarios[puerto][num]["cartas"][1]
                                 usuarios[puerto][num]["vivo"] = false;
                                 console.log("Murio")
                                 socketsClients.forEach(function (client) {
-                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio|"+cartaAntigua);
+                                    client.sendUTF("prince|"+tu+"|"+rival+"|"+"murio|princess");
                                 })
                                 usuarios[puerto][numTuyo]["cartas"].splice(idPrince,1)
 
                             }else{ // Si la carta es no es princesa le cambiamos la carta
                                 //console.log("cambiamos la carta de "+usuarios[puerto][num]["cartas"][1])
-                                cartaAntigua = usuarios[puerto][num]["cartas"][0]
+                                cartaAntigua = usuarios[puerto][num]["cartas"][1]
 
                                 usuarios[puerto][num]["cartas"].splice(1,1)
                                 let card = stack.pop();
