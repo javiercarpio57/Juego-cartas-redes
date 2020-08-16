@@ -195,6 +195,7 @@ export default class Game extends React.Component {
 
 			if (entradaServer[0].localeCompare('final') === 0){
 				console.log('FINALISTAS')
+				
 				let finalistas = []
 				let jugador = ''
 				let carta = ''
@@ -426,13 +427,11 @@ export default class Game extends React.Component {
 
 			// ==================== PRINCE ====================
 			if (entradaServer[0].localeCompare('prince') === 0) {
-				//prince | quién tiró | quién recibe | nueva_carta | carta_antigua
+				//prince | quién tiró | quién recibe | nueva_carta
 				const titleNotification = `${entradaServer[1]} jugó a PRINCE`
 				let bodyNotification = ''
 				let my_icon = ''
 				
-				self.discardCards(entradaServer[0], entradaServer[1]) // DESCARTAR PRINCE
-				self.discardCards(entradaServer[4], entradaServer[2]) // DESCARTAR LA OTRA CARTA
 				if (entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0) {
 					if (entradaServer[3].localeCompare('murio') === 0) {
 						bodyNotification = `Debido a que desechaste una princess, has perdido.`
@@ -463,6 +462,7 @@ export default class Game extends React.Component {
 						console.log("cambiaron las cartas de "+entradaServer[2])
 					}
 				}
+				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
@@ -475,13 +475,13 @@ export default class Game extends React.Component {
 				if (entradaServer[1].localeCompare(my_username) == 0) {
 					bodyNotification = `Jugaste a countess`
 					my_icon = 'success'
+					self.discardCards(entradaServer[0], entradaServer[1])
 					console.log("Jugaste countess")
 				} else {
 					bodyNotification = `${entradaServer[1]} jugó a countess`
 					my_icon = 'info'
 					console.log("Jugaron countess")
 				}
-				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
@@ -494,12 +494,11 @@ export default class Game extends React.Component {
 				if (entradaServer[1].localeCompare('princess') === 0) {
 					my_icon = 'error'
 					bodyNotification = 'Jugaste a princess'
+					self.discardCards(entradaServer[0], entradaServer[1])
 				} else {
 					my_icon = 'success'
 					bodyNotification = `${entradaServer[1]} jugó a princess`
 				}
-				self.discardCards(entradaServer[0], entradaServer[1])
-				self.discardCards(entradaServer[2], entradaServer[1])
 				self.KillPlayer(entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
@@ -699,10 +698,6 @@ export default class Game extends React.Component {
 		let indice = sumaGanadores.indexOf(highestValue)
 		let ganador = posiblesGanadores[indice]
 
-		console.log("POSIBLES GANADORES:",posiblesGanadores)
-		console.log("SUMAS", sumaGanadores)
-		console.log("GANADOR", ganador)
-
 		return ganador
 	}
 
@@ -777,35 +772,36 @@ export default class Game extends React.Component {
 	}
 
 	discardCards(cardName, player){
-		console.log('DESCARTANDO:', cardName)	
-		let array_descartadas = this.state.discarded_cards	
-		let mis_cartas = this.state.my_cards
+		if (cardName !== CARDS.PRINCESS) {	
+			console.log('DESCARTANDO:', cardName)	
+			let array_descartadas = this.state.discarded_cards	
+			let mis_cartas = this.state.my_cards
 
-		if(player === my_username){
-			let indice = 1
-			if(mis_cartas[0].name === cardName){
-				indice = 0
+			if(player === my_username){
+				let indice = 1
+				if(mis_cartas[0].name === cardName){
+					indice = 0
+				}
+				mis_cartas.splice(indice, 1)
+				let obj = {
+					name: cardName,
+					player: player
+				}
+				array_descartadas.push(obj)				
 			}
-			mis_cartas.splice(indice, 1)
-			let obj = {
-				name: cardName,
-				player: player
-			}
-			array_descartadas.push(obj)				
-		}
-		else{
-			let obj = {
-				name: cardName,
-				player: player
-			}
-			array_descartadas.push(obj)
-		}			
-		this.setState({
-			discarded_cards: array_descartadas,
-			my_cards: mis_cartas
-		})
-
-		if (cardName === CARDS.PRINCESS) {
+			else{
+				let obj = {
+					name: cardName,
+					player: player
+				}
+				array_descartadas.push(obj)
+			}			
+			this.setState({
+				discarded_cards: array_descartadas,
+				my_cards: mis_cartas
+			})
+		
+		} else {
 			this.KillPlayer(player)
 		}
 	}
