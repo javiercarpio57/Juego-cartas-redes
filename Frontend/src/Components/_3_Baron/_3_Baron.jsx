@@ -62,6 +62,9 @@ export default class _3_Baron extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
+                    <p className='text-content'>Compararás el valor de tu otra carta con la del rival que escojas, el que tenga la carta con valor más alto se queda en la partida, el perdedor será eliminado.</p>
+                    <br />
+
                     <Form fluid formValue={this.state.formValue} onChange={formValue => this.setState({ formValue })}>
                         <FormGroup>
                             <ControlLabel>Escoge un usuario</ControlLabel>

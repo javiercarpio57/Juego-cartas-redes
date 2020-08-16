@@ -41,6 +41,9 @@ export default class _7_Countess extends React.Component {
                     </div>
                 </Modal.Header>
                 <Modal.Body>
+                    <p className='text-content'>Si juegas esta carta perderás automáticamente.</p>
+                    <br />
+
                     ¿Quieres jugar la carta de Princess?
                 </Modal.Body>
                 <Modal.Footer>

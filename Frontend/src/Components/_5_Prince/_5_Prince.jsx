@@ -60,6 +60,9 @@ export default class _5_Prince extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
+                    <p className='text-content'>Cambia la carta del rival que escojas, puedes cambiar tu otra carta si te escoges. Escoger a alguien que tenga la princesa lo eliminará del juego.</p>
+                    <br />
+
                     <Form fluid formValue={this.state.formValue} onChange={formValue => this.setState({ formValue })}>
                         <FormGroup>
                             <ControlLabel>Escoge un usuario</ControlLabel>

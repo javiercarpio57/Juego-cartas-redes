@@ -41,6 +41,9 @@ export default class _7_Countess extends React.Component {
                     </div>
                 </Modal.Header>
                 <Modal.Body>
+                    <p className='text-content'>Solo podrás jugar esta carta si tienes un Rey o un Príncipe en tu mano.</p>
+                    <br />
+
                     Debes utilizar la carta de Countess
                 </Modal.Body>
                 <Modal.Footer>

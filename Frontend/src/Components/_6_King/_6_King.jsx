@@ -62,6 +62,9 @@ export default class _6_King extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
+                    <p className='text-content'>Intercambia tu otra carta por la del jugador que escojas.</p>
+                    <br />
+
                     <Form fluid formValue={this.state.formValue} onChange={formValue => this.setState({ formValue })}>
                         <FormGroup>
                             <ControlLabel>Escoge un usuario</ControlLabel>

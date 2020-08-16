@@ -216,9 +216,9 @@ export default class Game extends React.Component {
 				self.resetVariables()
 				self.SumarPuntos(entradaServer[1])
 				if (entradaServer[1].localeCompare(my_username) === 0) {
-					Alert.success(`Has ganado esta ronda. Felicidades.`, 10000)
+					Alert.success(`Has ganado esta ronda. Felicidades.`, 20000)
 				} else {
-					Alert.success(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`, 15000)
+					Alert.error(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`, 20000)
 				}
 
 			}

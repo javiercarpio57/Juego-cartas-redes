@@ -41,6 +41,9 @@ export default class _4_Handmaid extends React.Component {
                     </div>
                 </Modal.Header>
                 <Modal.Body>
+                    <p className='text-content'>Te dará inmunidad ante cualquier ataque por un turno.</p>
+                    <br />
+
                     ¿Quieres jugar la carta de Handmaid?
                 </Modal.Body>
                 <Modal.Footer>
