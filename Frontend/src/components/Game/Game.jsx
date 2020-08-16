@@ -66,7 +66,11 @@ export default class Game extends React.Component {
 			j3_alive: true,
 			j4_alive: true,
 			player_turn: '',
-			inmunes: []
+			inmunes: [],
+			my_points: 2,
+			puntosj2: 0,
+			puntosj3: 0,
+			puntosj4: 0
 		}
 		// this.client = this.client.bind(this);
 		this.close = this.close.bind(this)
@@ -246,7 +250,7 @@ export default class Game extends React.Component {
 					if (entradaServer[3].localeCompare("true") == 0){
 						bodyNotification = `Acertaste contra ${entradaServer[2]}. Lo has eliminado.`
 						my_icon = 'success'
-
+						self.discardCards(entradaServer[4], entradaServer[2])
 						self.KillPlayer(entradaServer[2])
 						console.log("le atino")
 					} else {
@@ -258,6 +262,7 @@ export default class Game extends React.Component {
 					if(entradaServer[3].localeCompare("true") == 0) {
 						bodyNotification = `${entradaServer[1]} te ha atacado. Te han eliminado.`
 						my_icon = 'error'
+						self.discardCards(entradaServer[4], entradaServer[2])
 						self.setState ({
 							alive: false
 						})
@@ -271,12 +276,13 @@ export default class Game extends React.Component {
 					my_icon = 'info'
 					if(entradaServer[3].localeCompare("true") == 0) {
 						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]}. ${entradaServer[2]} ha sido eliminado.`
+						self.discardCards(entradaServer[4], entradaServer[2])
 						self.KillPlayer(entradaServer[2])
 					} else {
 						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]} pero ha fallado. ${entradaServer[2]} sigue en el juego.`
 					}
 				}
-
+				
 				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification (titleNotification, bodyNotification, my_icon)
 			}
@@ -715,7 +721,9 @@ export default class Game extends React.Component {
 
 
 	render() {
-		const { show, my_cards, messages_array, connected_users, alive, discarded_cards, j2_alive, j3_alive, j4_alive, player_turn, disabled_users } = this.state
+		const { show, my_cards, messages_array, connected_users, alive, discarded_cards, 
+			j2_alive, j3_alive, j4_alive, player_turn, disabled_users,
+			my_points, puntosj2, puntosj3, puntosj4 } = this.state
 		const my_pos = connected_users.indexOf(my_username)
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
@@ -725,6 +733,10 @@ export default class Game extends React.Component {
 							jugador2_alive={j2_alive}
 							jugador3_alive={j3_alive}
 							jugador4_alive={j4_alive}
+							my_points={my_points}
+							points_j2={puntosj2}
+							points_j3={puntosj3}
+							points_j4={puntosj4}
 							player_turn={player_turn}
 				/>
 

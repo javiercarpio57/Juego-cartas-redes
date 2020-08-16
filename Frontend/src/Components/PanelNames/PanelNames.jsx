@@ -1,10 +1,21 @@
 import React from 'react'
-import { Message, Popover } from 'rsuite'
+import Coin_LL from '../Coin_LL/Coin_LL.jsx'
+import { Popover, Message } from 'rsuite'
 import './style.scss'
 
 export default class Card extends React.Component {
-	render(){
-        const { names, pivot, jugador1_alive, jugador2_alive, jugador3_alive, jugador4_alive, player_turn } = this.props
+
+    GetCoins(num) {
+        const coins = []
+        for (let i = 0; i < num; i++) {
+            coins.push (<Coin_LL />)
+        }
+        return coins
+    }
+
+	render() {
+        const { names, pivot, jugador1_alive, jugador2_alive, jugador3_alive, jugador4_alive,
+                my_points, points_j2, points_j3, points_j4, player_turn } = this.props
         const my_pos = names.indexOf(pivot)
 
         const styles = {
@@ -18,6 +29,9 @@ export default class Card extends React.Component {
                 <div className='spot-organization-vertical max-height'>
                     <div className='player1 put-color'>
                         <p key={names[my_pos] + '_' + my_pos}>{names[my_pos]}</p>
+                        {
+                            this.GetCoins(my_points)
+                        }
                     </div>
 
                     <div className='spot-organization-horizontal'>
