@@ -1,6 +1,6 @@
 import React from 'react'
 import Coin_LL from '../Coin_LL/Coin_LL.jsx'
-import { Popover, Message } from 'rsuite'
+import { Popover, Message, IconButton, Icon } from 'rsuite'
 import './style.scss'
 
 export default class Card extends React.Component {
@@ -37,14 +37,23 @@ export default class Card extends React.Component {
                     <div className='spot-organization-horizontal'>
                         <div className='player2 put-color'>
                             <p key={names[(my_pos + 1) % 4] + '_' + (my_pos + 1) % 4}>{names[(my_pos + 1) % 4]}</p>
+                            {
+                                this.GetCoins(points_j2)
+                            }
                         </div>
                         <div className='player4 put-color'>
                             <p key={names[(my_pos + 3) % 4] + '_' + (my_pos + 3) % 4}>{names[(my_pos + 3) % 4]}</p>
+                            {
+                                this.GetCoins(points_j4)
+                            }
                         </div>
                     </div>
 
                     <div className='player3 put-color'>
                         <p key={names[(my_pos + 2) % 4] + '_' + (my_pos + 2) % 4}>{names[(my_pos + 2) % 4]}</p>
+                        {
+                            this.GetCoins(points_j3)
+                        }
                     </div>
                 </div>
 
@@ -97,6 +106,10 @@ export default class Card extends React.Component {
                         :
                     null
                 }
+
+                <div className='help-btn'>
+                    <IconButton size='lg' color="cyan" circle icon={<Icon icon='question' />} />
+                </div>
             </div>
 		)
 	}
