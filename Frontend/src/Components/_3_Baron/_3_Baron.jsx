@@ -32,7 +32,7 @@ export default class _3_Baron extends React.Component {
     play(me) {
         let play
         if (this.state.formValue.usuario_seleccionado === SIN_EFECTO) {
-            play = `sinEfecto|${m}|baron`
+            play = `sinEfecto|${me}|baron`
         } else {
             play = `jugar|${me}|baron|${this.state.formValue.usuario_seleccionado}`
         }

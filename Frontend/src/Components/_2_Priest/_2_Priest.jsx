@@ -32,7 +32,7 @@ export default class _2_Priest extends React.Component {
     play(me) {
         let play
         if (this.state.formValue.usuario_seleccionado === SIN_EFECTO) {
-            play = `sinEfecto|${m}|priest`
+            play = `sinEfecto|${me}|priest`
         } else {
             play = `jugar|${me}|priest|${this.state.formValue.usuario_seleccionado}`
         }
