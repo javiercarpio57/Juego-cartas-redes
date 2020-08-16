@@ -103,6 +103,9 @@ export default class _1_Guard extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
+                    <p>Adivina la carta de tu oponente para eliminarlo. No puedes adivinar al guardia. No serás eliminado si fallas.</p>
+                    <br />
+
                     <Form fluid formValue={this.state.formValue} onChange={formValue => this.setState({ formValue })}>
                         <FormGroup>
                             <ControlLabel>Escoge un usuario</ControlLabel>

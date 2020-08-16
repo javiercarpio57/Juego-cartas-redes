@@ -62,6 +62,9 @@ export default class _2_Priest extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
 
+                    <p>Se te revelará la carta del jugador que escojas.</p>
+                    <br />
+
                     <Form fluid formValue={this.state.formValue} onChange={formValue => this.setState({ formValue })}>
                         <FormGroup>
                             <ControlLabel>Escoge un usuario</ControlLabel>

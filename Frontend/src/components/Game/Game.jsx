@@ -213,6 +213,7 @@ export default class Game extends React.Component {
 
 			if (entradaServer[0].localeCompare('ganador') === 0) {
 				self.resetVariables()
+				self.SumarPuntos(entradaServer[1])
 				if (entradaServer[1].localeCompare(my_username) === 0) {
 					Alert.success(`Has ganado esta ronda. Felicidades.`, 10000)
 				} else {
@@ -507,7 +508,7 @@ export default class Game extends React.Component {
 		};
 	}
 
-	SumPoints(player) {
+	SumarPuntos(player) {
 		const index = this.state.connected_users.indexOf(player)
 
 		if (this.state.connected_users[index] === player) {
@@ -773,12 +774,7 @@ export default class Game extends React.Component {
 			alive: true,
 			j2_alive: true,
 			j3_alive: true,
-			j4_alive: true,
-			my_points: 2,
-			puntosj2: 0,
-			puntosj3: 0,
-			puntosj4: 0,
-			has_ganador_supremo: null
+			j4_alive: true
 		})
 	}
 
