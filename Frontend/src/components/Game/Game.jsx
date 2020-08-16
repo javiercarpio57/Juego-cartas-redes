@@ -190,7 +190,6 @@ export default class Game extends React.Component {
 
 			if (entradaServer[0].localeCompare('final') === 0){
 				console.log('FINALISTAS')
-				
 				let finalistas = []
 				let jugador = ''
 				let carta = ''
@@ -203,7 +202,8 @@ export default class Game extends React.Component {
 					})
 				}
 
-				compararCartas(finalistas)
+				self.compararCartas(finalistas)
+				
 			}
 
 			if (entradaServer[0].localeCompare('ganador') === 0) {
@@ -651,6 +651,10 @@ export default class Game extends React.Component {
 
 		let indice = sumaGanadores.indexOf(highestValue)
 		let ganador = posiblesGanadores[indice]
+
+		console.log("POSIBLES GANADORES:",posiblesGanadores)
+		console.log("SUMAS", sumaGanadores)
+		console.log("GANADOR", ganador)
 
 		return ganador
 	}
