@@ -11,6 +11,8 @@ let my_user = ''
 let my_username = ''
 let my_code = ''
 
+const SIN_EFECTO = 'Jugar sin efecto'
+
 const CARDS = {
 	GUARD: 'guard',
 	PRIEST: 'priest',
@@ -469,9 +471,19 @@ export default class Game extends React.Component {
 			
 			console.log('INMUNES:', inmunesss)
 			console.log('INMUNES-ELIMINADOS:', eliminados)
-			return {
-				disabled_users: eliminados,
-				inmunes: inmunesss
+			if (eliminados.length === 3) {
+				const users = [...state.connected_users, SIN_EFECTO]
+				console.log('USUARIOS CON SIN EFECTO:', users)
+				return {
+					disabled_users: eliminados,
+					inmunes: inmunesss,
+					connected_users: users
+				}
+			} else {
+				return {
+					disabled_users: eliminados,
+					inmunes: inmunesss
+				}
 			}
 		})
 	}
@@ -479,16 +491,19 @@ export default class Game extends React.Component {
 	RemoveInmune(player) {
 		const nuevos_eliminados = this.state.disabled_users.filter(item => item !== player)
 		const nuevo_inmunes = this.state.inmunes.filter(item => item !== player)
+		const us = this.state.connected_users.filter(item => item !== SIN_EFECTO)
 
 		console.log('QUITAR INMUNE DE:', player)
 		console.log('NUEVO INMUNES:', nuevo_inmunes)
 		console.log('NUEVO ELIMINADOS:', nuevos_eliminados)
 		this.setState ({
 			disabled_users: nuevos_eliminados,
-			inmunes: nuevo_inmunes
+			inmunes: nuevo_inmunes,
+			connected_users: us
 		})
 		console.log('NUEVO INMUNES 2:', nuevo_inmunes)
 		console.log('NUEVO ELIMINADOS 2:', nuevos_eliminados)
+		
 	}
 
 	ReplaceMyCards(newCard) {

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, SelectPicker, Button, Form, FormGroup, FormControl, ControlLabel } from 'rsuite'
 
+const SIN_EFECTO = 'Jugar sin efecto'
 export default class _5_Prince extends React.Component {
 	constructor(props){
         super(props);
@@ -29,7 +30,12 @@ export default class _5_Prince extends React.Component {
     }
 
     play(me) {
-        const play = `jugar|${me}|prince|${this.state.formValue.usuario_seleccionado}`
+        let play
+        if (this.state.formValue.usuario_seleccionado === SIN_EFECTO) {
+            play = `sinEfecto|${m}|prince`
+        } else {
+            play = `jugar|${me}|prince|${this.state.formValue.usuario_seleccionado}`
+        }
 		this.props.jugarCarta('prince', play)
         this.close()
     }

@@ -38,6 +38,8 @@ const cards = [
         cardValue: '8'
     }
 ]
+const SIN_EFECTO = 'Jugar sin efecto'
+
 export default class _1_Guard extends React.Component {
 	constructor(props){
         super(props);
@@ -69,7 +71,12 @@ export default class _1_Guard extends React.Component {
 
     play(m) {
         const carta = this.state.formValue.carta_seleccionada.toLowerCase()
-        let play = `jugar|${m}|guard|${this.state.formValue.usuario_seleccionado}|${carta}`
+        let play
+        if (this.state.formValue.usuario_seleccionado === SIN_EFECTO) {
+            play = `sinEfecto|${m}|guard`
+        } else {
+            play = `jugar|${m}|guard|${this.state.formValue.usuario_seleccionado}|${carta}`
+        }
         this.props.jugarCarta('guard', play)
         this.close()
     }
