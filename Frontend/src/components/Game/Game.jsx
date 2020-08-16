@@ -613,10 +613,66 @@ export default class Game extends React.Component {
 	}
 
 	compararCartas(finalistas){
-		let highestCard = ''
-		console.log("FINALISTAS:",finalistas)
-		console.log("TABLA DE VALORES:", CARDSVAL)
+		let highestCard = 0
+		let ganadores = []
+		
+		for(var i=0; i<finalistas.length;i++){
+			for(var key in CARDSVAL){
+				if(finalistas[i].card === key){
+					finalistas[i].value = CARDSVAL[key]
+				}
+			}
+			if(finalistas[i].value > highestCard){
+				ganadores = []
+				ganadores.push(finalistas[i].name)
+			}
+			if(finalistas[i].value === highestCard){
+				ganadores.push(finalistas[i].name)
+			}
+		}
 
+		let ganador = ganadores[0]
+
+		if(ganadores.length>1){
+			ganador = this.compararDescartadas(ganadores)
+		}
+
+		let winner = 'ganadorEmpate|'
+		winner = winner+ganador
+
+		this.showSome('-',winner)
+
+	}
+
+	compararDescartadas(posiblesGanadores){
+
+		let suma = 0
+		let sumaGanadores = []
+		for(var j=0; j<posiblesGanadores.length; j++){
+			for(var i=0; i<discarded_cards.length; i++){
+				for(var key in CARDSVAL){
+					if(posiblesGanadores[j]===discarded_cards[i].player){
+						if(discarded_cards[i].name === key){
+							suma = suma + CARDSVAL[key]
+						}
+					}
+				}
+			}
+			sumaGanadores.push(suma)
+			suma = 0
+		}
+
+		let highestValue = 0
+		for(var p=0; p<sumaGanadores.length; p++){
+			if(sumaGanadores[p]>highestValue){
+				highestValue = sumaGanadores[p]
+			}
+		}
+
+		let indice = sumaGanadores.indexOf(highestValue)
+		let ganador = posiblesGanadores[indice]
+
+		return ganador
 	}
 
 	CheckMyCards() {
