@@ -114,12 +114,14 @@
 }
 
 .player-spot-vertical-left {
-    height: 125%;
+    position: relative;
+    height: 100%;
     width: 13%;
     display: grid;
     align-items: center;
+    margin-top: 10%;
     justify-content: space-around;
-    grid-template-rows: 15% 35% 50%;
+    grid-template-rows: 20% 20% 60%;
 }
 
 .player-spot-vertical-right {
