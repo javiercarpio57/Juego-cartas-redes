@@ -162,7 +162,7 @@ export default class PanelNames extends React.Component {
 
                 <Modal overflow show={show} onHide={() => this.Close()}>
                     <Modal.Header>
-                        <Modal.Title>Instrucciones de juego</Modal.Title>
+                        <Modal.Title>Instrucciones de cómo jugar cada carta</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <PanelGroup accordion bordered>
