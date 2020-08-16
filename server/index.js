@@ -141,16 +141,46 @@ function crearSala() {
 
                 console.log("Me he conectado exitosamente " + ":" + puerto);
 
-                temp = {
-                    "username": entradaCliente[1],
-                    "cartas": [],
-                    "invencible": false,
-                    "vivo": true,
-                    "tokens": 0
+        
+                if(usuariosIngresados>1){
+                    let bandera = true
+                    
+                    Object.keys(usuarios[puerto]).map((key,index)=>{
+                   
+                        if( usuarios[puerto][key]["username"].localeCompare(entradaCliente[1]) == 0 ){
+                            console.log("entroooo")
+                            temp = {
+                                "username": entradaCliente[1]+key.toString(),
+                                "cartas": [],
+                                "invencible": false,
+                                "vivo": true,
+                                "tokens": 0
+                            }
+                            bandera = false
+                        }else
+                        if(bandera){
+                            temp = {
+                                "username": entradaCliente[1],
+                                "cartas": [],
+                                "invencible": false,
+                                "vivo": true,
+                                "tokens": 0
+                            }
+                        }
+                    })
+                }else{
+                    temp = {
+                        "username": entradaCliente[1],
+                        "cartas": [],
+                        "invencible": false,
+                        "vivo": true,
+                        "tokens": 0
+                    }
                 }
+               
 
                 usuarios[puerto][usuariosIngresados] = temp;
-                
+                                
                 let mensaje = "conectado|" + usuariosIngresados
                 connection.sendUTF(mensaje);
 
