@@ -434,19 +434,34 @@ export default class Game extends React.Component {
 				self.discardCards(entradaServer[0], entradaServer[1]) // DESCARTAR PRINCE
 				self.discardCards(entradaServer[4], entradaServer[2]) // DESCARTAR LA OTRA CARTA
 				if (entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0) {
-					bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
-					my_icon = 'success'
-					console.log(`Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`)
-					self.ReplaceMyCards([entradaServer[3]])
+					if (entradaServer[3].localeCompare('murio') === 0) {
+						bodyNotification = `Debido a que desechaste una princess, has perdido.`
+						my_icon = 'error'
+					} else {
+						bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
+						my_icon = 'success'
+						console.log(`Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`)
+						self.ReplaceMyCards([entradaServer[3]])
+					}
 				} else if (entradaServer[2].localeCompare(my_username) == 0) {
-					bodyNotification = `${entradaServer[1]} cambió tu carta, tu nueva carta es ${entradaServer[3]}`
-					my_icon = 'warning'
-					self.ReplaceMyCards([entradaServer[3]])
-					console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
+					if (entradaServer[3].localeCompare('murio') === 0) {
+						bodyNotification = `Debido a que desechaste una princess, has perdido.`
+						my_icon = 'error'
+					} else {
+						bodyNotification = `${entradaServer[1]} cambió tu carta, tu nueva carta es ${entradaServer[3]}`
+						my_icon = 'warning'
+						self.ReplaceMyCards([entradaServer[3]])
+						console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
+					}
 				} else {
-					bodyNotification = `${entradaServer[1]} cambió las cartas de ${entradaServer[2]}`
-					my_icon = 'info'
-					console.log("cambiaron las cartas de "+entradaServer[2])
+					if (entradaServer[3].localeCompare('murio') === 0) {
+						bodyNotification = `Debido a que ${entradaServer[2]} desechó una princess, ha perdido.`
+						my_icon = 'success'
+					} else {
+						bodyNotification = `${entradaServer[1]} cambió las cartas de ${entradaServer[2]}`
+						my_icon = 'info'
+						console.log("cambiaron las cartas de "+entradaServer[2])
+					}
 				}
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}

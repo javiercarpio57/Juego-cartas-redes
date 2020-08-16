@@ -37,7 +37,7 @@ export default class _7_Countess extends React.Component {
             <Modal show={this.state.show} onHide={this.close} onExited={this.close} size='xs' keyboard>
                 <Modal.Header>
                     <div style={{ textAlign: 'center' }}>
-                        <Modal.Title>COUNTESS</Modal.Title>
+                        <Modal.Title>PRINCESS</Modal.Title>
                     </div>
                 </Modal.Header>
                 <Modal.Body>
