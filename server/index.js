@@ -137,10 +137,10 @@ function crearSala() {
             if (entradaCliente[0].localeCompare("conectarmeASala") == 0) {
                 let temp = {}
                 usuariosIngresados++;
-                personas = personas + usuariosIngresados + "|" + entradaCliente[1] + "|"
+                
 
                 console.log("Me he conectado exitosamente " + ":" + puerto);
-
+                let indice = usuariosIngresados.toString();
         
                 if(usuariosIngresados>1){
                     let bandera = true
@@ -150,7 +150,7 @@ function crearSala() {
                         if( usuarios[puerto][key]["username"].localeCompare(entradaCliente[1]) == 0 ){
                             console.log("entroooo")
                             temp = {
-                                "username": entradaCliente[1]+key.toString(),
+                                "username": entradaCliente[1]+indice,
                                 "cartas": [],
                                 "invencible": false,
                                 "vivo": true,
@@ -186,12 +186,12 @@ function crearSala() {
 
                 let card = stack.pop();
                 console.log("conectarmeASala las cartas son "+stack)
-                let indice = usuariosIngresados.toString();
+                
 
                 usuarios[puerto][indice]["cartas"].push(card)
 
                 console.log(usuarios[puerto])
-
+                personas = personas + usuariosIngresados + "|" +  usuarios[puerto][indice]["username"] + "|"
                 repartoInicial = repartoInicial + usuariosIngresados + "|" + card + "|"
                 socketsClients.forEach(function (client) {
                     client.sendUTF(personas);
