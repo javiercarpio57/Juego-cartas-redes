@@ -701,7 +701,7 @@ function crearSala() {
             
             let ganadorEmpate = entradaCliente[1]
             socketsClients.forEach(function (client) {
-                client.sendUTF("‘ganador|"+ganadorEmpate)
+                client.sendUTF("ganador|"+ganadorEmpate)
             })
 
         }
