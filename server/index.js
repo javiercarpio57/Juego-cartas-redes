@@ -230,7 +230,7 @@ function crearSala() {
                     }
 
                     socketsClients.forEach(function (client) {
-                        client.sendUTF("guard|"+tu+"|"+rival+"|"+res);
+                        client.sendUTF("guard|"+tu+"|"+rival+"|"+res+"|"+cartaContrincanteReal[0]);
                     })
                    console.log("El guard esta en la posicion "+idGuard+" y sera descartada")
                    usuarios[puerto][numTuyo]["cartas"].splice(idGuard,1)
@@ -572,7 +572,7 @@ function crearSala() {
             
             let efectoTu = entradaCliente[1]
             let efectoCarta = entradaCliente[2]
-            
+
             let numTuyo = getKeyByValue(usuarios[puerto],efectoTu)
 
             let idSinEfecto = usuarios[puerto][numTuyo]["cartas"].indexOf(efectoCarta);
