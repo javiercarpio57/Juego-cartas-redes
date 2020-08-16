@@ -102,8 +102,8 @@ export default class Game extends React.Component {
 		my_username = this.props.location.state.username
 		puertoCodigo = this.props.location.state.puerto
 
-		//let enlace = 'ws://3.135.137.126:'+this.props.location.state.puerto+'/'
-		let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
+		let enlace = 'ws://3.135.137.126:'+this.props.location.state.puerto+'/'
+		// let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
 		client = new W3CWebSocket(enlace, 'echo-protocol');
 		
 		client.onopen = () => {
@@ -705,10 +705,10 @@ export default class Game extends React.Component {
 		let suma = 0
 		let sumaGanadores = []
 		for(var j=0; j<posiblesGanadores.length; j++){
-			for(var i=0; i<discarded_cards.length; i++){
+			for(var i=0; i<this.state.discarded_cards.length; i++){
 				for(var key in CARDSVAL){
-					if(posiblesGanadores[j]===discarded_cards[i].player){
-						if(discarded_cards[i].name === key){
+					if(posiblesGanadores[j]===this.state.discarded_cards[i].player){
+						if(this.state.discarded_cards[i].name === key){
 							suma = suma + CARDSVAL[key]
 						}
 					}

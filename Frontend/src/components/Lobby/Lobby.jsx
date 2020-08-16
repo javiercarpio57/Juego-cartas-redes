@@ -42,8 +42,8 @@ export default class Lobby extends React.Component {
 	}
 
 	preguntar(username) {
-		//const client = new W3CWebSocket('ws://3.135.137.126:4200/', 'echo-protocol');
-		const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
+		const client = new W3CWebSocket('ws://3.135.137.126:4201/', 'echo-protocol');
+		// const client = new W3CWebSocket('ws://localhost:4200/', 'echo-protocol');
 		console.log('Se hizo click en crear sala');
 		client.onopen = () => {
 			console.log('WebSocket Client Connected');
