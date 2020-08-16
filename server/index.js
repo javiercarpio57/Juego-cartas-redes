@@ -567,6 +567,20 @@ function crearSala() {
                 }
                 
             }
+        }else
+        if(entradaCliente[0].localeCompare("sinEfecto") == 0){
+            
+            let efectoTu = entradaCliente[1]
+            let efectoCarta = entradaCliente[2]
+            
+            let numTuyo = getKeyByValue(usuarios[puerto],efectoTu)
+
+            let idSinEfecto = usuarios[puerto][numTuyo]["cartas"].indexOf(efectoCarta)
+            socketsClients.forEach(function (client) {
+                client.sendUTF("sinEfectoCliente|"+efectoTu+"|"+efectoCarta)
+            })
+            usuarios[puerto][numTuyo]["cartas"].splice(idSinEfecto,1)
+
         }
         
         });

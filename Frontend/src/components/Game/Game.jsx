@@ -380,7 +380,6 @@ export default class Game extends React.Component {
 				let my_icon = ''
 
 				if (entradaServer[1].localeCompare(my_username)) {
-					self.discardCards(entradaServer[0], entradaServer[1])
 					self.ReplaceMyCards([entradaServer[4]])
 					bodyNotification = `Has intercambiado carta con ${entradaServer[2]}`
 					my_icon = 'success'
@@ -392,6 +391,7 @@ export default class Game extends React.Component {
 					bodyNotification = `${entradaServer[1]} ha intercambiado carta con ${entradaServer[2]}`
 					my_icon = 'info'
 				}
+				self.discardCards(entradaServer[0], entradaServer[1])
 				self.ShowNotification(titleNotification, bodyNotification, my_icon)
 			}
 
@@ -642,11 +642,11 @@ export default class Game extends React.Component {
 		this.setState({
 			my_cards: [],
 			discarded_cards: [],
+			disabled_users: [],
 			alive: true,
 			j2_alive: true,
 			j3_alive: true,
 			j4_alive: true,
-
 		})
 	}
 
