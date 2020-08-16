@@ -701,9 +701,11 @@ function crearSala() {
         if(entradaCliente[0].localeCompare("ganadorEmpate") == 0){
             
             let ganadorEmpate = entradaCliente[1]
+            let numTuyo = getKeyByValue(usuarios[puerto],ganadorEmpate)
             socketsClients.forEach(function (client) {
                 client.sendUTF("ganador|"+ganadorEmpate)
             })
+            usuarios[puerto][numTuyo]["tokens"] = usuarios[puerto][numTuyo]["tokens"]+1;
 
         }
         
