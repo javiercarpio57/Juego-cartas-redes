@@ -48,6 +48,8 @@ let client = null
 let puertoCodigo = ''
 
 export default class Game extends React.Component {
+	// messageEndRef = React.createRef()
+
 	constructor (props) {
 		super(props)
 
@@ -100,13 +102,22 @@ export default class Game extends React.Component {
 		this.props.history.push({
 			pathname: `/lobby/${my_username}`,
 			state: {
-				username: my_username
+					username: my_username
 			}
 		});
 	}
 
+	// componentDidUpdate() {
+	// 	this.ScrollToBottom()
+	// }
+
+	// ScrollToBottom() {
+	// 	this.messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
+	// }
+
 	componentDidMount() {
 		self = this
+		// this.ScrollToBottom()
 		console.log("el username que vino a Game es: YO "+this.props.location.state.username);
 		console.log("el puerto que vino a Game es "+this.props.location.state.puerto);
 		my_username = this.props.location.state.username
@@ -129,9 +140,9 @@ export default class Game extends React.Component {
 			
 			client.onclose = function() {
 				console.log('echo-protocol Client Closed');
-				self.setState({
-					has_to_go_lobby: true
-				})
+				// self.setState({
+				// 	has_to_go_lobby: true
+				// })
 			};
 
 			client.onmessage = function(e) {
@@ -209,13 +220,15 @@ export default class Game extends React.Component {
 
 				if (entradaServer[0].localeCompare('chatc') === 0) {
 					console.log("Mensaje para broadcast")
-					let mensaje = (entradaServer[1]+": "+entradaServer[2])
+					const estructura_chat = {
+						usuario: entradaServer[1],
+						mensaje: entradaServer[2]
+					}
+					// let mensaje = (entradaServer[1]+": "+entradaServer[2])
 					let mensajeArray = self.state.messages_array
-					mensajeArray.push({
-						mensaje 
-					})
+					mensajeArray.push(estructura_chat)
 					self.setState({
-						messages_array: mensajeArray					
+						messages_array: mensajeArray
 					})
 					console.log(self.state.messages_array)
 				}
@@ -942,7 +955,16 @@ export default class Game extends React.Component {
 					<div className='center-pile-cards' />
 					<div className='center-chat'> 
 						<div className='center-chat-show'>
-							<div className='chat-Size'>{messages_array.map((d) => <li key={d.mensaje}>{d.mensaje}</li>)}</div>
+							<div className='chat-Size' style={{ padding: '10px', paddingLeft: '15px' }}>
+								{
+									messages_array.map(
+										(d, index) => <li key={d.usuario + '_' + d.mensaje + '_' + index} style={{listStyleType: 'none'}}>
+											<b>{d.usuario}</b>: {d.mensaje}
+										</li>
+									)
+								}
+								{/* <div ref={this.messageEndRef} /> */}
+							</div>
 						</div>
 						<div className='center-chat-input'>
 							<Input style={{ height: 30, fontSize: 12 }} placeholder='Chat' onPressEnter={this.SendChat}/>
