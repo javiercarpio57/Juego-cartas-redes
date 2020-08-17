@@ -8,8 +8,8 @@ let cont = 0;
 let servidores = []
 let sockets = []
 let usuarios = {}
-let PORT = 4200
-//let HOST = '0.0.0.0'
+let PORT = 4201
+let HOST = '0.0.0.0'
 let cards = [
 	'guard','guard','guard','guard',
 	'guard','priest','priest','baron',
@@ -101,8 +101,8 @@ function crearSala() {
         response.writeHead(404);
         response.end();
     });
-    servidores[turno].listen(puerto, function () {
-        console.log((new Date()) + ' Server is listening on: '+ puerto.toString());
+    servidores[turno].listen(puerto,HOST, function () {
+        console.log((new Date()) + ' Server is listening on '+HOST+':'+ puerto.toString());
     });
     sockets[turno] = new WebSocketServer({
         httpServer: servidores[turno],
@@ -569,7 +569,7 @@ function crearSala() {
                 indice = estado_de_jugadores.indexOf(true,0) + 1;
                 console.log("El ganador es"+usuarios[puerto][indice]["username"]);
                 usuarios[puerto][indice]["tokens"] = usuarios[puerto][indice]["tokens"]+1;
-                if(usuarios[puerto][indice]["tokens"] == 1){
+                if(usuarios[puerto][indice]["tokens"] == 4){
                     socketsClients.forEach(function (client) {
                         client.sendUTF("ganadorsupremo|"+usuarios[puerto][indice]["username"]);
                     });    
