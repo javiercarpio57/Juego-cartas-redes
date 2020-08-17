@@ -1,23 +1,28 @@
 #!/usr/bin/env node
 
+//Paquetes de WebSocket y http
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 const { client } = require('websocket');
 
+//Varibles globales para todas las salas
 let cont = 0;
 let servidores = []
 let sockets = []
 let usuarios = {}
 let PORT = 4201
 let HOST = '0.0.0.0'
-let cards = [
+
+// Deck de cartas 
+const cards = [
 	'guard','guard','guard','guard',
 	'guard','priest','priest','baron',
 	'baron','handmaid', 'handmaid','prince',
 	'prince','king','countess','princess'
     ]
 
-let diccionarioCartas = {
+// Diccionario de numero de cartas
+const diccionarioCartas = {
     'guard': '1',
     'priest': '2',
     'baron':'3',
@@ -62,10 +67,22 @@ function baron(miCarta,cartaUsuario){
         return 0;
     }
 }
+
+/**
+ * Metodo para revolver el deck de cartas 
+ * @param {*} array - lista de cartas
+ */
 function shuffle(array) {
     array.sort(() => Math.random() - 0.5);
 }
 
+/**
+ * Metodo de validacion para verificar si un usuario puede entrar a la sala o no
+ * Se basa en la cantidad de usuarios por sala, donde si es true, hay espacio disponible
+ * y false si ya hay 4 jugadores en la sala
+ * @param {*} origin - socket de sala
+ * @param {*} cantjugadores - cantidad de jugadores en la sala
+ */
 function originIsAllowed(origin,cantjugadores) {
     // put logic here to detect whether the specified origin is allowed.
     if(cantjugadores<4){
@@ -77,6 +94,10 @@ function originIsAllowed(origin,cantjugadores) {
     }
 }
 
+
+/**
+ * Metodo donde se crea la sala y tiene todos protocolos. Es el encargado de manejar todos los protocolos para enviar al cliente
+ */
 function crearSala() {
     //============== Variables de sala generales 
     let usuariosIngresados = 0;
@@ -101,9 +122,11 @@ function crearSala() {
         response.writeHead(404);
         response.end();
     });
+    //============ Para verificar a que host y puerto debe escuchar la sala
     servidores[turno].listen(puerto,HOST, function () {
         console.log((new Date()) + ' Server is listening on '+HOST+':'+ puerto.toString());
     });
+    //Instancia de objeto WebSocketServer
     sockets[turno] = new WebSocketServer({
         httpServer: servidores[turno],
         autoAcceptConnections: false
@@ -111,15 +134,17 @@ function crearSala() {
     //=================================================
     //=========== Conexion de socket general => Aqui se desarrolla el intercambio servidor cliente
     sockets[turno].on('request', function (request) {
+        // Verificacion de cantidad de usuarios en la sala, si hay mas de 4, rechaza la conexion
         if (!originIsAllowed(request.origin,usuariosIngresados)) {
             request.reject();
             console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
             return;
         }
+        //====== En caso que la conexion si es aceptada 
         var connection = request.accept('echo-protocol', request.origin);
         socketsClients.push(connection);
         console.log((new Date()) + ' Connection accepted.');
-
+        //====== Ya se establece conexion con y aqui ya se pueden enviar a manejar protocolos
         connection.on('message', function (message) {
             console.log("El mensaje ingresado es " + message.utf8Data);
             let mensaje = message.utf8Data
@@ -134,6 +159,7 @@ function crearSala() {
                 crearSala();
 
             } else
+            //====== Protocolo para que usuario pueda conectarse a la sala => ---
             if (entradaCliente[0].localeCompare("conectarmeASala") == 0) {
                 let temp = {}
                 usuariosIngresados++;
@@ -141,7 +167,7 @@ function crearSala() {
 
                 console.log("Me he conectado exitosamente " + ":" + puerto);
                 let indice = usuariosIngresados.toString();
-        
+                //Verificacion de nombres repetidos, si encuentra un nombre repetido le agrega el numero en el orden en el que entro
                 if(usuariosIngresados>1){
                     let bandera = true
                     
@@ -183,11 +209,10 @@ function crearSala() {
                                 
                 let mensaje = "conectado|" + usuariosIngresados
                 connection.sendUTF(mensaje);
-
-                let card = stack.pop();
-                console.log("conectarmeASala las cartas son "+stack)
                 
-
+                //==== Asignar una carta a un jugador del stack de cartas
+                let card = stack.pop();
+                
                 usuarios[puerto][indice]["cartas"].push(card)
 
                 console.log(usuarios[puerto])
@@ -196,6 +221,7 @@ function crearSala() {
                 socketsClients.forEach(function (client) {
                     client.sendUTF(personas);
                 })
+                //Una vez esten los 4 jugadores ya puede iniciar la partida y envia el usuario y cartas a cada cliente
                 if(usuariosIngresados == 4){
                     let card = stack.pop();
                     usuarios[puerto]["1"]["cartas"].push(card);
@@ -217,11 +243,13 @@ function crearSala() {
                     console.log(usuarios[puerto]) 
                 }
             } else
+            //====== Protocolo para iniciar la señal de inicio de partida
             if (entradaCliente[0].localeCompare("iniciar") == 0) {
                 socketsClients.forEach(function (client) {
                     client.sendUTF(repartoInicial);
                 })
             }else
+            //====== Protocolo para enviar mensajes por broadcast
             if (entradaCliente[0].localeCompare("broadcast") == 0) {
 
                 let usuarioMensaje = entradaCliente[1];
@@ -234,21 +262,17 @@ function crearSala() {
                     client.sendUTF(mensajeAEnviar);
                 })
             }
-            // if(entradaCliente[0].localeCompare("cerrar")==0){
-            //     client.clo
-            // }
+            //====== Protocolo para realizar jugadas, este protocolo ya viene con la carta que jugo el usuario
             if(entradaCliente[0].localeCompare("jugar") == 0){
-
+                //========= Variables para realizar jugadas
                 let tu = entradaCliente[1]
                 let cartaAJugar = entradaCliente[2].toLowerCase()
                 let rival = entradaCliente[3]
                 let numTuyo = getKeyByValue(usuarios[puerto],tu)
-                console.log("el num del usuario es",numTuyo)
-
                 let num = getKeyByValue(usuarios[puerto],rival)
-                console.log("el num del rival es",num)
                 let cartaContrincanteReal = usuarios[puerto][num]["cartas"];
-
+                
+                //========== Carta de Guard
                 if(cartaAJugar.localeCompare("guard")==0){
 
                     let idGuard = usuarios[puerto][numTuyo]["cartas"].indexOf("guard")
@@ -269,6 +293,7 @@ function crearSala() {
                    //fruits.splice(0, 1);        // Removes the first element of fruits 
                    
                 }else
+                //============ Carta de Priest
                 if(cartaAJugar.localeCompare("priest")==0){
                     let idPriest = usuarios[puerto][numTuyo]["cartas"].indexOf("priest")
                     console.log("La carta de tu rival es",cartaContrincanteReal[0])
@@ -283,6 +308,7 @@ function crearSala() {
                     console.log(usuarios[puerto])
 
                 }else
+                //==========Carta de Baron
                 if(cartaAJugar.localeCompare("baron")==0){
 
                     // Este se debe modificar cuando se tengan 2 cartas debido a que es el valor de tu otra carta contra la del rival no el valor del baron 
@@ -334,6 +360,7 @@ function crearSala() {
                     console.log(usuarios[puerto])
 
                 }else
+                //========== Carta de Prince
                 if(cartaAJugar.localeCompare("prince")==0){
                     console.log("En el stack quedan "+stack.length+" cartas")
                     console.log("En el stack estan las cartas: ",stack)
@@ -455,6 +482,7 @@ function crearSala() {
                     }
                     
                 }else
+                //=========== Carta de Handmaid
                 if(cartaAJugar.localeCompare("handmaid")==0){
 
                     // Este se debe modificar cuando se tengan turnos para regresar a la normalidad a un jugador
@@ -469,6 +497,7 @@ function crearSala() {
                     console.log(usuarios[puerto])
                     
                 }else
+                //============= Carta de King
                 if(cartaAJugar.localeCompare("king")==0){
                     let idKing = usuarios[puerto][numTuyo]["cartas"].indexOf("king")
                     let cartaContrincante = usuarios[puerto][num]["cartas"][0];
@@ -478,24 +507,16 @@ function crearSala() {
                     let cartaNuevaCon = "";
                     if(indiceRey == 0){
                         cartaAIntercambiar = usuarios[puerto][numTuyo]["cartas"][1];
-                        console.log("Entro al if");
-                        console.log("Carta a intercambiar"+cartaAIntercambiar);
-                        console.log("Antes de intercambio"+JSON.stringify(usuarios));
                         let temp = cartaContrincante;
                         usuarios[puerto][num]["cartas"][0] = cartaAIntercambiar;
                         usuarios[puerto][numTuyo]["cartas"][1] = temp;
-                        console.log("Despues de intercambio"+JSON.stringify(usuarios));
                         cartaNuevamia = usuarios[puerto][numTuyo]["cartas"][1];
                         cartaNuevaCon = usuarios[puerto][num]["cartas"][0];
                     }else{
                         cartaAIntercambiar = usuarios[puerto][numTuyo]["cartas"][0];
-                        console.log("Se fue al else");
-                        console.log("Antes de intercambio"+JSON.stringify(usuarios));
-                        console.log("Antes de intercambio"+usuarios);
                         let temp = cartaContrincante;
                         usuarios[puerto][num]["cartas"][0] = cartaAIntercambiar;
                         usuarios[puerto][numTuyo]["cartas"][0] = temp;
-                        console.log("Despues de intercambio"+JSON.stringify(usuarios));
                         cartaNuevamia = usuarios[puerto][numTuyo]["cartas"][0];
                         cartaNuevaCon = usuarios[puerto][num]["cartas"][0];
                     }
@@ -505,14 +526,15 @@ function crearSala() {
                     usuarios[puerto][numTuyo]["cartas"].splice(idKing,1)
                     console.log(usuarios[puerto])
                 }else
+                //============= Carta de countess
                 if(cartaAJugar.localeCompare("countess")==0){
                     let idCountess = usuarios[puerto][numTuyo]["cartas"].indexOf("countess")
                     usuarios[puerto][numTuyo]["cartas"].splice(idCountess,1)
-                    console.log("Se jugo a la condesa")
                     socketsClients.forEach(function (client) {
                         client.sendUTF("countess|"+tu);
                     })
                 }else
+                //============= Carta de princess
                 if(cartaAJugar.localeCompare("princess")==0){
                     usuarios[puerto][numTuyo]["vivo"] = false;
                     let idPrincess = usuarios[puerto][numTuyo]["cartas"].indexOf("princess")
@@ -522,12 +544,12 @@ function crearSala() {
                     }else{
                         otraCarta = usuarios[puerto][numTuyo]["cartas"][0]
                     }
-                    console.log("Se jugo a a la princesa");
                     socketsClients.forEach(function (client) {
                         client.sendUTF("princess|"+tu+"|"+otraCarta);
                     })
                     console.log("princess|"+tu+"|"+otraCarta)
                 }
+            //========== Verificacion para pasar cambiar al siguiente jugador
             let siguienteJugador = turnoJugador+1;
             if(siguienteJugador > 4){
                 siguienteJugador = 1;
@@ -554,7 +576,6 @@ function crearSala() {
                     }
                 }
             }
-	    console.log("Turno despues de los if de las validaciones "+turnoJugador);
 
             let estado_de_jugadores = []
             let cont_perdedores = 0
@@ -611,8 +632,6 @@ function crearSala() {
                     console.log(usuarios[puerto]);
                 }
             }else{
-                console.log("Esto tiene el array"+estado_de_jugadores+"y el valor de perdedores es"+cont_perdedores);
-
                 if(stack.length != 0 ){
                     let card = stack.pop();
                     console.log("Jugar las cartas son"+stack)
@@ -686,7 +705,6 @@ function crearSala() {
             usuarios[puerto][numTuyo]["cartas"].splice(idSinEfecto,1)
 
             let card = stack.pop();
-            console.log("Jugar las cartas son"+stack)
             usuarios[puerto][turnoJugador.toString()]["cartas"].push(card);
             console.log(usuarios[puerto])
 
@@ -700,6 +718,7 @@ function crearSala() {
             })
 
         }else
+        //============ En caso que haya un empate selecciona al ganador dependiendo del numero de la carta
         if(entradaCliente[0].localeCompare("ganadorEmpate") == 0){
             
             let ganadorEmpate = entradaCliente[1]
