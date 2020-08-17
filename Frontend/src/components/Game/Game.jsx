@@ -71,7 +71,8 @@ export default class Game extends React.Component {
 			puntosj3: 0,
 			puntosj4: 0,
 			has_ganador_supremo: null,
-			has_check_name: false
+			has_check_name: false,
+			has_to_go_lobby: false
 		}
 		// this.client = this.client.bind(this);
 		this.Close = this.Close.bind(this)
@@ -95,6 +96,15 @@ export default class Game extends React.Component {
 		});
 	}
 
+	GoToLobby() {
+		this.props.history.push({
+			pathname: `/lobby/${my_username}`,
+			state: {
+				username: my_username
+			}
+		});
+	}
+
 	componentDidMount() {
 		self = this
 		console.log("el username que vino a Game es: YO "+this.props.location.state.username);
@@ -104,424 +114,433 @@ export default class Game extends React.Component {
 
 		let enlace = 'ws://3.135.137.126:'+this.props.location.state.puerto+'/'
 		// let enlace = 'ws://localhost:'+this.props.location.state.puerto+'/'
-		client = new W3CWebSocket(enlace, 'echo-protocol');
-		
-		client.onopen = () => {
-			function EstablecerConexion() {
-				if (client.readyState === client.OPEN) {
-					let conectarmeASala = "conectarmeASala|"+self.props.location.state.username
-					client.send(conectarmeASala);
-				}
-			}
-			EstablecerConexion();
-		  };
-		  
-	  	client.onclose = function() {
-			console.log('echo-protocol Client Closed');
-		};
-
-		client.onmessage = function(e) {
-			let mensaje= e.data
-			let entradaServer = mensaje.split("|");
-			console.log(entradaServer)
-
-			if (typeof e.data === 'string') {
-				console.log("El Server Manda: '" + e.data + "'");
-			}
-			if((entradaServer[0].localeCompare("conectado"))==0){
-				console.log("Eres el cliente numero "+entradaServer[1]+" en entrar")
-				my_code = entradaServer[1]
-
-				self.setState({
-					is_host: my_code == '1'
-				})
-			}
-			//Se ejecuta la primera vez que cuando inicia el juego ahi entran las cartas
-			if (entradaServer[0].localeCompare('turno') === 0) {
-				const pos = entradaServer.indexOf(my_username)
-				self.GetNewCard(entradaServer[pos + 1])
-				if (self.state.is_host) {
-					self.GetNewCard(entradaServer[pos + 2])
-				}
-
-				console.log("Asignar cartas"+entradaServer);
-				self.setState({
-					show: false,
-					player_turn: entradaServer[1]
-				})
-			}
-
-			if (entradaServer[0].localeCompare('turnoactual') === 0) {
-				self.setState({
-					player_turn: entradaServer[1]
-				})
-
-				if (self.state.inmunes.includes(entradaServer[1])) {
-					self.RemoveInmune(entradaServer[1])
-				}
-				if (entradaServer[1].localeCompare(my_username) == 0) {
-					console.log('ENTRADA SERVER:', entradaServer)
-					const mi_lista = []
-					mi_lista.push(entradaServer[2])
-					mi_lista.push(entradaServer[3])
-					console.log('MI_LISTA:', mi_lista)
-					self.ReplaceMyCards(mi_lista)
-					self.CheckMyCards()
-				} else {
-					console.log('MIS CARTAS AHORA:', self.state.my_cards)
-				}
-				console.log("Cartas del siguiente usuario"+entradaServer);
-			}
-
-			if (entradaServer[0].localeCompare('usuarios') === 0) {
-				console.log("Lista de Usuarios conectados")
-				let i = 0
-				const con_u = []
-				for(i = 1; i< (entradaServer.length) -1; i = i + 2) {
-					if (!self.state.has_check_name) {
-						console.log('REASIGNANDO NOMBRE:', my_username, entradaServer[(entradaServer.length) - 2])
-						my_username = entradaServer[(entradaServer.length) - 2]
-						self.setState({
-							has_check_name: true
-						})
+		try {
+			client = new W3CWebSocket(enlace, 'echo-protocol');
+			
+			client.onopen = () => {
+				function EstablecerConexion() {
+					if (client.readyState === client.OPEN) {
+						let conectarmeASala = "conectarmeASala|"+self.props.location.state.username
+						client.send(conectarmeASala);
 					}
-					con_u.push(entradaServer[i+1])
-					console.log("ID: "+entradaServer[i]+" Username: "+entradaServer[i+1])
 				}
-				self.setState ({
-					connected_users: con_u
-				})
-			}
-
-			if (entradaServer[0].localeCompare('chatc') === 0) {
-				console.log("Mensaje para broadcast")
-				let mensaje = (entradaServer[1]+": "+entradaServer[2])
-				let mensajeArray = self.state.messages_array
-				mensajeArray.push({
-					mensaje 
-				})
+				EstablecerConexion();
+			};
+			
+			client.onclose = function() {
+				console.log('echo-protocol Client Closed');
 				self.setState({
-					messages_array: mensajeArray					
+					has_to_go_lobby: true
 				})
-				console.log(self.state.messages_array)
-			}
+			};
 
-			if (entradaServer[0].localeCompare('final') === 0){
-				console.log('FINALISTAS')
-				
-				let finalistas = []
-				let jugador = ''
-				let carta = ''
-				for(var i = 1; i<entradaServer.length; i = i+2){
-					jugador = entradaServer[i]
-					carta = entradaServer[i+1]
-					finalistas.push({
-						name: jugador,
-						card: carta
+			client.onmessage = function(e) {
+				let mensaje= e.data
+				let entradaServer = mensaje.split("|");
+				console.log(entradaServer)
+
+				if (typeof e.data === 'string') {
+					console.log("El Server Manda: '" + e.data + "'");
+				}
+				if((entradaServer[0].localeCompare("conectado"))==0){
+					console.log("Eres el cliente numero "+entradaServer[1]+" en entrar")
+					my_code = entradaServer[1]
+
+					self.setState({
+						is_host: my_code == '1'
+					})
+				}
+				//Se ejecuta la primera vez que cuando inicia el juego ahi entran las cartas
+				if (entradaServer[0].localeCompare('turno') === 0) {
+					const pos = entradaServer.indexOf(my_username)
+					self.GetNewCard(entradaServer[pos + 1])
+					if (self.state.is_host) {
+						self.GetNewCard(entradaServer[pos + 2])
+					}
+
+					console.log("Asignar cartas"+entradaServer);
+					self.setState({
+						show: false,
+						player_turn: entradaServer[1]
 					})
 				}
 
-				self.compararCartas(finalistas)
-			}
+				if (entradaServer[0].localeCompare('turnoactual') === 0) {
+					self.setState({
+						player_turn: entradaServer[1]
+					})
 
-			if (entradaServer[0].localeCompare('ganador') === 0) {
-				self.ResetVariables()
-				self.SumarPuntos(entradaServer[1])
-				if (entradaServer[1].localeCompare(my_username) === 0) {
-					Alert.success(`Has ganado esta ronda. Felicidades.`, 20000)
-				} else {
-					Alert.error(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`, 20000)
-				}
-
-			}
-
-			if (entradaServer[0].localeCompare('ganadorsupremo') === 0) {
-				self.setState({
-					has_ganador_supremo: entradaServer[1]
-				})
-			}
-
-			if (entradaServer[0].localeCompare('sinEfectoCliente') === 0) {
-				const titleNotification = `${entradaServer[1]} jugó a ${entradaServer[2]}`
-				let bodyNotification = `${entradaServer[1]} jugó a ${entradaServer[2]}, pero no tuvo ningún efecto`
-				let my_icon = ''
-
-				if (entradaServer[1].localeCompare(my_username) === 0) {
-					my_icon = 'warning'
-				} else {
-					my_icon = 'info'
-				}
-				self.DescartarCarta(entradaServer[2], entradaServer[1])
-				self.ShowNotification(titleNotification, bodyNotification, my_icon)
-			}
-
-// ======================= JUEGO DE CARTAS =============================
-
-			// ==================== GUARD ====================
-			if (entradaServer[0].localeCompare(CARDS.GUARD) === 0) {
-				console.log("De haber jugado al guard")
-				//"guard|"+tu+"|"+rival+"|"+res
-				console.log("El que tiro",entradaServer[1])
-				console.log("El que recibio",entradaServer[2])
-
-				const titleNotification = `${entradaServer[1]} jugó a GUARD`
-				let bodyNotification = ''
-				let my_icon = ''
-				
-				if (entradaServer[1].localeCompare(my_username) == 0) {
-					if (entradaServer[3].localeCompare("true") == 0){
-						bodyNotification = `Acertaste contra ${entradaServer[2]}. Lo has eliminado.`
-						my_icon = 'success'
-						self.DescartarCarta(entradaServer[4], entradaServer[2])
-						self.KillPlayer(entradaServer[2])
-						console.log("le atino")
-					} else {
-						bodyNotification = `Fallaste contra ${entradaServer[2]}.`
-						my_icon = 'error'
-						console.log("Fallaste jeje")
+					if (self.state.inmunes.includes(entradaServer[1])) {
+						self.RemoveInmune(entradaServer[1])
 					}
-				} else if (entradaServer[2].localeCompare(my_username) == 0) {
-					if(entradaServer[3].localeCompare("true") == 0) {
-						bodyNotification = `${entradaServer[1]} te ha atacado. Te han eliminado.`
-						my_icon = 'error'
-						self.DescartarCarta(entradaServer[4], entradaServer[2])
-						self.setState ({
-							alive: false
+					if (entradaServer[1].localeCompare(my_username) == 0) {
+						console.log('ENTRADA SERVER:', entradaServer)
+						const mi_lista = []
+						mi_lista.push(entradaServer[2])
+						mi_lista.push(entradaServer[3])
+						console.log('MI_LISTA:', mi_lista)
+						self.ReplaceMyCards(mi_lista)
+						self.CheckMyCards()
+					} else {
+						console.log('MIS CARTAS AHORA:', self.state.my_cards)
+					}
+					console.log("Cartas del siguiente usuario"+entradaServer);
+				}
+
+				if (entradaServer[0].localeCompare('usuarios') === 0) {
+					console.log("Lista de Usuarios conectados")
+					let i = 0
+					const con_u = []
+					for(i = 1; i< (entradaServer.length) -1; i = i + 2) {
+						if (!self.state.has_check_name) {
+							console.log('REASIGNANDO NOMBRE:', my_username, entradaServer[(entradaServer.length) - 2])
+							my_username = entradaServer[(entradaServer.length) - 2]
+							self.setState({
+								has_check_name: true
+							})
+						}
+						con_u.push(entradaServer[i+1])
+						console.log("ID: "+entradaServer[i]+" Username: "+entradaServer[i+1])
+					}
+					self.setState ({
+						connected_users: con_u
+					})
+				}
+
+				if (entradaServer[0].localeCompare('chatc') === 0) {
+					console.log("Mensaje para broadcast")
+					let mensaje = (entradaServer[1]+": "+entradaServer[2])
+					let mensajeArray = self.state.messages_array
+					mensajeArray.push({
+						mensaje 
+					})
+					self.setState({
+						messages_array: mensajeArray					
+					})
+					console.log(self.state.messages_array)
+				}
+
+				if (entradaServer[0].localeCompare('final') === 0){
+					console.log('FINALISTAS')
+					
+					let finalistas = []
+					let jugador = ''
+					let carta = ''
+					for(var i = 1; i<entradaServer.length; i = i+2){
+						jugador = entradaServer[i]
+						carta = entradaServer[i+1]
+						finalistas.push({
+							name: jugador,
+							card: carta
 						})
-						console.log("Te atacaron")
-					} else {
-						bodyNotification = `${entradaServer[1]} te ha atacado pero ha fallado.`
-						my_icon = 'warning'
-						console.log("Te atacaron pero no te afecto")
 					}
-				} else {
-					my_icon = 'info'
-					if(entradaServer[3].localeCompare("true") == 0) {
-						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]}. ${entradaServer[2]} ha sido eliminado.`
-						self.DescartarCarta(entradaServer[4], entradaServer[2])
-						self.KillPlayer(entradaServer[2])
-					} else {
-						bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]} pero ha fallado. ${entradaServer[2]} sigue en el juego.`
-					}
-				}
-				
-				self.DescartarCarta(entradaServer[0], entradaServer[1])
-				self.ShowNotification (titleNotification, bodyNotification, my_icon)
-			}
-			
-			// ==================== PRIEST ====================
-			if (entradaServer[0].localeCompare(CARDS.PRIEST) === 0) {
-				const titleNotification = `${entradaServer[1]} jugó a PRIEST`
-				let bodyNotification = ''
-				let my_icon = ''
 
-				if (entradaServer[1].localeCompare(my_username) == 0) {
-					bodyNotification = `La carta de ${entradaServer[2]} es ${entradaServer[3]}`
-					my_icon = 'success'
-					console.log("La carta de " + entradaServer[2] + " es " + entradaServer[3])
-				} else if (entradaServer[2].localeCompare(my_username) == 0) {
-					bodyNotification = `${entradaServer[1]} vio tu carta`
-					my_icon = 'warning'
-					console.log(entradaServer[1] + " vio tu carta")
-				} else {
-					bodyNotification = `${entradaServer[1]} vio la carta de ${entradaServer[2]}`
-					my_icon = 'info'
+					self.compararCartas(finalistas)
 				}
 
-				self.DescartarCarta(entradaServer[0], entradaServer[1])
-				self.ShowNotification(titleNotification, bodyNotification, my_icon)
-			}
-			
-			// ==================== BARON ====================
-			if (entradaServer[0].localeCompare(CARDS.BARON) === 0) {
-				const titleNotification = `${entradaServer[1]} jugó a BARON`
-				let bodyNotification = ''
-				let my_icon = ''
-				
-				if (entradaServer[1].localeCompare(my_username) == 0) {// Si yo soy el que tiro la carta
-					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si el perdedor soy yo
-						bodyNotification = `${entradaServer[2]} tiene una carta más alta que la tuya, perdiste`
-						my_icon = 'error'
-						self.setState ({
-							alive: false
-						})
-						console.log( entradaServer[2] + " tiene una carta mas alta que la tuya, perdiste");
-					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
-						bodyNotification = `Tu carta es más alta que la de ${entradaServer[2]}, ganaste`
-						my_icon = 'success'
-						
-						self.KillPlayer(entradaServer[2])
-						console.log("Tu carta es mas alta que la de "+entradaServer[2]+" ganaste");
+				if (entradaServer[0].localeCompare('ganador') === 0) {
+					self.ResetVariables()
+					self.SumarPuntos(entradaServer[1])
+					if (entradaServer[1].localeCompare(my_username) === 0) {
+						Alert.success(`Has ganado esta ronda. Felicidades.`, 20000)
 					} else {
-						bodyNotification = `Has empatado contra ${entradaServer[2]}`
-						my_icon = 'warning'
-						console.log("Empate");
+						Alert.error(`${entradaServer[1]} ha ganado esta ronda. Intenta mejor esta ronda.`, 20000)
 					}
-				} else if (entradaServer[2].localeCompare(my_username) == 0) {// Si yo soy el que recibio la carta
-					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si yo soy el ganador 
-						bodyNotification = `Te atacó ${entradaServer[1]} pero tu carta es más alta, ganaste`
-						my_icon = 'success'
-						self.KillPlayer(entradaServer[1])
-						console.log("Te ataco "+ entradaServer[1] + " pero tu carta es mas alta, ganaste")
-					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {//Si yo soy el que perdedor
-						bodyNotification = `Te atacó ${entradaServer[1]}, y tiene una carta más alta que la tuya, perdiste`
-						my_icon = 'error'
-						self.setState ({
-							alive: false
-						})
-						console.log("Te ataco "+ entradaServer[1] + " y tiene una carta mas alta que la tuya, perdiste");
-					} else {
-						bodyNotification = `Has empatado contra ${entradaServer[2]}`
-						console.log("Empate")
+
+				}
+
+				if (entradaServer[0].localeCompare('ganadorsupremo') === 0) {
+					self.setState({
+						has_ganador_supremo: entradaServer[1]
+					})
+				}
+
+				if (entradaServer[0].localeCompare('sinEfectoCliente') === 0) {
+					const titleNotification = `${entradaServer[1]} jugó a ${entradaServer[2]}`
+					let bodyNotification = `${entradaServer[1]} jugó a ${entradaServer[2]}, pero no tuvo ningún efecto`
+					let my_icon = ''
+
+					if (entradaServer[1].localeCompare(my_username) === 0) {
 						my_icon = 'warning'
-					}
-				} else {
-					if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si el perdedor soy yo
-						bodyNotification = `${entradaServer[2]} tiene una carta más alta que ${entradaServer[1]}, ${entradaServer[1]} ha perdido`
-						my_icon = 'info'
-						self.KillPlayer(entradaServer[3])
-					} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
-						bodyNotification = `${entradaServer[1]} tiene una carta más alta que ${entradaServer[2]}, ${entradaServer[2]} ha perdido`
-						my_icon = 'info'
-						self.KillPlayer(entradaServer[3])
 					} else {
-						bodyNotification = `${entradaServer[1]} ha empatado con ${entradaServer[1]}`
 						my_icon = 'info'
 					}
+					self.DescartarCarta(entradaServer[2], entradaServer[1])
+					self.ShowNotification(titleNotification, bodyNotification, my_icon)
 				}
 
-				if (entradaServer[3].localeCompare('-') !== 0) {
-					self.DescartarCarta(entradaServer[4], entradaServer[3])
-				}
-				self.DescartarCarta(entradaServer[0], entradaServer[1])
-				self.ShowNotification(titleNotification, bodyNotification, my_icon)
-			}
-			
-			// ==================== HANDMAID ====================
-			if (entradaServer[0].localeCompare(CARDS.HANDMAID) === 0) {
-				const titleNotification = `${entradaServer[1]} jugó a HANDMAID`
-				let bodyNotification = ''
-				let my_icon = ''
+	// ======================= JUEGO DE CARTAS =============================
 
-				if(entradaServer[1].localeCompare(my_username) == 0){
-					bodyNotification = 'Eres invencible por un turno'
-					my_icon = 'success'
-					console.log("Eres invencible por un turno")
-				} else {
-					bodyNotification = `Cuidado ${entradaServer[1]} es invencible por un turno.`
-					my_icon = 'warning'
-					console.log("Cuidado "+ entradaServer[1]+" es invencible por un turno.")
-				}
-				self.CreateInmune(entradaServer[1])
-				
-				self.DescartarCarta(entradaServer[0], entradaServer[1])
-				self.ShowNotification(titleNotification, bodyNotification, my_icon)
-			}
+				// ==================== GUARD ====================
+				if (entradaServer[0].localeCompare(CARDS.GUARD) === 0) {
+					console.log("De haber jugado al guard")
+					//"guard|"+tu+"|"+rival+"|"+res
+					console.log("El que tiro",entradaServer[1])
+					console.log("El que recibio",entradaServer[2])
 
-			// ==================== KING ====================
-			if (entradaServer[0].localeCompare(CARDS.KING) === 0) {
-				const titleNotification = `${entradaServer[1]} jugó a KING`
-				let bodyNotification = ''
-				let my_icon = ''
-
-				self.DescartarCarta(entradaServer[0], entradaServer[1])
-				if (entradaServer[1].localeCompare(my_username) === 0) {
-					self.ReplaceMyCards([entradaServer[3]])
-					bodyNotification = `Has intercambiado carta con ${entradaServer[2]}`
-					my_icon = 'success'
-				} else if (entradaServer[2].localeCompare(my_username) === 0) {
-					self.ReplaceMyCards([entradaServer[4]])
-					bodyNotification = `${entradaServer[1]} ha intercambiado carta contigo`
-					my_icon = 'warning'
-				} else {
-					bodyNotification = `${entradaServer[1]} ha intercambiado carta con ${entradaServer[2]}`
-					my_icon = 'info'
-				}
-				self.ShowNotification(titleNotification, bodyNotification, my_icon)
-			}
-
-			// ==================== PRINCE ====================
-			if (entradaServer[0].localeCompare(CARDS.PRINCE) === 0) {
-				//prince | quién tiró | quién recibe | nueva_carta
-				const titleNotification = `${entradaServer[1]} jugó a PRINCE`
-				let bodyNotification = ''
-				let my_icon = ''
-				
-				self.DescartarCarta(entradaServer[0], entradaServer[1])
-				if (entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0) {
-					if (entradaServer[3].localeCompare('murio') === 0) {
-						bodyNotification = `Debido a que desechaste una princess, has perdido.`
-						my_icon = 'error'
-						self.DescartarCarta(CARDS.PRINCESS, entradaServer[2])
+					const titleNotification = `${entradaServer[1]} jugó a GUARD`
+					let bodyNotification = ''
+					let my_icon = ''
+					
+					if (entradaServer[1].localeCompare(my_username) == 0) {
+						if (entradaServer[3].localeCompare("true") == 0){
+							bodyNotification = `Acertaste contra ${entradaServer[2]}. Lo has eliminado.`
+							my_icon = 'success'
+							self.DescartarCarta(entradaServer[4], entradaServer[2])
+							self.KillPlayer(entradaServer[2])
+							console.log("le atino")
+						} else {
+							bodyNotification = `Fallaste contra ${entradaServer[2]}.`
+							my_icon = 'error'
+							console.log("Fallaste jeje")
+						}
+					} else if (entradaServer[2].localeCompare(my_username) == 0) {
+						if(entradaServer[3].localeCompare("true") == 0) {
+							bodyNotification = `${entradaServer[1]} te ha atacado. Te han eliminado.`
+							my_icon = 'error'
+							self.DescartarCarta(entradaServer[4], entradaServer[2])
+							self.setState ({
+								alive: false
+							})
+							console.log("Te atacaron")
+						} else {
+							bodyNotification = `${entradaServer[1]} te ha atacado pero ha fallado.`
+							my_icon = 'warning'
+							console.log("Te atacaron pero no te afecto")
+						}
 					} else {
-						bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
+						my_icon = 'info'
+						if(entradaServer[3].localeCompare("true") == 0) {
+							bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]}. ${entradaServer[2]} ha sido eliminado.`
+							self.DescartarCarta(entradaServer[4], entradaServer[2])
+							self.KillPlayer(entradaServer[2])
+						} else {
+							bodyNotification = `${entradaServer[1]} ha atacado a ${entradaServer[2]} pero ha fallado. ${entradaServer[2]} sigue en el juego.`
+						}
+					}
+					
+					self.DescartarCarta(entradaServer[0], entradaServer[1])
+					self.ShowNotification (titleNotification, bodyNotification, my_icon)
+				}
+				
+				// ==================== PRIEST ====================
+				if (entradaServer[0].localeCompare(CARDS.PRIEST) === 0) {
+					const titleNotification = `${entradaServer[1]} jugó a PRIEST`
+					let bodyNotification = ''
+					let my_icon = ''
+
+					if (entradaServer[1].localeCompare(my_username) == 0) {
+						bodyNotification = `La carta de ${entradaServer[2]} es ${entradaServer[3]}`
 						my_icon = 'success'
-						console.log(`Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`)
+						console.log("La carta de " + entradaServer[2] + " es " + entradaServer[3])
+					} else if (entradaServer[2].localeCompare(my_username) == 0) {
+						bodyNotification = `${entradaServer[1]} vio tu carta`
+						my_icon = 'warning'
+						console.log(entradaServer[1] + " vio tu carta")
+					} else {
+						bodyNotification = `${entradaServer[1]} vio la carta de ${entradaServer[2]}`
+						my_icon = 'info'
+					}
+
+					self.DescartarCarta(entradaServer[0], entradaServer[1])
+					self.ShowNotification(titleNotification, bodyNotification, my_icon)
+				}
+				
+				// ==================== BARON ====================
+				if (entradaServer[0].localeCompare(CARDS.BARON) === 0) {
+					const titleNotification = `${entradaServer[1]} jugó a BARON`
+					let bodyNotification = ''
+					let my_icon = ''
+					
+					if (entradaServer[1].localeCompare(my_username) == 0) {// Si yo soy el que tiro la carta
+						if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si el perdedor soy yo
+							bodyNotification = `${entradaServer[2]} tiene una carta más alta que la tuya, perdiste`
+							my_icon = 'error'
+							self.setState ({
+								alive: false
+							})
+							console.log( entradaServer[2] + " tiene una carta mas alta que la tuya, perdiste");
+						} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
+							bodyNotification = `Tu carta es más alta que la de ${entradaServer[2]}, ganaste`
+							my_icon = 'success'
+							
+							self.KillPlayer(entradaServer[2])
+							console.log("Tu carta es mas alta que la de "+entradaServer[2]+" ganaste");
+						} else {
+							bodyNotification = `Has empatado contra ${entradaServer[2]}`
+							my_icon = 'warning'
+							console.log("Empate");
+						}
+					} else if (entradaServer[2].localeCompare(my_username) == 0) {// Si yo soy el que recibio la carta
+						if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si yo soy el ganador 
+							bodyNotification = `Te atacó ${entradaServer[1]} pero tu carta es más alta, ganaste`
+							my_icon = 'success'
+							self.KillPlayer(entradaServer[1])
+							console.log("Te ataco "+ entradaServer[1] + " pero tu carta es mas alta, ganaste")
+						} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {//Si yo soy el que perdedor
+							bodyNotification = `Te atacó ${entradaServer[1]}, y tiene una carta más alta que la tuya, perdiste`
+							my_icon = 'error'
+							self.setState ({
+								alive: false
+							})
+							console.log("Te ataco "+ entradaServer[1] + " y tiene una carta mas alta que la tuya, perdiste");
+						} else {
+							bodyNotification = `Has empatado contra ${entradaServer[2]}`
+							console.log("Empate")
+							my_icon = 'warning'
+						}
+					} else {
+						if (entradaServer[3].localeCompare(entradaServer[1]) == 0) {// Si el perdedor soy yo
+							bodyNotification = `${entradaServer[2]} tiene una carta más alta que ${entradaServer[1]}, ${entradaServer[1]} ha perdido`
+							my_icon = 'info'
+							self.KillPlayer(entradaServer[3])
+						} else if (entradaServer[3].localeCompare(entradaServer[2]) == 0) {// Si el perdedor es el rival
+							bodyNotification = `${entradaServer[1]} tiene una carta más alta que ${entradaServer[2]}, ${entradaServer[2]} ha perdido`
+							my_icon = 'info'
+							self.KillPlayer(entradaServer[3])
+						} else {
+							bodyNotification = `${entradaServer[1]} ha empatado con ${entradaServer[1]}`
+							my_icon = 'info'
+						}
+					}
+
+					if (entradaServer[3].localeCompare('-') !== 0) {
+						self.DescartarCarta(entradaServer[4], entradaServer[3])
+					}
+					self.DescartarCarta(entradaServer[0], entradaServer[1])
+					self.ShowNotification(titleNotification, bodyNotification, my_icon)
+				}
+				
+				// ==================== HANDMAID ====================
+				if (entradaServer[0].localeCompare(CARDS.HANDMAID) === 0) {
+					const titleNotification = `${entradaServer[1]} jugó a HANDMAID`
+					let bodyNotification = ''
+					let my_icon = ''
+
+					if(entradaServer[1].localeCompare(my_username) == 0){
+						bodyNotification = 'Eres invencible por un turno'
+						my_icon = 'success'
+						console.log("Eres invencible por un turno")
+					} else {
+						bodyNotification = `Cuidado ${entradaServer[1]} es invencible por un turno.`
+						my_icon = 'warning'
+						console.log("Cuidado "+ entradaServer[1]+" es invencible por un turno.")
+					}
+					self.CreateInmune(entradaServer[1])
+					
+					self.DescartarCarta(entradaServer[0], entradaServer[1])
+					self.ShowNotification(titleNotification, bodyNotification, my_icon)
+				}
+
+				// ==================== KING ====================
+				if (entradaServer[0].localeCompare(CARDS.KING) === 0) {
+					const titleNotification = `${entradaServer[1]} jugó a KING`
+					let bodyNotification = ''
+					let my_icon = ''
+
+					self.DescartarCarta(entradaServer[0], entradaServer[1])
+					if (entradaServer[1].localeCompare(my_username) === 0) {
 						self.ReplaceMyCards([entradaServer[3]])
-					}
-				} else if (entradaServer[2].localeCompare(my_username) == 0) {
-					if (entradaServer[3].localeCompare('murio') === 0) {
-						bodyNotification = `Debido a que desechaste una princess, has perdido.`
-						my_icon = 'error'
-						self.DescartarCarta(CARDS.PRINCESS, entradaServer[2])
-					} else {
-						bodyNotification = `${entradaServer[1]} cambió tu carta, tu nueva carta es ${entradaServer[3]}`
-						my_icon = 'warning'
-						self.ReplaceMyCards([entradaServer[3]])
-						console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
-					}
-				} else {
-					if (entradaServer[3].localeCompare('murio') === 0) {
-						bodyNotification = `Debido a que ${entradaServer[2]} desechó una princess, ha perdido.`
+						bodyNotification = `Has intercambiado carta con ${entradaServer[2]}`
 						my_icon = 'success'
-						self.DescartarCarta(CARDS.PRINCESS, entradaServer[2])
+					} else if (entradaServer[2].localeCompare(my_username) === 0) {
+						self.ReplaceMyCards([entradaServer[4]])
+						bodyNotification = `${entradaServer[1]} ha intercambiado carta contigo`
+						my_icon = 'warning'
 					} else {
-						bodyNotification = `${entradaServer[1]} cambió las cartas de ${entradaServer[2]}`
+						bodyNotification = `${entradaServer[1]} ha intercambiado carta con ${entradaServer[2]}`
 						my_icon = 'info'
-						console.log("cambiaron las cartas de "+entradaServer[2])
 					}
+					self.ShowNotification(titleNotification, bodyNotification, my_icon)
 				}
-				self.ShowNotification(titleNotification, bodyNotification, my_icon)
-			}
 
-			// ==================== COUNTESS ====================
-			if (entradaServer[0].localeCompare(CARDS.COUNTESS) === 0) {
-				const titleNotification = `${entradaServer[1]} jugó a COUNTESS`
-				let bodyNotification = ''
-				let my_icon = ''
-
-				if (entradaServer[1].localeCompare(my_username) == 0) {
-					bodyNotification = `Jugaste a countess`
-					my_icon = 'success'
-					console.log("Jugaste countess")
-				} else {
-					bodyNotification = `${entradaServer[1]} jugó a countess`
-					my_icon = 'info'
-					console.log("Jugaron countess")
+				// ==================== PRINCE ====================
+				if (entradaServer[0].localeCompare(CARDS.PRINCE) === 0) {
+					//prince | quién tiró | quién recibe | nueva_carta
+					const titleNotification = `${entradaServer[1]} jugó a PRINCE`
+					let bodyNotification = ''
+					let my_icon = ''
+					
+					self.DescartarCarta(entradaServer[0], entradaServer[1])
+					if (entradaServer[1].localeCompare(my_username) == 0 && entradaServer[2].localeCompare(my_username) == 0) {
+						if (entradaServer[3].localeCompare('murio') === 0) {
+							bodyNotification = `Debido a que desechaste una princess, has perdido.`
+							my_icon = 'error'
+							self.DescartarCarta(CARDS.PRINCESS, entradaServer[2])
+						} else {
+							bodyNotification = `Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`
+							my_icon = 'success'
+							console.log(`Cambiaste tu carta, tu nueva carta es ${entradaServer[3]}`)
+							self.ReplaceMyCards([entradaServer[3]])
+						}
+					} else if (entradaServer[2].localeCompare(my_username) == 0) {
+						if (entradaServer[3].localeCompare('murio') === 0) {
+							bodyNotification = `Debido a que desechaste una princess, has perdido.`
+							my_icon = 'error'
+							self.DescartarCarta(CARDS.PRINCESS, entradaServer[2])
+						} else {
+							bodyNotification = `${entradaServer[1]} cambió tu carta, tu nueva carta es ${entradaServer[3]}`
+							my_icon = 'warning'
+							self.ReplaceMyCards([entradaServer[3]])
+							console.log(entradaServer[1]+" te cambio la carta, nueva carta es: "+entradaServer[3])
+						}
+					} else {
+						if (entradaServer[3].localeCompare('murio') === 0) {
+							bodyNotification = `Debido a que ${entradaServer[2]} desechó una princess, ha perdido.`
+							my_icon = 'success'
+							self.DescartarCarta(CARDS.PRINCESS, entradaServer[2])
+						} else {
+							bodyNotification = `${entradaServer[1]} cambió las cartas de ${entradaServer[2]}`
+							my_icon = 'info'
+							console.log("cambiaron las cartas de "+entradaServer[2])
+						}
+					}
+					self.ShowNotification(titleNotification, bodyNotification, my_icon)
 				}
-				self.DescartarCarta(entradaServer[0], entradaServer[1])
-				self.ShowNotification(titleNotification, bodyNotification, my_icon)
-			}
 
-			// ==================== PRINCESS ====================
-			if (entradaServer[0].localeCompare(CARDS.PRINCESS) === 0) {
-				const titleNotification = `${entradaServer[1]} jugó a PRINCESS`
-				let bodyNotification = ''
-				let my_icon = ''
+				// ==================== COUNTESS ====================
+				if (entradaServer[0].localeCompare(CARDS.COUNTESS) === 0) {
+					const titleNotification = `${entradaServer[1]} jugó a COUNTESS`
+					let bodyNotification = ''
+					let my_icon = ''
 
-				if (entradaServer[1].localeCompare(my_username) === 0) {
-					my_icon = 'error'
-					bodyNotification = 'Jugaste a princess'
-				} else {
-					my_icon = 'success'
-					bodyNotification = `${entradaServer[1]} jugó a princess`
+					if (entradaServer[1].localeCompare(my_username) == 0) {
+						bodyNotification = `Jugaste a countess`
+						my_icon = 'success'
+						console.log("Jugaste countess")
+					} else {
+						bodyNotification = `${entradaServer[1]} jugó a countess`
+						my_icon = 'info'
+						console.log("Jugaron countess")
+					}
+					self.DescartarCarta(entradaServer[0], entradaServer[1])
+					self.ShowNotification(titleNotification, bodyNotification, my_icon)
 				}
-				self.DescartarCarta(entradaServer[0], entradaServer[1])
-				self.DescartarCarta(entradaServer[2], entradaServer[1])
-				self.ShowNotification(titleNotification, bodyNotification, my_icon)
-			}
-// ======================================================================
-		};
+
+				// ==================== PRINCESS ====================
+				if (entradaServer[0].localeCompare(CARDS.PRINCESS) === 0) {
+					const titleNotification = `${entradaServer[1]} jugó a PRINCESS`
+					let bodyNotification = ''
+					let my_icon = ''
+
+					if (entradaServer[1].localeCompare(my_username) === 0) {
+						my_icon = 'error'
+						bodyNotification = 'Jugaste a princess'
+					} else {
+						my_icon = 'success'
+						bodyNotification = `${entradaServer[1]} jugó a princess`
+					}
+					self.DescartarCarta(entradaServer[0], entradaServer[1])
+					self.DescartarCarta(entradaServer[2], entradaServer[1])
+					self.ShowNotification(titleNotification, bodyNotification, my_icon)
+				}
+	// ======================================================================
+			};
+		} catch (err) {
+			this.setState({
+				has_to_go_lobby: true
+			})
+		}
 	}
 
 	SumarPuntos(player) {
@@ -1053,6 +1072,22 @@ export default class Game extends React.Component {
 						<div className='modal-buttons'>
                             <Button onClick={() => this.GoToMenu()} color="green">
                                 Regresar a Home
+                            </Button>
+                        </div>
+					</Modal.Footer>
+				</Modal>
+
+				<Modal show={this.state.has_to_go_lobby} backdrop='static'>
+					<Modal.Header>
+						<Modal.Title>Sala llena</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<p>Intenta conectarte a una sala nueva</p>
+					</Modal.Body>
+					<Modal.Footer>
+						<div className='modal-buttons'>
+                            <Button onClick={() => this.GoToLobby()} color="green">
+                                Regresar a Lobby
                             </Button>
                         </div>
 					</Modal.Footer>
