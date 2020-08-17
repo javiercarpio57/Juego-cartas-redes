@@ -60,7 +60,6 @@ export default class Game extends React.Component {
 			is_host: false,
 			connected_users: [],
 			disabled_users: [],
-			killed_users:[''],
 			alive: true,
 			j2_alive: true,
 			j3_alive: true,
@@ -525,17 +524,6 @@ export default class Game extends React.Component {
 		};
 	}
 
-	checkAlive(player, number){
-		const my_pos = this.state.connected_users.indexOf(my_username)
-		let alive = true
-		
-		if(this.state.connected_users[(my_pos + number) %  4] === player){
-			alive = false
-		}
-
-		return alive
-	}
-
 	SumarPuntos(player) {
 		const index = this.state.connected_users.indexOf(my_username)
 
@@ -620,15 +608,12 @@ export default class Game extends React.Component {
 
 	KillPlayer(player) {
 		const my_pos = this.state.connected_users.indexOf(my_username)
-		const array_muertos = this.state.killed_users
-		array_muertos.push(player)
-
+		
 		this.setState (state => {
 			console.log('ELIMINARON A:', player)
 			const eliminados = [...state.disabled_users, player]
 
 			return {
-				killed_users: array_muertos,
 				disabled_users: eliminados
 			}
 		})
@@ -788,7 +773,6 @@ export default class Game extends React.Component {
 			my_cards: [],
 			discarded_cards: [],
 			disabled_users: [],
-			killed_users: [],
 			alive: true,
 			j2_alive: true,
 			j3_alive: true,
@@ -840,9 +824,8 @@ export default class Game extends React.Component {
 	render() {
 		const { show, my_cards, messages_array, connected_users, alive, discarded_cards, 
 			j2_alive, j3_alive, j4_alive, player_turn, disabled_users,
-			my_points, puntosj2, puntosj3, puntosj4, has_ganador_supremo, killed_users } = this.state
+			my_points, puntosj2, puntosj3, puntosj4, has_ganador_supremo } = this.state
 		const my_pos = connected_users.indexOf(my_username)
-		self = this
 		return (
             <div className='background-wood spot-organization-vertical max-height'>
 				<PanelNames names={connected_users}
@@ -902,17 +885,9 @@ export default class Game extends React.Component {
 
 				<div className='spot-organization-horizontal'>
 					<div className='player-spot-vertical-left'>
-						{
-							killed_users.map((user, index) => {
-								self.checkAlive(user, 1)
-									?
-								<div className='player-2'>
-									<Card name = 'player2' cardImagen= 'unknown-card' enable={true} />
-								</div>
-									:
-								null
-							})
-						}
+						<div className='player-2'>
+							<Card name = 'player2' cardImagen= 'unknown-card' enable={true} />
+						</div>
 						{
 							player_turn.localeCompare(connected_users[(my_pos + 1) %  4]) === 0
 								?
@@ -976,7 +951,8 @@ export default class Game extends React.Component {
 									}
 								})
 							}
-						</div>						
+						</div>
+						
 						{
 							player_turn.localeCompare(connected_users[(my_pos + 3) %  4]) === 0
 								?
@@ -986,18 +962,10 @@ export default class Game extends React.Component {
 								:
 							null
 						}
-						{
-							killed_users.map((user, index) => {
-								self.checkAlive(user, 3)
-									?
-								<div className='player-4'>
-									<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
-								</div>
-									:
-								null
-							})							
-						}
-						
+
+						<div className='player-4'>
+							<Card name = 'player4' cardImagen= 'unknown-card' enable={true} />
+						</div>
 					</div>
 				</div>
 				<div className='player-spot-horizontal-top'>
@@ -1031,18 +999,10 @@ export default class Game extends React.Component {
 							:
 						null
 					}
-					{
-						killed_users.map((user, index) => {
-							self.checkAlive(user, 2)
-								?
-							<div className='player-3'>
-								<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
-							</div>
-								:
-							null
-						})
-					}
 
+					<div className='player-3'>
+						<Card name = 'player3' cardImagen= 'unknown-card' enable={true} />
+					</div>
 				</div>
 
 				<Modal show={show}>
