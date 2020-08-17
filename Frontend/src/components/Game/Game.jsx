@@ -74,12 +74,14 @@ export default class Game extends React.Component {
 			has_check_name: false,
 			has_to_go_lobby: false
 		}
-		// this.client = this.client.bind(this);
 		this.Close = this.Close.bind(this)
 		this.GetNewCard = this.GetNewCard.bind(this)
 		this.SendChat = this.SendChat.bind(this)
 	}
 
+	/**
+	 * Cierra el Modal de 'esperando usuarios'
+	 */
 	Close () {
         this.setState({
             show: false
@@ -90,12 +92,18 @@ export default class Game extends React.Component {
         }
 	}
 	
+	/**
+	 * Redirecciona al menu
+	 */
 	GoToMenu() {
 		this.props.history.push({
 			pathname: '/'
 		});
 	}
 
+	/**
+	 * Redirecciona al lobby
+	 */
 	GoToLobby() {
 		this.props.history.push({
 			pathname: `/lobby/${my_username}`,
@@ -105,19 +113,8 @@ export default class Game extends React.Component {
 		});
 	}
 
-	// componentDidUpdate() {
-	// 	this.ScrollToBottom()
-	// }
-
-	// ScrollToBottom() {
-	// 	this.messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
-	// }
-
 	componentDidMount() {
 		self = this
-		// this.ScrollToBottom()
-		console.log("el username que vino a Game es: YO "+this.props.location.state.username);
-		console.log("el puerto que vino a Game es "+this.props.location.state.puerto);
 		my_username = this.props.location.state.username
 		puertoCodigo = this.props.location.state.puerto
 
@@ -138,9 +135,9 @@ export default class Game extends React.Component {
 			
 			client.onclose = function() {
 				console.log('echo-protocol Client Closed');
-				// self.setState({
-				// 	has_to_go_lobby: true
-				// })
+				self.setState({
+					has_to_go_lobby: true
+				})
 			};
 
 			client.onmessage = function(e) {
@@ -183,33 +180,25 @@ export default class Game extends React.Component {
 						self.RemoveInmune(entradaServer[1])
 					}
 					if (entradaServer[1].localeCompare(my_username) == 0) {
-						console.log('ENTRADA SERVER:', entradaServer)
 						const mi_lista = []
 						mi_lista.push(entradaServer[2])
 						mi_lista.push(entradaServer[3])
-						console.log('MI_LISTA:', mi_lista)
 						self.ReplaceMyCards(mi_lista)
 						self.CheckMyCards()
-					} else {
-						console.log('MIS CARTAS AHORA:', self.state.my_cards)
 					}
-					console.log("Cartas del siguiente usuario"+entradaServer);
 				}
 
 				if (entradaServer[0].localeCompare('usuarios') === 0) {
-					console.log("Lista de Usuarios conectados")
 					let i = 0
 					const con_u = []
 					for(i = 1; i< (entradaServer.length) -1; i = i + 2) {
 						if (!self.state.has_check_name) {
-							console.log('REASIGNANDO NOMBRE:', my_username, entradaServer[(entradaServer.length) - 2])
 							my_username = entradaServer[(entradaServer.length) - 2]
 							self.setState({
 								has_check_name: true
 							})
 						}
 						con_u.push(entradaServer[i+1])
-						console.log("ID: "+entradaServer[i]+" Username: "+entradaServer[i+1])
 					}
 					self.setState ({
 						connected_users: con_u
@@ -246,7 +235,7 @@ export default class Game extends React.Component {
 						})
 					}
 
-					self.compararCartas(finalistas)
+					self.CompararCartas(finalistas)
 				}
 
 				if (entradaServer[0].localeCompare('ganador') === 0) {
@@ -554,6 +543,10 @@ export default class Game extends React.Component {
 		}
 	}
 
+	/**
+	 * Suma 1 punto al personaje que ganó ronda
+	 * @param {*} player - Nombre de jugador que sumará puntos
+	 */
 	SumarPuntos(player) {
 		const index = this.state.connected_users.indexOf(my_username)
 
@@ -577,17 +570,17 @@ export default class Game extends React.Component {
 
 	}
 
+	/**
+	 * Crea inmunidad a un jugador
+	 * @param {*} player - Nombre de jugador que recibirá inmunidad
+	 */
 	CreateInmune(player) {
-		console.log('CREANDO INMUNIDAD A:', player)
 		this.setState (state => {
 			const eliminados = [...state.disabled_users, player]
 			const inmunesss = [...state.inmunes, player]
 			
-			console.log('INMUNES:', inmunesss)
-			console.log('INMUNES-ELIMINADOS:', eliminados)
 			if (eliminados.length === 3 || eliminados.length === 4) {
 				const users = [...state.connected_users, SIN_EFECTO]
-				console.log('USUARIOS CON SIN EFECTO:', users)
 				return {
 					disabled_users: eliminados,
 					inmunes: inmunesss,
@@ -602,26 +595,27 @@ export default class Game extends React.Component {
 		})
 	}
 
+	/**
+	 * Quita inmunidad a jugador
+	 * @param {*} player - Nombre de jugador que se quitará inmunidad
+	 */
 	RemoveInmune(player) {
 		const nuevos_eliminados = this.state.disabled_users.filter(item => item !== player)
 		const nuevo_inmunes = this.state.inmunes.filter(item => item !== player)
 		const us = this.state.connected_users.filter(item => item !== SIN_EFECTO)
-
-		console.log('QUITAR INMUNE DE:', player)
-		console.log('NUEVO INMUNES:', nuevo_inmunes)
-		console.log('NUEVO ELIMINADOS:', nuevos_eliminados)
+		
 		this.setState ({
 			disabled_users: nuevos_eliminados,
 			inmunes: nuevo_inmunes,
 			connected_users: us
 		})
-		console.log('NUEVO INMUNES 2:', nuevo_inmunes)
-		console.log('NUEVO ELIMINADOS 2:', nuevos_eliminados)
-		
 	}
 
+	/**
+	 * Reemplaza mis cartas por otras nuevas
+	 * @param {*} newCard - Listado de nuevas cartas a obtener
+	 */
 	ReplaceMyCards(newCard) {
-		console.log('NEWCARD:', newCard)
 		const temp_card = []
 		newCard.map((nombre, index) => {
 			temp_card.push({
@@ -629,25 +623,25 @@ export default class Game extends React.Component {
 				name: nombre,
 			})
 		})
-		
-		console.log('MIS NUEVAS CARTAS:', temp_card)
 		this.setState({
 			my_cards: temp_card
 		})
 	}
 
+	/**
+	 * Elimina a un jugador de la ronda
+	 * @param {*} player - Nombre de jugador a eliminar en ronda
+	 */
 	KillPlayer(player) {
 		const my_pos = this.state.connected_users.indexOf(my_username)
 		
 		this.setState (state => {
-			console.log('ELIMINARON A:', player)
 			const eliminados = [...state.disabled_users, player]
 
 			return {
 				disabled_users: eliminados
 			}
 		})
-		console.log('ELIMINADOS:', this.state.disabled_users)
 
 		if (player.localeCompare(this.state.connected_users[(my_pos + 1) % 4]) == 0) {
 			this.setState ({
@@ -668,6 +662,12 @@ export default class Game extends React.Component {
 		}
 	}
 
+	/**
+	 * Muestra notificación para mostrar alguna información
+	 * @param {*} title - Título de notificación
+	 * @param {*} description - Descripción de notificación
+	 * @param {*} my_icon - Ícono de notificación
+	 */
 	ShowNotification (title, description, my_icon) {
 		Notification[my_icon] ({
 			title,
@@ -677,6 +677,10 @@ export default class Game extends React.Component {
 		})
 	}
 
+	/**
+	 * Obtiene nueva carta y la pone en mi mazo
+	 * @param {*} newCard - Carta a poner en mi mazo
+	 */
 	GetNewCard(newCard) {
 		const item = newCard
 		cards.splice(cards.indexOf(item), 1)
@@ -694,7 +698,11 @@ export default class Game extends React.Component {
 		this.CheckMyCards()
 	}
 
-	compararCartas(finalistas){
+	/**
+	 * Verifica el ganador de la ronda
+	 * @param {*} finalistas - Listado de jugadores que empataron
+	 */
+	CompararCartas(finalistas){
 		let highestCard = 0
 		let ganadores = []
 		
@@ -714,13 +722,10 @@ export default class Game extends React.Component {
 			}
 		}
 
-		console.log("FINALISTAS:", finalistas)
-		console.log("GANADORES:", ganadores)
-
 		let ganador = ganadores[0]
 
 		if(ganadores.length>1){
-			ganador = this.compararDescartadas(ganadores)
+			ganador = this.CompararDescartadas(ganadores)
 		}
 
 		let winner = 'ganadorEmpate|'
@@ -732,7 +737,11 @@ export default class Game extends React.Component {
 
 	}
 
-	compararDescartadas(posiblesGanadores){
+	/**
+	 * Cuenta los puntos de las cartas descartadas
+	 * @param {*} posiblesGanadores - Listado de ganadores
+	 */
+	CompararDescartadas(posiblesGanadores){
 
 		let suma = 0
 		let sumaGanadores = []
@@ -763,6 +772,9 @@ export default class Game extends React.Component {
 		return ganador
 	}
 
+	/**
+	 * Verifica que las cartas puedan jugarse, o bloquearse según sea el caso
+	 */
 	CheckMyCards() {
 		let tmp_cards = this.state.my_cards
 
@@ -785,19 +797,24 @@ export default class Game extends React.Component {
 		})
 	}
 
+	/**
+	 * Envía el protocolo de chat al server
+	 * @param {*} event - Evento de input
+	 */
 	SendChat(event){
 		//Send to Server chat
 		if(event.target.value !=''){
-			console.log(event.target.value)
 			this.setState({lastMessage: event.target.value})
 			let texto = 'broadcast|'+my_username+'|'+event.target.value
-			console.log("el mensaje a enviar es: "+texto)
 			client.send(texto);
 		}
 		//Clean box
 		event.target.value = ''
 	}
 
+	/**
+	 * Reinicia al valor inicial de las variables
+	 */
 	ResetVariables(){
 		this.setState({
 			my_cards: [],
@@ -810,14 +827,23 @@ export default class Game extends React.Component {
 		})
 	}
 
+	/**
+	 * Se envía protocolo a server
+	 * @param {*} cardName - Nombre de la carta
+	 * @param {*} stringPlay - Protocolo a enviar al server
+	 */
 	EnviarProtocolo(cardName, stringPlay) {
 		console.log("Al haber jugado una carta le mandamos al server:")
 		console.log(stringPlay)
 		client.send(stringPlay)
 	}
 
-	DescartarCarta(cardName, player){
-		console.log('DESCARTANDO:', cardName)	
+	/**
+	 * Decarta una carta de un jugador
+	 * @param {*} cardName - Nombre de la carta
+	 * @param {*} player - Nombre de jugador
+	 */
+	DescartarCarta(cardName, player) {
 		let array_descartadas = this.state.discarded_cards	
 		let mis_cartas = this.state.my_cards
 		
