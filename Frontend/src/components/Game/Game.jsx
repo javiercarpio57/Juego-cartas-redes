@@ -48,8 +48,6 @@ let client = null
 let puertoCodigo = ''
 
 export default class Game extends React.Component {
-	// messageEndRef = React.createRef()
-
 	constructor (props) {
 		super(props)
 
@@ -963,7 +961,6 @@ export default class Game extends React.Component {
 										</li>
 									)
 								}
-								{/* <div ref={this.messageEndRef} /> */}
 							</div>
 						</div>
 						<div className='center-chat-input'>
