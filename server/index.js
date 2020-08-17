@@ -569,11 +569,13 @@ function crearSala() {
                 indice = estado_de_jugadores.indexOf(true,0) + 1;
                 console.log("El ganador es"+usuarios[puerto][indice]["username"]);
                 usuarios[puerto][indice]["tokens"] = usuarios[puerto][indice]["tokens"]+1;
-                if(usuarios[puerto][indice]["tokens"] == 4){
+                if(usuarios[puerto][indice]["tokens"] == 1){
                     socketsClients.forEach(function (client) {
                         client.sendUTF("ganadorsupremo|"+usuarios[puerto][indice]["username"]);
                     });    
-                    sockets[turno].close();
+                    sockets[turno].on('close',function(reasonCode, description){
+                        console.log((new Date())+'Peer'+connection.remoteAddress+' disconnected');
+                    });
                 }else{
                     socketsClients.forEach(function (client) {
                         client.sendUTF("ganador|"+usuarios[puerto][indice]["username"]);
