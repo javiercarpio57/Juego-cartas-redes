@@ -135,9 +135,9 @@ export default class Game extends React.Component {
 			
 			client.onclose = function() {
 				console.log('echo-protocol Client Closed');
-				self.setState({
-					has_to_go_lobby: true
-				})
+				// self.setState({
+				// 	has_to_go_lobby: true
+				// })
 			};
 
 			client.onmessage = function(e) {
@@ -537,9 +537,9 @@ export default class Game extends React.Component {
 	// ======================================================================
 			};
 		} catch (err) {
-			this.setState({
-				has_to_go_lobby: true
-			})
+			// this.setState({
+			// 	has_to_go_lobby: true
+			// })
 		}
 	}
 
